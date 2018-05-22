@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hbm2ddl.auto">update</property>
+        <property name="hibernate.dialect">
+            org.hibernate.dialect.MySQLDialect
+        </property>
+        <property name="show_sql">true</property>
+        <property name="hibernate.connection.driver_class">
+            com.mysql.jdbc.Driver
+        </property>
+        <property name="current_session_context_class">thread</property>
+        <property name="hibernate.enable_lazy_load_no_trans">true</property>
+        <property name="hibernate.connection.url">
+            jdbc:mysql://localhost:3306/satiproduction
+        </property>
+        <property name="hibernate.connection.username">
+            root
+        </property>
+        <property name="hibernate.connection.password">
+            root
+        </property>
+        <mapping class="Employee" resource="hibernateMappingEmployee.hbm.xml"/>
+        <mapping class="LabTest" resource="hibernateMappingLabTest.hbm.xml"/>
+        <mapping class="CoffeeAttribute" resource="hibernateMappingCoffeeAttribute.hbm.xml"/>
+        <mapping class="CoffeeOwner" resource="hibernateMappingCoffeeOwner.hbm.xml"/>
+        <mapping class="CoffeeType" resource="hibernateMappingCoffeeType.hbm.xml"/>
+        <mapping class="Provider" resource="hibernateMappingProvider.hbm.xml"/>
+        <mapping class="PackType" resource="hibernateMappingPackType.hbm.xml"/>
+        <mapping class="CoffeeGreen" resource="hibernateMappingCoffeeGreen.hbm.xml"/>
+        <mapping class="CoffeeGreenChangeHistory" resource="hibernateMappingCoffeeGreenChangeHistory.hbm.xml"/>
+        <mapping class="AromaChangeHistory" resource="hibernateMappingAromaChangeHistory.hbm.xml"/>
+        <mapping class="AromaType" resource="hibernateMappingAromaType.hbm.xml"/>
+        <mapping class="Aroma" resource="hibernateMappingAroma.hbm.xml"/>
+        <mapping class="ProductType" resource="hibernateMappingProductType.hbm.xml"/>
+        <mapping class="ProductionLine" resource="hibernateMappingProductionLine.hbm.xml"/>
+        <mapping class="ProductionCoffee" resource="hibernateMappingProductionCoffee.hbm.xml"/>
+        <mapping class="RoastAromaPart" resource="hibernateMappingRoastAromaPart.hbm.xml"/>
+        <mapping class="RoastPart" resource="hibernateMappingRoastPart.hbm.xml"/>
+        <mapping class="RoastGreenCoffeePart" resource="hibernateMappingRoastGreenCoffeePart.hbm.xml"/>
+        <mapping class="RoastRaport" resource="hibernateMappingRoastRaport.hbm.xml"/>
+        <mapping class="InstantCoffeeMixPart" resource="hibernateMappingInstantCoffeeMixPart.hbm.xml"/>
+        <mapping class="InstantCoffeeMixRaport" resource="hibernateMappingInstantCoffeeMixRaport.hbm.xml"/>
+        <mapping class="ProductionCoffeeSeek" resource="hibernateMappingProductionCoffeeSeek.hbm.xml"/>
+        <mapping class="ProductionCoffeeReturn" resource="hibernateMappingProductionCoffeeReturn.hbm.xml"/>
+        <mapping class="ProductionRaportCoffeeAssignment" resource="hibernateMappingProductionRaportCoffeeAssignment.hbm.xml"/>
+        <mapping class="ProductionRaportPart" resource="hibernateMappingProductionRaportPart.hbm.xml"/>
+        <mapping class="ProductionCoffeeExternalReturn" resource="hibernateMappingProductionCoffeeExternalReturn.hbm.xml"/>
+        <mapping class="SugarType" resource="hibernateMappingSugarType.hbm.xml"/>
+        <mapping class="Sugar" resource="hibernateMappingSugar.hbm.xml"/>
+        <mapping class="DirectPackageType" resource="hibernateMappingDirectPackageType.hbm.xml"/>
+        <mapping class="DirectPackage" resource="hibernateMappingDirectPackage.hbm.xml"/>
+        <mapping class="ReadyCoffee" resource="hibernateMappingReadyCoffee.hbm.xml"/>
+        <mapping class="ProductionRaportDirectPackage" resource="hibernateMappingProductionRaportDirectPackage.hbm.xml"/>
+        <mapping class="ReturnedProduct" resource="hibernateMappingReturnedProduct.hbm.xml"/>
+        <mapping class="Pallete" resource="hibernateMappingPallete.hbm.xml"/>
+      
+    </session-factory>
+</hibernate-configuration>

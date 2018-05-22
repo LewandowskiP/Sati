@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionCoffeeReturn" table="ProductionCoffeeReturn">
+        
+        <id name="id" type="int" column="productionCoffeeReturn_id">
+            <generator class="identity"/>
+        </id>
+        <property name="weight" column="weight" type="float"/>
+        <property name="info" column="info" type="string"/>
+        <property name="returnedTime" column="returnedTime" type="timestamp"/>
+        <many-to-one name="productionCoffee" column="productionCoffee_id" class="ProductionCoffee" />
+        <many-to-one name="returnedBy" column="returnedBy" class="ProductionManagement.Employee"/>
+        
+      
+    </class> 
+  
+
+</hibernate-mapping>

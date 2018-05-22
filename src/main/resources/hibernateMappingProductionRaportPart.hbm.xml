@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionRaportPart" table="ProductionRaportPart">
+        <id name="id" type="int" column="productionRaportPart_id">
+            <generator class="identity"/>
+        </id>
+   
+        <property name="otherInfo" type="string">
+            <column name="otherInfo" length="200"/>
+        </property>
+   
+        <property name="batchInfo" type="string">
+            <column name="batchInfo" length="80"/>
+        </property>
+ 
+        <property name="shift" column="shift" type="int"/>
+        <property name="raportDate" column="raportDate" type="timestamp"/>
+          
+        <property name="totalPallete" type="int" column ="totalPallete"/>        
+        <property name="totalWeight" type="float" column ="totalWeight"/>            
+        <property name="totalPcs" type="int" column ="totalPcs"/>        
+
+        <property name="oxygen" type="float" column ="oxygen"/>        
+        <property name="sealing" type="boolean" column ="sealing"/>
+        <property name="type" type="int" column ="type"/>
+        <property name="stickSize" type="float" column ="stickSize"/>       
+       
+        <property name="labTestDate" type="timestamp" column ="labTestDate"/>
+        <property name="labTestState" type="int" column="labTestState"/>
+
+        <many-to-one name ="productType" class="ProductClasses.ProductType" column="productType_id"/>
+        <many-to-one name ="emp" class="ProductionManagement.Employee" column="employee_id"/>
+        <many-to-one name ="productionLine" class="ProductionClasses.ProductionLine" column="productionLine_id"/>
+      
+        <set name="productionRaportCoffeeAssignment" table="productionRaportCoffeeAssignment" inverse="true" cascade="all" >
+            <key column="productionRaportPart_id" not-null="false"/>
+            <one-to-many class="ProductionRaportCoffeeAssignment"/>
+        </set>
+        
+        <set name="productionRaportDirectPackage" table="productionRaportDirectPackage" inverse="true" cascade="all" >
+            <key column="productionRaportPart_id" not-null="false"/>
+            <one-to-many class="ProductionRaportDirectPackage"/>
+        </set>
+       
+        <set name="pallete" table="pallete" inverse="true" cascade="all" >
+            <key column="productionRaportPart_id" not-null="false"/>
+            <one-to-many class="Pallete"/>
+        </set>
+      
+    </class>
+
+</hibernate-mapping>

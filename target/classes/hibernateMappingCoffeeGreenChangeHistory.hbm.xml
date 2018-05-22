@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="GreenCoffeeClasses">
+  
+    <class name="CoffeeGreenChangeHistory" table="CoffeeGreenChangeHistory">
+        <id name="id" type="int" column="id">
+            <generator class="native"/>
+        </id>      
+        <property name="changeTime" column="changeTime" type="timestamp"/>
+        <property name="comment"  type="string">
+            <column name="comment" length="100"/>
+        </property> 
+        <property name="weight" column="weightChange" type="float"/>
+        <many-to-one name="coffeeGreen" column="coffeeGreen_id" class="CoffeeGreen"/>
+        <many-to-one name="changedBy" column="changedBy" class="ProductionManagement.Employee"/>
+        <many-to-one name="instantCoffeeMixRaport" column="instantCoffeeMixRaport" class="ProductClasses.InstantCoffeeMixRaport"/>
+        <many-to-one name="roastRaport" column="roastRaport" class="ProductClasses.RoastRaport" />            
+    </class> 
+  
+
+</hibernate-mapping>

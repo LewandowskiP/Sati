@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionRaportCardboard" table="productionRaportCardboard">
+        
+        <id name="id" type="int" column="productionRaportCardboard_id">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="cardboard" column="cardboard_id" class="ProductClasses.Cardboard"   not-null="true" />
+        <many-to-one name="productionRaportPart" column="productionRaportPart_id" class="ProductionRaportPart"   not-null="true" />
+      
+    </class> 
+  
+
+</hibernate-mapping>

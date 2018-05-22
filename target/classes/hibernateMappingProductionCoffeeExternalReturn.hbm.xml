@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionCoffeeExternalReturn" table="ProductionCoffeeExternalReturn">
+        <id name="id" type="int" column="productionCoffeeExternalReturn">
+            <generator class="identity"/>
+        </id>
+        <property name="labId" type="string">
+            <column name="labId" length="30"/>
+        </property>
+        <property name="returnInfo" type="string">
+            <column name="returnInfo" length="300"/>
+        </property>
+        <property name="returnDate" column="returnDate" type="timestamp"/>
+        <property name="state" column="state" type="int"/>
+        <property name="weight" column="weight" type="float"/>
+        <many-to-one name="labTest" column="labTest_id" class="ProductionManagement.LabTest" cascade="all" />
+        <many-to-one name="storemanId" column="storeman_id" class="ProductionManagement.Employee" />
+        <many-to-one name="productionRaportPart" column="productionRaportPart_id" class="ProductionRaportPart" />
+        <many-to-one name="productionCoffee" column="productionCoffee_id" class="ProductionCoffee" />
+
+    </class> 
+  
+
+</hibernate-mapping>

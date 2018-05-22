@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+  
+    <class name="InstantCoffeeMixPart" table="InstantCoffeeMixPart">
+        <id name="id" type="int" column="instantCoffeeMixPart_id">
+            <generator class="identity"/>
+        </id>    
+        <property name="serialNumber" column="serialNumber" type="string"/>
+        <property name="cardBoardNumber" column="cardBoardNumber" type="int"/>
+        <property name="weight" column="weight" type="float"/>
+        <property name="sealOk" column="sealOk" type="boolean"/>
+        <many-to-one name="instantCoffeeMixRaport" column="instantCoffeeMixRaport_id" class="InstantCoffeeMixRaport"  not-null="true" />  
+        <many-to-one name="coffeeGreen" column="coffeeGreen_id" class="GreenCoffeeClasses.CoffeeGreen"  not-null="true" />
+    </class>
+
+</hibernate-mapping>

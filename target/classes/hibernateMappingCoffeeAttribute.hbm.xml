@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="GreenCoffeeClasses">
+   
+    <class name="CoffeeAttribute" table="CoffeeAttribute">
+        <id name="id" type="int" column="coffeeAttribute_id">
+            <generator class="identity"/>
+        </id>
+        <property name="attributeName" type="string">
+            <column name="attributeName" length="20"/>
+        </property>
+        <property name="shortcut" type="string">
+            <column name="shortcut" length="6"/>
+        </property>
+        <set name="coffeeType" table="CoffeeType_CoffeeAttribute"
+             inverse="true" lazy="true" fetch="select"  >
+            <key>
+                <column name="coffeeAttribute_id" not-null="true" />
+            </key>
+            <many-to-many entity-name="GreenCoffeeClasses.CoffeeType">
+                <column name="coffeeType_id" not-null="true" />
+            </many-to-many>
+        </set>
+    </class>
+
+</hibernate-mapping>

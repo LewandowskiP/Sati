@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="GreenCoffeeClasses">
+  
+    <class name="CoffeeGreen" table="CoffeeGreen">
+        <id name="id" type="int" column="coffeeGreen_id">
+            <generator class="native"/>
+        </id>
+        <property name="labId" type="string">
+            <column name="labId" length="30"/>
+        </property>
+        
+        <property name="dossierNumber" type="string">
+            <column name="dossierNumber" length="20"/>
+        </property>
+        
+        <property name="arrivalDate" column="arrivalDate" type="timestamp"/>
+        <property name="numberOfPacks" column="numberOfPacks" type="int"/>
+        <property name="contractNumber"  type="string">
+            <column name="contractNumber" length="30"/>
+        </property>
+        <property name="state" column="state" type="int"/>
+        <property name="currentWeight" column="currentWeight" type="float"/>
+        
+        <property name="arrivalWeight" column="arrivalWeight" type="float"/>
+        
+        <many-to-one name="labTest" column="labTest" class="ProductionManagement.LabTest" cascade="all" />
+        <many-to-one name="packType" column="packType" class="PackType" not-null="true"/>
+        <many-to-one name="coffeeOwner" column="coffeeOwner" class="CoffeeOwner" not-null="true"/>
+        <many-to-one name="storeman" column="storeman" class="ProductionManagement.Employee" not-null="true"/>
+        <many-to-one name="coffeeType" column="coffeeType" class="CoffeeType" not-null="true"/>
+        <many-to-one name="provider" column="provider" class="Provider" not-null="true"/>
+        
+        <set name="coffeeGreenChangeHistory" table="coffeeGreenChangeHistory" inverse="true" cascade="all">
+            <key column="coffeeGreen_id"/>
+            <one-to-many class="CoffeeGreenChangeHistory"/>
+        </set>
+        
+
+
+    </class> 
+  
+
+</hibernate-mapping>

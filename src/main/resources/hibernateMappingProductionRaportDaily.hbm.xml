@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionRaportDaily" table="ProductionRaportDaily">
+        <id name="id" type="int" column="productionRaportDaily_id">
+            <generator class="identity"/>
+        </id>
+        
+        <property name="shift" column="shift" type="int"/>
+        <property name="raportId" column="raportId" type="int" />
+        <property name="state" column="state" type="int"/>
+        <property name="raportDate" column="raportDate" type="timestamp"/>
+        
+        <many-to-one name ="emp" class="ProductionManagement.Employee" column="employee_id"/>
+             
+        <many-to-one name ="productionLine" class="ProductionClasses.ProductionLine" column="productionLine_id"/>
+       
+    
+        <set name="productionRaportPart" table="productionRaportPart" inverse="true" cascade="all" >
+            <key column="productionRaportDaily_id" not-null="false"/>
+            <one-to-many class="ProductionRaportPart"/>
+        </set>
+        
+        <set name="productionCoffeeSeek" table="productionCoffeeSeek" inverse="true" cascade="all" >
+            <key column="productionRaportDaily_id" not-null="false"/>
+            <one-to-many class="ProductionCoffeeSeek"/>
+        </set>
+        
+        
+    </class>
+
+</hibernate-mapping>

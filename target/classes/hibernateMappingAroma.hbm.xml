@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+  
+    <class name="Aroma" table="Aroma">
+        <id name="id" type="int" column="aroma_id">
+            <generator class="native"/>
+        </id>
+        <property name="labId" type="string">
+            <column name="labId" length="30"/>
+        </property>             
+        <property name="arrivalDate" column="arrivalDate" type="timestamp"/>
+        <property name="state" column="state" type="int"/>
+        <property name="quantity" column="quantity" type="float" />
+        <property name="arrivalQuantity" column="arrivalQuantity" type="float" />
+        <many-to-one name="labTest" column="labTest" class="ProductionManagement.LabTest" cascade="all"/>
+        <many-to-one name="storeman" column="storeman" class="ProductionManagement.Employee" not-null="true"/>
+        <many-to-one name="aromaType" column="aromaType" class="AromaType" not-null="true"/>
+        <many-to-one name="provider" column="provider" class="GreenCoffeeClasses.Provider" not-null="true"/>     
+        <set name="aromaChangeHistory" table="aromaGreenChangeHistory" inverse="true"    cascade="all">
+            <key column="aroma_id"/>
+            <one-to-many class="AromaChangeHistory"/>
+        </set>
+    </class> 
+</hibernate-mapping>

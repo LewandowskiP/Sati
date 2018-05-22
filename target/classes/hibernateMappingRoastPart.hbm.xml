@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+  
+    <class name="RoastPart" table="RoastPart">
+        <id name="id" type="int" column="roastPart_id">
+            <generator class="identity"/>
+        </id>
+        <property name="sourceWeight" column="sourceWeight" type="float"/>
+        <property name="roastedWeight" column="roastedWeight" type="float"/>
+        <property name="temperature" column="temperature" type="boolean"/>
+        <property name="colour" type="string">
+            <column name="colour" length="10"/>
+        </property>
+        <many-to-one name="roastRaport" column="roastRaport_id" class="RoastRaport" not-null="true" />
+    </class>
+
+</hibernate-mapping>

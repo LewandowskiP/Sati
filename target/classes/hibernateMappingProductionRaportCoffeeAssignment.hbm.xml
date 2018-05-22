@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionRaportCoffeeAssignment" table="productionRaportCoffeeAssignment">
+        
+        <id name="id" type="int" column="productionRaportCoffeeAssignment_id">
+            <generator class="identity"/>
+        </id>
+        <property name="weight" column="weight" type="float"/>
+        <property name="used" column="used" type="boolean"/>
+              
+        <many-to-one name="productionCoffee" column="productionCoffee_id" class="ProductionCoffee"   not-null="false" />
+        <many-to-one name="productionRaportPart" column="productionRaportPart_id" class="ProductionRaportPart"   not-null="false" />
+       
+    </class> 
+  
+
+</hibernate-mapping>

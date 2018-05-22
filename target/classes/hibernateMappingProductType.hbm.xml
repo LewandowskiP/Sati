@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+    <class name="ProductType" table="ProductType">
+        <id name="id" type="int" column="productType_id">
+            <generator class="identity"/>
+        </id>
+        <property name="fileURL" type="string">
+            <column name="fileURL" length="400" not-null="true"/>
+        </property>
+        
+        <property name="ean" type="string" column="ean" />
+    
+        <property name="fileURLinstant" type="string">
+            <column name="fileURLinstant" length="400" />
+        </property>
+        <property name="instant" type="boolean" column="instant"/>
+        <property name="hidden" type="boolean" column="hidden"/>        
+        <property name="type" type="int" column="type"/>        
+        <property name="productName" type="string" >
+            <column name="productName" length="50" not-null="true"/>
+        </property>
+        <property name="createDate" type="timestamp" column="createDate"/>
+        <property name="version" column="version" type="int" not-null="true"/>
+        
+    </class>
+</hibernate-mapping>

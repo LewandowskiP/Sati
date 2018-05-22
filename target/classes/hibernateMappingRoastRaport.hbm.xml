@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+  
+    <class name="RoastRaport" table="RoastRaport">
+        <id name="id" type="int" column="roastRaport_id">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="productType" column="productType_id" class="ProductClasses.ProductType"/>
+        <property name="totalSourceWeight" column="totalSourceWeight" type="float"/>
+        <property name="totalRoastWeight" column="totalRoastWeight" type="float"/>
+      
+        <property name="swift" column="swift" type="int" />
+        
+        <property name="otherInfo" type="string">
+            <column name="otherInfo" length="200"/>
+        </property>
+        <property name="completeTime" column="completeTime" type="timestamp"/>
+        <many-to-one name="completedBy" column="completedBy_id" class="ProductionManagement.Employee"/>
+        
+       
+        <many-to-one name="productionCoffee" column="productionCoffee_id" class="ProductionClasses.ProductionCoffee"/>
+        <many-to-one name="productionLine" column="productionLine_id" class="ProductionClasses.ProductionLine"/>
+        
+        <set name="roastGreenCoffeePart" table="roastGreenCoffeePart" inverse="true" cascade="all">
+            <key column="roastRaport_id" not-null="true"/>
+            <one-to-many class="RoastGreenCoffeePart"/>
+        </set>
+ 
+        <set name="roastAromaPart" table="roastAromaPart" inverse="true"    cascade="all" >
+            <key column="roastRaport_id" not-null="false"/>
+            <one-to-many class="RoastAromaPart"/>
+        </set>
+        
+        <set name="roastPart" table="roastPart" inverse="true"    cascade="all">
+            <key column="roastRaport_id" not-null="true"/>
+            <one-to-many class="RoastPart"/>
+        </set>
+        
+        
+    </class>
+
+</hibernate-mapping>

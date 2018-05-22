@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionManagement">
+   
+    <class name="LabTest" table="LabTest">
+        <id name="id" type="int" column="labTest_id">
+            <generator class="native"/>
+        </id>
+        <property name="organoleptic" type="string">
+            <column name="organoleptic" length="400"/>
+        </property>    
+        <property name="technical"  type="string">
+            <column name="technical" length="400"/>
+        </property>                       
+        <property name="vermin" column="vermin" type="boolean"/>      
+        
+        <property name="accepted" column="accepted" type="boolean"/>      
+        <property name="sampleSize" column="sampleSize" type="int"/>        
+        <property name="examineDate" column="examineDate" type="timestamp"/>          
+        
+        <property name="lawApprovement"  type="string"/>
+        <property name="specificationApprovement"  type="string"/>
+        <property name="serialNumber"  type="string"/>
+        <property name="certificate"  type="string"/>
+        <property name="expiryDate"  type="string"/>
+        <property name="otherDocuments"  type="string"/>
+        <property name="jury"  type="string"/>
+        <property name="color"  type="string"/>
+        <property name="smell"  type="string"/>
+        <property name="taste"  type="string"/>
+        <property name="consistency"  type="string"/>
+        <property name="intensity"  type="string"/>
+        <property name="foam"  type="string"/>
+        <property name="shape"  type="string"/>
+        <property name="phAfter"  type="string"/>
+        <property name="consistencyAfter"  type="string"/>
+        <property name="colorAfter"  type="string"/>
+        <property name="smellAfter"  type="string"/>
+        <property name="tasteAfter"  type="string"/>
+        <property name="clarityAfter"  type="string"/>
+        <property name="fabric"  type="string"/>
+        <property name="esthetics"  type="string"/>
+        <property name="dimensions"  type="string"/>
+        <property name="colors"  type="string"/>
+        <property name="textCorrect"  type="string"/>
+        <property name="structure"  type="string"/>
+        <property name="layering"  type="string"/>
+        <property name="resistanceToAbrasion"  type="string"/>
+        <property name="damaged"  type="string"/>
+        <property name="marking"  type="string"/>
+        <property name="weight"  type="string"/>
+        <property name="humidity"  type="string"/> 
+        <property name="oxygen"  type="string"/>
+        <property name="granulity"  type="string"/>
+        <property name="machineTest"  type="string"/>
+        <property name="solubility"  type="string"/>
+        <property name="mold"  type="string"/>
+        <property name="pollution"  type="string"/>
+        <property name="sealing"  type="string"/>
+        <property name="purity"  type="string"/>
+        
+        <property name="type" type="int"/>
+        <many-to-one name="labAssistant" column="labAssistant" class="ProductionManagement.Employee" not-null="false"/>
+    </class>
+
+</hibernate-mapping>

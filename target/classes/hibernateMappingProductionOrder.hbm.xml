@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionOrder" table="ProductionOrder">
+        <id name="id" type="int" column="productionOrder_id">
+            <generator class="identity"/>
+        </id>
+        <property name="state" column="state" type="int"/>
+        <property name="positionInQueue" column="positionInQueue" type="int"/>
+        <property name="quantity" type="string">
+            <column name="quantity" length="30"/>
+        </property>
+      
+        <property name="otherInfo" type="string">
+            <column name="otherInfo" length="50"/>
+        </property>
+        <property name="orderTime" column="orderTime" type="timestamp"/>
+        <property name="completeTime" column="completeTime" type="timestamp"/>
+        <many-to-one name="orderedBy" column="orderedBy" class="ProductionManagement.Employee"    not-null="true"   />
+        <many-to-one name="completedBy" column="completedBy" class="ProductionManagement.Employee"    not-null="false"   />
+        <many-to-one name="productType" column="productType" class="ProductClasses.ProductType"   not-null="false"  />
+        <many-to-one name="productionLine" column="productionLine" class="ProductionLine"   not-null="true" />
+        <many-to-one name="roastRaport" column="roastRaport" class="ProductClasses.RoastRaport"   not-null="false" />
+        <many-to-one name="productionRaportPart" column="productionRaportPart" class="ProductionClasses.ProductionRaportPart"   not-null="false" />
+        <many-to-one name="instantCoffeeMixRaport" column="instantCoffeeMixRaport" class="ProductClasses.InstantCoffeeMixRaport"   not-null="false" />
+    
+    </class> 
+  
+
+</hibernate-mapping>

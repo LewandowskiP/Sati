@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+  
+    <class name="ReadyCoffee" table="ReadyCoffee">
+        <id name="id" type="int" column="readyCoffee_id">
+            <generator class="native"/>
+        </id>
+        <property name="labId" type="string">
+            <column name="labId" length="30"/>
+        </property>
+        <property name="otherInfo" type="string">
+            <column name="otherInfo" length="80"/>
+        </property>             
+                     
+        <property name="arrivalDate" column="arrivalDate" type="timestamp"/>
+        <property name="state" column="state" type="int"/>  
+        <property name="arrivalQuantity" column="arrivalQuantity" type="int" />
+        <property name="arrivalWeight" column="arrivalWeight" type="float" />  
+        <many-to-one name="labTest" column="labTest" class="ProductionManagement.LabTest" cascade="all" />
+        <many-to-one name="storeman" column="storeman" class="ProductionManagement.Employee" not-null="true"/>
+        <many-to-one name="productType" column="productType" class="ProductType" not-null="true"/>
+        <many-to-one name="provider" column="provider" class="GreenCoffeeClasses.Provider" not-null="true"/>   
+        
+    </class> 
+</hibernate-mapping>

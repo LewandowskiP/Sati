@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductClasses">
+  
+    <class name="InstantCoffeeMixRaport" table="InstantCoffeeMixRaport">
+        <id name="id" type="int" column="instantCoffeeMixRaport_id">
+            <generator class="identity"/>
+        </id>
+        <many-to-one name="productType" column="productType_id" class="ProductClasses.ProductType"/>
+        <property name="weight" column="weight" type="float"/>     
+        <property name="swift" column="swift" type="int" />
+        <property name="otherInfo" type="string">
+            <column name="otherInfo" length="200"/>
+        </property>
+        <property name="mixDate" column="mixDate" type="timestamp"/>
+        <many-to-one name="mixedBy" column="mixedBy" class="ProductionManagement.Employee"/>
+        <many-to-one name="productionCoffee" column="productionCoffee_id" class="ProductionClasses.ProductionCoffee"/>
+        <many-to-one name="productionLine" column="productionLine_id" class="ProductionClasses.ProductionLine"/>
+        <set name="instantCoffeeMixPart" table="instantCoffeeMixPart_id" inverse="true" cascade="all" >
+            <key column="instantCoffeeMixRaport_id" not-null="true"/>
+            <one-to-many class="InstantCoffeeMixPart"/>
+        </set>
+            
+    </class>
+
+</hibernate-mapping>

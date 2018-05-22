@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionCoffeeSeek" table="ProductionCoffeeSeek">
+        
+        <id name="id" type="int" column="productionCoffeeSeek_id">
+            <generator class="identity"/>
+        </id>
+        <property name="weight" column="weight" type="float"/>
+        <many-to-one name="productionCoffee" column="productionCoffee_id" class="ProductionCoffee"   not-null="false" />
+        <many-to-one name="seekedBy" column="seekedBy" class="ProductionManagement.Employee"   not-null="false" />
+      
+    </class> 
+  
+
+</hibernate-mapping>

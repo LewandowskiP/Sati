@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+ "-//Hibernate/Hibernate Mapping DTD//EN"
+ "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"> 
+
+<hibernate-mapping package="ProductionClasses">
+  
+    <class name="ProductionCoffee" table="ProductionCoffee">
+        
+        <id name="id" type="int" column="productionCoffee_id">
+            <generator class="identity"/>
+        </id>
+        
+        <property name="state" column="state" type="int"/>
+        <property name="weight" column="weight" type="float"/> 
+        <property name="returned" column="returned" type="boolean"/>
+        <property name="used" column="used" type="boolean"/>
+        <property name="prodDate" column="prodDate" type="timestamp"/>
+        <many-to-one name="productType" column="productType" class="ProductClasses.ProductType"   not-null="false" />
+    
+    </class> 
+  
+
+</hibernate-mapping>
