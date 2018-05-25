@@ -24,6 +24,7 @@ import java.awt.event.ItemListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.event.TableModelEvent;
@@ -37,7 +38,7 @@ import javax.swing.table.DefaultTableModel;
 public class NewRaportProductionPanel extends javax.swing.JPanel {
 
     DataBaseConnector dbc = null;
-    Employee emp;
+    Employee employee;
     ProductionLine selectedProductionLine;
     ProductType selectedProductType;
     ProductionRaportPart productionRaportPart;
@@ -49,6 +50,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
      * Creates new form NewRaportRoastPanel
      */
     private void resetInput() {
+        buttonAssignBatch.setEnabled(true);
         spinnerOxygen.setValue((float) 0);
         spinnerProductionCoffeeSeek.setValue((float) 0);
         spinnerStickWeight.setValue((float) 0);
@@ -60,26 +62,30 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         DefaultTableModel dtm = (DefaultTableModel) tableDirectPackage.getModel();
         dtm.setRowCount(0);
         dtm.setRowCount(1);
+        dtm = (DefaultTableModel) tablePallete.getModel();
+        dtm.setRowCount(0);
+        dtm.setRowCount(1);
         dbc.clearSession();
 
     }
 
-    private void setControls(boolean state) {
-        spinnerOxygen.setEnabled(state);
-        spinnerProductionCoffeeSeek.setEnabled(state);
-        spinnerStickWeight.setEnabled(state);
-        textAreaOtherInfo.setEnabled(state);
-        textFieldBatchInfo.setEnabled(state);
-        buttonSendRaport.setEnabled(state);
-        comboBoxProductionCoffee.setEnabled(state);
-        comboBoxSeal.setEnabled(state);
-        comboBoxBean.setEnabled(state);
-        buttonProductionCoffeeSeek.setEnabled(state);
-        buttonConfirmProductionOrder.setEnabled(state);
-        buttonSendRaport.setEnabled(state);
-        buttonOpenFile.setEnabled(state);
+    private void setPreInitControls(boolean state) {
+        comboBoxProductionLine.setEnabled(state);
         comboBoxProductType.setEnabled(state);
-        tableDirectPackage.setEnabled(state);
+        spinnerExpiry.setEnabled(state);
+        buttonAssignBatch.setEnabled(state);
+
+        tablePallete.setEnabled(!state);
+        tableDirectPackage.setEnabled(!state);
+        spinnerStickWeight.setEnabled(!state);
+        spinnerOxygen.setEnabled(!state);
+        comboBoxBean.setEnabled(!state);
+        comboBoxSeal.setEnabled(!state);
+        comboBoxProductionCoffee.setEnabled(!state);
+        buttonProductionCoffeeSeek.setEnabled(!state);
+        spinnerProductionCoffeeSeek.setEnabled(!state);
+        buttonConfirmProductionOrder.setEnabled(!state);
+        textAreaOtherInfo.setEnabled(!state);
     }
 
     private void initProductionLines() {
@@ -97,7 +103,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         ArrayList<ProductionCoffee> alpc = dbc.getProductionCoffeeWithState(Global.PRODUCTION_COFFEE_READY);
         Object[] o = alpc.toArray();
         Arrays.sort(o);
-
         comboBoxProductionCoffee.removeAllItems();
         for (Object pc : o) {
             comboBoxProductionCoffee.addItem(pc);
@@ -109,29 +114,29 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private void initProductType() {
         ArrayList<ProductType> alpt = dbc.getProductType(Global.PRODUCT_TYPE_PACK);
         comboBoxProductType.removeAllItems();
-
         Object[] A = alpt.toArray();
         alpt.toArray(A);
         Arrays.sort(A);
         comboBoxProductType.removeAllItems();
         for (Object pt : A) {
             comboBoxProductType.addItem(pt);
-
         }
         comboBoxProductType.setSelectedItem(null);
     }
 
     public NewRaportProductionPanel(Employee emp) {
         initComponents();
-        setControls(false);
+        setPreInitControls(true);
         dbc = Global.getDataBaseConnector();
         resetInput();
-        this.emp = emp;
-
+        this.employee = emp;
         dbc.openSession();
         initProductionLines();
         initProductType();
         initProductionCoffee();
+        textFieldBatchInfo.setEnabled(false);
+
+        buttonAssignBatch.setEnabled(true);
         tableDirectPackage.getModel().addTableModelListener(new CheckBoxDirectPackageRaport(2, 3));
         comboBoxProductType.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent arg0) {
@@ -140,7 +145,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         });
 
         tablePallete.getModel().addTableModelListener(new TableModelListener() {
-
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
                 int column = e.getColumn();
@@ -148,57 +152,75 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 if (column == 4) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
-                        String[] options = {"Tak", "Nie"};
-                        int result = JOptionPane.showOptionDialog(null, "Czy na pewno chcesz usunąć tę paletę z raportu?", "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                        if (JOptionPane.OK_OPTION == result) {
-                            Pallete p = (Pallete) model.getValueAt(row, 0);
-                            summaryWeight -= p.getNetto();
-                            summaryPcs -= p.getQuantity();
-                            summaryPalletes++;
-
-                            JOptionPane.showMessageDialog(null, "Paleta usunięta.");
+                        Pallete pallete = (Pallete) model.getValueAt(row, 0);
+                        if (pallete == null) {
+                            String[] options = {"Dodaj", "Cofnij"};
+                            GenerateLabelEan128 generateLabelEan128 = new GenerateLabelEan128(employee, productionRaportPart);
+                            int result = JOptionPane.showOptionDialog(null, generateLabelEan128, "Podaj dane palety!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                            if (JOptionPane.OK_OPTION == result) {
+                                Pallete newPallete = generateLabelEan128.getPallete();
+                                summaryWeight += newPallete.getNetto();
+                                summaryPcs += newPallete.getQuantity();
+                                summaryPalletes++;
+                                productionRaportPart.getPallete().add(newPallete);
+                                model.removeRow(row);
+                                model.addRow(new Object[]{newPallete, newPallete.getId(), newPallete.getQuantity(), newPallete.getNetto(), false, false, false});
+                                model.addRow(new Object[]{null, null, null, null, false, false, false});
+                            } else {
+                                Pallete newPallete = generateLabelEan128.getPallete();
+                                if (newPallete != null) {
+                                    dbc.deleteObject(newPallete);
+                                }
+                            }
                         }
+                        model.setValueAt(false, row, column);
                     }
                 } else if (column == 5) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
-                        String[] options = {"Tak", "Nie"};
-                        int result = JOptionPane.showOptionDialog(null, "Czy na pewno chcesz usunąć tę paletę z raportu?", "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
-                        if (JOptionPane.OK_OPTION == result) {
-                            Pallete p = (Pallete) model.getValueAt(row, 0);
-                            summaryWeight -= p.getNetto();
-                            summaryPcs -= p.getQuantity();
-                            summaryPalletes++;
-                            dbc.deleteObject(p);
-                            JOptionPane.showMessageDialog(null, "Paleta usunięta.");
+                        Pallete pallete = (Pallete) model.getValueAt(row, 0);
+                        if (pallete != null) {
+                            String[] options = {"Tak", "Nie"};
+                            int result = JOptionPane.showOptionDialog(null, "Czy na pewno chcesz usunąć tę paletę z raportu?", "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null, options, options[0]);
+                            if (JOptionPane.OK_OPTION == result) {
+
+                                summaryWeight -= pallete.getNetto();
+                                summaryPcs -= pallete.getQuantity();
+                                summaryPalletes++;
+                                productionRaportPart.getPallete().remove(pallete);
+                                dbc.deleteObject(pallete);
+                                JOptionPane.showMessageDialog(null, "Paleta usunięta.", "Infromacja", JOptionPane.PLAIN_MESSAGE);
+                                int rowCount = model.getRowCount();
+                                model.removeRow(row);
+                                if (rowCount == 1) {
+                                    model.addRow(new Object[]{null, null, null, null, false, false, false});
+                                }
+                            }
                         }
+                        model.setValueAt(false, row, column);
                     }
                 } else if (column == 6) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
                         Pallete p = (Pallete) model.getValueAt(row, 0);
-                        p.showDetails();
+                        if (p != null) {
+                            p.showDetails();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Brak palety", "Infromacja", JOptionPane.PLAIN_MESSAGE);
+                        }
+                        model.setValueAt(false, row, column);
                     }
                 }
-
             }
-
-        });
+        }
+        );
 
         comboBoxProductionLine.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent arg0) {
                 selectedProductionLine = (ProductionLine) comboBoxProductionLine.getSelectedItem();
-                if (selectedProductionLine != null) {
-                    comboBoxProductType.setEnabled(true);
-                    setControls(true);
-
-                } else {
-                    comboBoxProductType.setEnabled(false);
-                    setControls(false);
-
-                }
             }
-        });
+        }
+        );
     }
 
     /**
@@ -242,9 +264,11 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         tablePallete = new javax.swing.JTable();
         jLabel1 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
+        buttonAssignBatch = new javax.swing.JButton();
         spinnerExpiry = new javax.swing.JSpinner();
         jLabel12 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jSeparator2 = new javax.swing.JSeparator();
 
         buttonSendRaport.setText("Rozlicz zarezerwowaną kawę");
         buttonSendRaport.addActionListener(new java.awt.event.ActionListener() {
@@ -396,7 +420,12 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
         jLabel9.setText("Informacje dodatkowe");
 
-        jButton1.setText("Nadaj");
+        buttonAssignBatch.setText("Nadaj");
+        buttonAssignBatch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAssignBatchActionPerformed(evt);
+            }
+        });
 
         spinnerExpiry.setModel(new javax.swing.SpinnerDateModel());
 
@@ -407,73 +436,76 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(buttonSendRaport)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(buttonConfirmProductionOrder))
+                    .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(12, 12, 12)
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton1)
-                                .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(spinnerStickWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(buttonSendRaport)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(buttonConfirmProductionOrder))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(12, 12, 12)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel3)
-                                    .addComponent(comboBoxSeal, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(28, 28, 28)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(spinnerStickWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel3)
+                                            .addComponent(comboBoxSeal, javax.swing.GroupLayout.PREFERRED_SIZE, 85, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(28, 28, 28)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(comboBoxBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(spinnerOxygen, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel4))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(jLabel21)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                                    .addComponent(jScrollPane3)
+                                    .addComponent(jScrollPane1)))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(comboBoxBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(spinnerOxygen, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jLabel21)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
-                            .addComponent(jScrollPane3)
-                            .addComponent(jScrollPane1)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel11)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jLabel6)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(buttonProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel7)
-                                .addGap(18, 18, 18)
-                                .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel10)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(comboBoxProductType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(buttonOpenFile))
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel9)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel9)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(jLabel11)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jLabel6)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(buttonProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel7)
+                                            .addComponent(jLabel10)
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                        .addGap(18, 18, 18)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(comboBoxProductType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(buttonOpenFile))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(buttonAssignBatch))
+                                            .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -485,13 +517,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     .addComponent(jLabel7))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(buttonProductionCoffeeSeek))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel10)
                     .addComponent(comboBoxProductType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonOpenFile))
@@ -500,11 +525,21 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     .addComponent(jLabel12)
                     .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel8)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel8)
+                    .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonAssignBatch))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                    .addComponent(jLabel11)
+                    .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel6)
+                    .addComponent(buttonProductionCoffeeSeek))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -515,7 +550,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel9)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
@@ -547,12 +582,12 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         String[] options = new String[2];
         options[0] = "Zamknij raport ze zmiany";
         options[1] = "Cofnij";
-        ManageProductionCoffeeSeek mpcs = new ManageProductionCoffeeSeek(emp);
+        ManageProductionCoffeeSeek mpcs = new ManageProductionCoffeeSeek(employee);
         int result = JOptionPane.showOptionDialog(this, mpcs, "Rozlicz niezużytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         if (result == JOptionPane.YES_OPTION) {
             if (mpcs.warden == 0) {
                 dbc.openSession();
-                for (ProductionCoffeeSeek pcs : dbc.getProductionCoffeeSeekWithEmployee(emp)) {
+                for (ProductionCoffeeSeek pcs : dbc.getProductionCoffeeSeekWithEmployee(employee)) {
                     pcs.getProductionCoffee().setWeight(Global.round(pcs.getProductionCoffee().getWeight() + pcs.getWeight(), 2));
                     if (pcs.getProductionCoffee().getWeight() > 0) {
                         pcs.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
@@ -562,7 +597,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     dbc.deleteObject(pcs);
                 }
 
-                setControls(false);
+                setPreInitControls(false);
                 initProductionLines();
                 initProductionCoffee();
             } else {
@@ -584,7 +619,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 throw new NotEnoughtCoffeeException(pc.getProductType().getProductName());
             }
             ProductionCoffeeSeek pcs = new ProductionCoffeeSeek();
-            pcs.setSeekedBy(emp);
+            pcs.setSeekedBy(employee);
             pcs.setWeight(Global.round(pcToSeek, 2));
             pcs.setProductionCoffee(pc);
             pc.setWeight(Global.round(pc.getWeight() - pcToSeek, 2));
@@ -593,6 +628,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             }
             dbc.updateObject(pc);
             dbc.saveObject(pcs);
+
             initProductionCoffee();
             JOptionPane.showMessageDialog(this, ("Zarezerwowano kawę" + pc.getProductType().getProductName() + " w ilośći " + pcToSeek + "[kg]."));
         } catch (ClassCastException e) {
@@ -611,54 +647,44 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private void buttonConfirmProductionOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmProductionOrderActionPerformed
 
         try {
-            dbc.clearSession();
             dbc.openSession();
-            ProductionRaportPart prp = new ProductionRaportPart();
-            prp.setEmp(emp);
-            prp.setRaportDate(new Timestamp(System.currentTimeMillis()));
-            prp.setRaportId(WIDTH);
-            prp.setShift(Global.currentShift());
-            prp.setProductionLine(selectedProductionLine);
-            prp.setBatchInfo(textFieldBatchInfo.getText());
-            prp.setOtherInfo(textAreaOtherInfo.getText());
-            prp.setStickSize((Float) spinnerStickWeight.getValue());
-            prp.setOxygen((Float) spinnerOxygen.getValue());
-            prp.setTotalWeight(Global.round((Float) summaryWeight, 2));
+            productionRaportPart.setRaportDate(new Timestamp(System.currentTimeMillis()));
+            productionRaportPart.setShift(Global.currentShift());
+            productionRaportPart.setOtherInfo(textAreaOtherInfo.getText());
+            productionRaportPart.setStickSize((Float) spinnerStickWeight.getValue());
+            productionRaportPart.setOxygen((Float) spinnerOxygen.getValue());
+            productionRaportPart.setTotalWeight(Global.round((Float) summaryWeight, 2));
             for (int i = 0; i < tableDirectPackage.getRowCount() - 1; i++) {
                 ProductionRaportDirectPackage prdp = new ProductionRaportDirectPackage();
-                prdp.setProductionRaportPart(prp);
+                prdp.setProductionRaportPart(productionRaportPart);
                 prdp.setDirectPackage(dbc.findDirectPackageWithLabId((String) tableDirectPackage.getValueAt(i, 0)));
-                prp.getProductionRaportDirectPackage().add(prdp);
+                productionRaportPart.getProductionRaportDirectPackage().add(prdp);
             }
-            prp.setType(comboBoxBean.getSelectedIndex());
+            productionRaportPart.setType(comboBoxBean.getSelectedIndex());
             if (comboBoxSeal.getSelectedIndex() == 1) {
-                prp.setSealing(false);
+                productionRaportPart.setSealing(false);
             } else {
-                prp.setSealing(true);
+                productionRaportPart.setSealing(true);
             }
-            prp.setTotalPallete(summaryPalletes);
-            prp.setTotalPcs(summaryPcs);
+            productionRaportPart.setTotalPallete(summaryPalletes);
+            productionRaportPart.setTotalPcs(summaryPcs);
             if (selectedProductType == null) {
                 throw new ZeroInputException();
             }
 
-            prp.setProductType(selectedProductType);
-            if (prp.getTotalWeight() == 0 || prp.getKGperPallete() == 0 || prp.getPCSperPallete() == 0 || prp.getTotalPcs() == 0 || prp.getBatchInfo().length() < 5) {
-                throw new ZeroInputException();
-            }
-            prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
+            productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
             String[] options = new String[2];
             options[0] = "Dalej";
             options[1] = "Odrzuć";
             dbc.startTransation();
-            int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(prp, emp), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(productionRaportPart, employee), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (JOptionPane.OK_OPTION == res) {
-                int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(prp), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION == result) {
-                    dbc.saveTransation(prp);
+                    dbc.saveTransation(productionRaportPart);
                     dbc.commitTransation();
                     resetInput();
-                    System.out.println("OK@");
+                    setPreInitControls(true);
                 } else {
                     dbc.rollbackTransation();
                 }
@@ -676,7 +702,49 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonConfirmProductionOrderActionPerformed
 
+    private void buttonAssignBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAssignBatchActionPerformed
+        try {
+
+            ProductionRaportPart productionRaportPart = dbc.getLatestProductionRaportPart(selectedProductionLine, employee);
+            if (productionRaportPart.getLabTestState() > 0) {
+                productionRaportPart = new ProductionRaportPart();
+            } else {
+                DefaultTableModel dtm = (DefaultTableModel) tablePallete.getModel();
+                dtm.setRowCount(0);
+                for (Pallete p : productionRaportPart.getPallete()) {
+                    summaryWeight += p.getNetto();
+                    summaryPcs += p.getQuantity();
+                    summaryPalletes++;
+
+                    dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
+
+                }
+                dtm.addRow(new Object[]{null, null, null, null, false, false, false});
+            }
+            productionRaportPart.setEmp(employee);
+            productionRaportPart.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
+            productionRaportPart.setProductType(selectedProductType);
+            productionRaportPart.setProductionLine(selectedProductionLine);
+
+            dbc.saveObject(productionRaportPart);
+            dbc.updateObject(productionRaportPart);
+            String batch = String.format("%07d", productionRaportPart.getId()) + 'L' + Global.timestampToStrYYMMDD(productionRaportPart.getExpiryDate());
+            productionRaportPart.setBatchInfo(batch);
+            textFieldBatchInfo.setText(batch);
+            dbc.updateObject(productionRaportPart);
+            this.productionRaportPart = productionRaportPart;
+
+            setPreInitControls(false);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }//GEN-LAST:event_buttonAssignBatchActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAssignBatch;
     private javax.swing.JButton buttonConfirmProductionOrder;
     private javax.swing.JButton buttonOpenFile;
     private javax.swing.JButton buttonProductionCoffeeSeek;
@@ -686,7 +754,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comboBoxProductionCoffee;
     private javax.swing.JComboBox comboBoxProductionLine;
     private javax.swing.JComboBox comboBoxSeal;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -704,6 +771,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSpinner spinnerExpiry;
     private javax.swing.JSpinner spinnerOxygen;
     private javax.swing.JSpinner spinnerProductionCoffeeSeek;

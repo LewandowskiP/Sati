@@ -37,7 +37,7 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (Pallete p : palleteToAccept) {
-            model.addRow(new Object[]{p, p.getProductType(), p.getBatch(), p.getQuantity(), Global.timestampToStrDDMMYYYY(p.getProdDate()), Global.getPalleteState(p.getState()), false, false});
+            model.addRow(new Object[]{p, p.getProductionRaportPart().getProductType(), p.getBatch(), p.getQuantity(), Global.timestampToStrDDMMYYYY(p.getProdDate()), Global.getPalleteState(p.getState()), false, false});
 
         }
 

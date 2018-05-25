@@ -275,6 +275,22 @@ public class DataBaseConnector {
 
     }
 
+    public ProductionRaportPart getLatestProductionRaportPart(ProductionLine productionLine, Employee employee) {
+        ProductionRaportPart toReturn = null;
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.emp = :emp AND PRP.productionLine = :productionLine ORDER BY id DESC LIMIT 1";
+        Query q = s.createQuery(hql);
+        q.setParameter("emp", employee);
+        q.setParameter("productionLine", productionLine);
+        List result = (List<ProductionCoffee>) q.list();
+        if (result.size() > 0) {
+            toReturn = (ProductionRaportPart) result.get(0);
+        }
+        return toReturn;
+    }
+
     public ArrayList<Pallete> getPalleteWithFromTo(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();

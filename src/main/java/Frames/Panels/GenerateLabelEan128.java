@@ -5,21 +5,15 @@
  */
 package Frames.Panels;
 
-import ProductClasses.ProductType;
 import ProductionClasses.Pallete;
-import ProductionClasses.ProductionLine;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.Timestamp;
 import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import org.krysalis.barcode4j.impl.upcean.EAN13Bean;
+import javax.swing.JOptionPane;
 import org.krysalis.barcode4j.impl.upcean.UPCEANLogicImpl;
 
 /**
@@ -31,19 +25,25 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
     /**
      * Creates new form GenerateLabelEan128
      */
-    
     ProductionRaportPart productionRaportPart;
     DataBaseConnector dbc;
     Employee emp;
 
-    Pallete p;
+    Pallete pallete;
 
+    public Pallete getPallete() {
+        return pallete;
+    }
 
     public GenerateLabelEan128(Employee emp, ProductionRaportPart prp) {
         initComponents();
         this.emp = emp;
         dbc = Global.getDataBaseConnector();
         dbc.openSession();
+        this.productionRaportPart = prp;
+        textFieldBatch.setText(prp.getBatchInfo());
+        spinnerExpiry.setValue((Date) prp.getExpiryDate());
+
     }
 
     /**
@@ -84,7 +84,10 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
 
         spinnerNetto.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(9999.0f), Float.valueOf(0.25f)));
 
+        textFieldBatch.setEnabled(false);
+
         spinnerExpiry.setModel(new javax.swing.SpinnerDateModel());
+        spinnerExpiry.setEnabled(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -143,8 +146,6 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
 
         String ean13 = productionRaportPart.getProductType().getEan();
 
-        EAN13Bean generator = new EAN13Bean();
-        UPCEANLogicImpl impl = generator.createLogicImpl();
         ean13 += UPCEANLogicImpl.calcChecksum(ean13);
 
         String gtin = Global.qtinID + ean13;
@@ -156,26 +157,24 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
 
         String netto = Global.nettoID + formatter.format(spinnerNetto.getValue());
         netto = netto.replace(",", "");
-        p = new Pallete();
-        p.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
-        p.setProdDate(new Timestamp(System.currentTimeMillis()));
-        p.setNetto((Float) spinnerNetto.getValue());
-        p.setQuantity((Integer) spinnerPcs.getValue());
-        p.setBatch(textFieldBatch.getText());
-        p.setEan128Lot(gtin + Global.eanSeparator + lot + Global.eanSeparator + expiryDate);
-        p.setEan128Pallete(prodDate + Global.eanSeparator + netto + Global.eanSeparator + quantity);
-        p.setEmployee(emp);
-        p.setState(Global.PALLETE_WAITING);
-        p.setProductType(selectedProductType);
+        pallete = new Pallete();
+        pallete.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
+        pallete.setProdDate(new Timestamp(System.currentTimeMillis()));
+        pallete.setNetto((Float) spinnerNetto.getValue());
+        pallete.setQuantity((Integer) spinnerPcs.getValue());
+        pallete.setBatch(textFieldBatch.getText());
+        pallete.setEan128Lot(gtin + Global.eanSeparator + lot + Global.eanSeparator + expiryDate);
+        pallete.setEan128Pallete(prodDate + Global.eanSeparator + netto + Global.eanSeparator + quantity);
+        pallete.setState(Global.PALLETE_WAITING);
+        pallete.setProductionRaportPart(productionRaportPart);
+        dbc.saveObject(pallete);
+        dbc.refresh(pallete);
+        String number = Global.palleteNumberID + String.format("%d", pallete.getId());
+        pallete.setEan128Num(number);
+        dbc.updateObject(pallete);
+        dbc.refresh(pallete);
 
-        dbc.saveObject(p);
-        dbc.refresh(p);
-        String number = Global.palleteNumberID + String.format("%d", p.getId());
-        p.setEan128Num(number);
-        dbc.updateObject(p);
-        dbc.refresh(p);
-
-        p.showDetails(Global.MODE_PRINT_DELETE);
+        JOptionPane.showMessageDialog(null, "Wygenerowano etykietę", "Uwaga", JOptionPane.PLAIN_MESSAGE);
 
     }//GEN-LAST:event_jButton1ActionPerformed
 

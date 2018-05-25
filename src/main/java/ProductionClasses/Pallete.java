@@ -7,9 +7,7 @@ package ProductionClasses;
 
 import Frames.Panels.DetailsPalletePanel;
 import Frames.Panels.GenerateLabelEan128;
-import ProductClasses.ProductType;
 import ProductionManagement.DataBaseConnector;
-import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
 import java.awt.Color;
@@ -146,6 +144,7 @@ public class Pallete implements Details {
         this.batch = batch;
     }
 
+    @Override
     public void showDetails() {
         DataBaseConnector dbc = Global.getDataBaseConnector();
         dbc.openSession();
@@ -206,7 +205,7 @@ public class Pallete implements Details {
         yOffset += Global.labelOffset + imageLot.getHeight();
 
         xOffset += Global.labelOffset;
-        String ean13FullText = Global.qtinText + this.getProductType().getEan();
+        String ean13FullText = Global.qtinText + this.productionRaportPart.getProductType().getEan();
         g.drawChars(ean13FullText.toCharArray(), 0, ean13FullText.length(), xOffset, yOffset);
 
         yOffset += Global.labelOffset;
@@ -218,7 +217,7 @@ public class Pallete implements Details {
         g.drawChars(expiryDateFullText.toCharArray(), 0, expiryDateFullText.length(), xOffset, yOffset);
 
         yOffset += Global.labelOffset;
-        String productTypeFullText = Global.productNameText + this.getProductType().getProductName();
+        String productTypeFullText = Global.productNameText + this.productionRaportPart.getProductType().getProductName();
         g.drawChars(productTypeFullText.toCharArray(), 0, productTypeFullText.length(), xOffset, yOffset);
 
         xOffset = Global.labelOffset;
@@ -247,7 +246,7 @@ public class Pallete implements Details {
         String palleteNumberFullText = Global.palleteNumberText + this.getId();
         g.drawChars(palleteNumberFullText.toCharArray(), 0, palleteNumberFullText.length(), xOffset, yOffset);
         yOffset += Global.labelOffset;
-        String employeeCodeFullText = Global.employeeCodeText + this.getEmployee().getEmployeeID();
+        String employeeCodeFullText = Global.employeeCodeText + this.productionRaportPart.getEmp().getEmployeeID();
         g.drawChars(employeeCodeFullText.toCharArray(), 0, employeeCodeFullText.length(), xOffset, yOffset);
 
     }
@@ -279,6 +278,7 @@ public class Pallete implements Details {
         PrinterJob printJob = PrinterJob.getPrinterJob();
 
         printJob.setPrintable(new Printable() {
+            @Override
             public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) throws PrinterException {
                 pageFormat.setOrientation(PageFormat.LANDSCAPE);
                 if (pageIndex != 0) {
@@ -302,6 +302,11 @@ public class Pallete implements Details {
                     .getName()).log(Level.SEVERE, null, ex);
         }
 
+    }
+
+    @Override
+    public String toString() {
+        return this.id + " " + this.getBatch();
     }
 
 }

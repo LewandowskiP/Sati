@@ -14,7 +14,6 @@ import Frames.Panels.AddProductionLinePanel;
 import Frames.Panels.AddReadyCoffeePanel;
 import Frames.Panels.BrowsePalleteGeneral;
 import Frames.Panels.BrowseResourcesToExamine;
-import Frames.Panels.GenerateLabelEan128;
 import Frames.Panels.NewRaportProductionPanel;
 import GreenCoffeeClasses.CoffeeAttribute;
 import GreenCoffeeClasses.CoffeeGreen;
@@ -461,7 +460,7 @@ public class AdministratorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton7ActionPerformed
 
     private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
-        scrollPanelAdministratorFrame.setViewportView(new GenerateLabelEan128(emp));
+        scrollPanelAdministratorFrame.setViewportView(null);
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed

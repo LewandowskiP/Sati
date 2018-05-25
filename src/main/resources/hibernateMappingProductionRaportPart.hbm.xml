@@ -20,7 +20,8 @@
  
         <property name="shift" column="shift" type="int"/>
         <property name="raportDate" column="raportDate" type="timestamp"/>
-          
+        <property name="expiryDate" column="expiryDate" type="timestamp"/>
+        
         <property name="totalPallete" type="int" column ="totalPallete"/>        
         <property name="totalWeight" type="float" column ="totalWeight"/>            
         <property name="totalPcs" type="int" column ="totalPcs"/>        

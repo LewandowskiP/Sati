@@ -19,8 +19,6 @@
         <property name="ean128Pallete" type="string" column ="ean128Pallete"/>   
         <property name="ean128Num" type="string" column ="ean128Num"/>
         <property name="state" type="int" column="state"/>
-        <many-to-one name ="productType" class="ProductClasses.ProductType" column="productType_id"/>
-        <many-to-one name ="employee" class="ProductionManagement.Employee" column="employee_id"/>
         <many-to-one name ="productionRaportPart" class="ProductionRaportPart" column="productionRaportPart_id"/>
         
       

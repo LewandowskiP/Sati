@@ -86,11 +86,8 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
                     cellValue += prca.getWeight();
                 }
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(cellValue);
-                XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(String.valueOf(p.getPCSperPallete()) + "/" + String.valueOf(p.getKGperPallete()));
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getTotalPallete());
-                XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getRestPcs());
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getTotalPcs());
-                XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getRestWeight());
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getTotalWeight());
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getOtherInfo());
 

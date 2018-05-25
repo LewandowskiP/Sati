@@ -5,16 +5,15 @@
  */
 package Frames.Panels;
 
+import Listeners.CheckBoxDetailsListener;
+import ProductionClasses.Pallete;
 import ProductionClasses.ProductionCoffee;
 import ProductionClasses.ProductionCoffeeReturn;
-import ProductionClasses.ProductionCoffeeSeek;
-import ProductionClasses.ProductionRaportCardboard;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportDirectPackage;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
-import SatiInterfaces.Details;
 import java.util.ArrayList;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -35,48 +34,45 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
      * @param prp
      */
     private DataBaseConnector dbc;
-    private ProductionRaportPart prp;
+    private ProductionRaportPart productionRaportPart;
 
-    public DetailsProductionRaportPartPanel(ProductionRaportPart prp) {
+    public DetailsProductionRaportPartPanel(ProductionRaportPart productionRaportPart) {
         initComponents();
         dbc = Global.getDataBaseConnector();
         dbc.openSession();
-        this.prp = prp;
-        if (prp.isSealing()) {
+        this.productionRaportPart = productionRaportPart;
+        if (productionRaportPart.isSealing()) {
             textFieldSealing.setText("TAK");
         } else {
             textFieldSealing.setText("NIE");
         }
-        DefaultTableModel dtm = (DefaultTableModel) jTable2.getModel();
-        for (ProductionRaportDirectPackage prdp : prp.getProductionRaportDirectPackage()) {
-            dtm.addRow(new Object[]{prdp.getDirectPackage(), false});
-        }
 
-        if (!prp.getOtherInfo().equals("")) {
-            textFieldOtherInfo.setText(prp.getOtherInfo());
+        if (!productionRaportPart.getOtherInfo().equals("")) {
+            textFieldOtherInfo.setText(productionRaportPart.getOtherInfo());
         } else {
             textFieldOtherInfo.setText("BRAK");
         }
-        textFieldKGTotal.setText(Float.toString(prp.getTotalWeight()));
-        textFieldKGRest.setText(Float.toString(prp.getRestWeight()));
-        textFieldPCSTotal.setText(Float.toString(prp.getTotalPcs()));
-        textFieldPCSRest.setText(Float.toString(prp.getRestPcs()));
-        textFieldOxygenAmmount.setText(Float.toString(prp.getOxygen()));
-        textFieldPalleteSize.setText((Float.toString(prp.getKGperPallete()) + "KG/" + Float.toString(prp.getPCSperPallete()) + "szt"));
+        textFieldKGTotal.setText(Float.toString(productionRaportPart.getTotalWeight()));
+        textFieldPCSTotal.setText(Float.toString(productionRaportPart.getTotalPcs()));
+        textFieldOxygenAmmount.setText(Float.toString(productionRaportPart.getOxygen()));
+        textFieldProductName.setText(productionRaportPart.getProductType().getProductName());
+        textFieldBean.setText(Global.getProductTypeName(productionRaportPart.getType()));
+        textFieldStickSize.setText(Float.toString(productionRaportPart.getStickSize()));
+        textFieldTotalPalletes.setText(Integer.toString(productionRaportPart.getTotalPallete()));
+        textFieldbatchInfo.setText(productionRaportPart.getBatchInfo());
 
-        textFieldProductName.setText(prp.getProductType().getProductName());
+        textFieldCompleteDate.setText(productionRaportPart.getRaportDate().toString());
+        textFieldCompletedBy.setText(productionRaportPart.getEmp().toString());
 
-        textFieldBean.setText(Global.getProductTypeName(prp.getType()));
-        textFieldStickSize.setText(Float.toString(prp.getStickSize()));
-        textFieldTotalPalletes.setText(Integer.toString(prp.getTotalPallete()));
-        textFieldbatchInfo.setText(prp.getBatchInfo());
+        DefaultTableModel dtm = (DefaultTableModel) tableDirectPackage.getModel();
+        dtm.addTableModelListener(new CheckBoxDetailsListener(1));
+        for (ProductionRaportDirectPackage prdp : productionRaportPart.getProductionRaportDirectPackage()) {
+            dtm.addRow(new Object[]{prdp.getDirectPackage(), false});
+        }
 
-        textFieldCompleteDate.setText(prp.getRaportDate().toString());
-        textFieldCompletedBy.setText(prp.getEmp().toString());
-
-        dtm = (DefaultTableModel) jTable1.getModel();
-
-        for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
+        dtm = (DefaultTableModel) tableProductionCoffee.getModel();
+        dtm.addTableModelListener(new CheckBoxDetailsListener(3));
+        for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
             String prefix = "";
             if (prca.getProductionCoffee().isReturned()) {
                 prefix += "ZW ";
@@ -84,60 +80,34 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             if (prca.getProductionCoffee().isUsed()) {
                 prefix += "PP ";
             }
-
             dtm.addRow(new Object[]{prca.getProductionCoffee(), prefix + prca.getProductionCoffee().getProductType(), prca.getWeight(), false, false});
-
         }
 
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
+        tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = jTable1.rowAtPoint(evt.getPoint());
-                int col = jTable1.columnAtPoint(evt.getPoint());
-                if (col == 3) {
-                    Details o = (Details) dbc.findResourceWithProductionCoffee(jTable1.getValueAt(row, 0));
-                    o.showDetails();
-                    jTable1.setValueAt(false, row, col);
-                }
-
-            }
-        }
-        );
-
-        jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = jTable1.rowAtPoint(evt.getPoint());
-                int col = jTable1.columnAtPoint(evt.getPoint());
+                int row = tableProductionCoffee.rowAtPoint(evt.getPoint());
+                int col = tableProductionCoffee.columnAtPoint(evt.getPoint());
                 if (col == 4) {
-                    ArrayList<ProductionCoffeeReturn> alpcr = dbc.getProductionCoffeeReturnWithProductionCoffee((ProductionCoffee) jTable1.getValueAt(row, 0));
+                    ArrayList<ProductionCoffeeReturn> alpcr = dbc.getProductionCoffeeReturnWithProductionCoffee((ProductionCoffee) tableProductionCoffee.getValueAt(row, 0));
                     if (alpcr.isEmpty()) {
                         JOptionPane.showMessageDialog(null, "Brak komentarzy");
                     } else {
                         String[] options = new String[]{"OK"};
                         JOptionPane.showOptionDialog(null, new ShowProductionCoffeeReturnHistoryPanel(alpcr), "Komentarze", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                     }
-                    jTable1.setValueAt(false, row, col);
+                    tableProductionCoffee.setValueAt(false, row, col);
                 }
 
             }
         }
         );
 
-        jTable2.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                int row = jTable2.rowAtPoint(evt.getPoint());
-                int col = jTable2.columnAtPoint(evt.getPoint());
-                if (col == 1) {
-                    Details o = (Details) jTable2.getValueAt(row, 0);
-                    o.showDetails();
-                    jTable2.setValueAt(false, row, col);
-                }
-
-            }
+        dtm = (DefaultTableModel) tablePallete.getModel();
+        dtm.addTableModelListener(new CheckBoxDetailsListener(3));
+        for (Pallete p : productionRaportPart.getPallete()) {
+            dtm.addRow(new Object[]{p, p.getNetto(), p.getQuantity(), false});
         }
-        );
 
     }
 
@@ -150,9 +120,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jSeparator1 = new javax.swing.JSeparator();
         jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -163,7 +131,6 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         jLabel14 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         textFieldProductName = new javax.swing.JTextField();
-        textFieldPalleteSize = new javax.swing.JTextField();
         textFieldKGTotal = new javax.swing.JTextField();
         textFieldPCSTotal = new javax.swing.JTextField();
         textFieldbatchInfo = new javax.swing.JTextField();
@@ -174,24 +141,18 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         textFieldSealing = new javax.swing.JTextField();
         textFieldBean = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableProductionCoffee = new javax.swing.JTable();
         textFieldCompletedBy = new javax.swing.JTextField();
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         textFieldCompleteDate = new javax.swing.JTextField();
         jButton2 = new javax.swing.JButton();
-        jLabel16 = new javax.swing.JLabel();
-        jLabel19 = new javax.swing.JLabel();
-        textFieldKGRest = new javax.swing.JTextField();
-        jLabel20 = new javax.swing.JLabel();
-        jLabel21 = new javax.swing.JLabel();
-        textFieldPCSRest = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tableDirectPackage = new javax.swing.JTable();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tablePallete = new javax.swing.JTable();
 
         jLabel1.setText("Nazwa produktu: ");
-
-        jLabel2.setText("Wielkość palety: ");
 
         jLabel3.setText("Ilość palet: ");
 
@@ -211,7 +172,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
 
         jLabel15.setText("Ziarno/Mielona: ");
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableProductionCoffee.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -234,19 +195,19 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
-        if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(0);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(0);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
-            jTable1.getColumnModel().getColumn(1).setPreferredWidth(250);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(50);
-            jTable1.getColumnModel().getColumn(3).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(3).setPreferredWidth(80);
-            jTable1.getColumnModel().getColumn(3).setMaxWidth(80);
-            jTable1.getColumnModel().getColumn(4).setMinWidth(80);
-            jTable1.getColumnModel().getColumn(4).setPreferredWidth(80);
-            jTable1.getColumnModel().getColumn(4).setMaxWidth(80);
+        jScrollPane1.setViewportView(tableProductionCoffee);
+        if (tableProductionCoffee.getColumnModel().getColumnCount() > 0) {
+            tableProductionCoffee.getColumnModel().getColumn(0).setMinWidth(0);
+            tableProductionCoffee.getColumnModel().getColumn(0).setPreferredWidth(0);
+            tableProductionCoffee.getColumnModel().getColumn(0).setMaxWidth(0);
+            tableProductionCoffee.getColumnModel().getColumn(1).setPreferredWidth(250);
+            tableProductionCoffee.getColumnModel().getColumn(2).setPreferredWidth(50);
+            tableProductionCoffee.getColumnModel().getColumn(3).setMinWidth(80);
+            tableProductionCoffee.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tableProductionCoffee.getColumnModel().getColumn(3).setMaxWidth(80);
+            tableProductionCoffee.getColumnModel().getColumn(4).setMinWidth(80);
+            tableProductionCoffee.getColumnModel().getColumn(4).setPreferredWidth(80);
+            tableProductionCoffee.getColumnModel().getColumn(4).setMaxWidth(80);
         }
 
         jLabel17.setText("Wykonał:");
@@ -260,15 +221,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             }
         });
 
-        jLabel16.setText("Razem");
-
-        jLabel19.setText("Reszta");
-
-        jLabel20.setText("Razem");
-
-        jLabel21.setText("Reszta");
-
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tableDirectPackage.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -291,11 +244,41 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                 return canEdit [columnIndex];
             }
         });
-        jScrollPane2.setViewportView(jTable2);
-        if (jTable2.getColumnModel().getColumnCount() > 0) {
-            jTable2.getColumnModel().getColumn(1).setMinWidth(80);
-            jTable2.getColumnModel().getColumn(1).setPreferredWidth(80);
-            jTable2.getColumnModel().getColumn(1).setMaxWidth(80);
+        jScrollPane2.setViewportView(tableDirectPackage);
+        if (tableDirectPackage.getColumnModel().getColumnCount() > 0) {
+            tableDirectPackage.getColumnModel().getColumn(1).setMinWidth(80);
+            tableDirectPackage.getColumnModel().getColumn(1).setPreferredWidth(80);
+            tableDirectPackage.getColumnModel().getColumn(1).setMaxWidth(80);
+        }
+
+        tablePallete.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Paleta", "Netto", "Sztuki", "Etykieta"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Object.class, java.lang.Float.class, java.lang.Integer.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        jScrollPane3.setViewportView(tablePallete);
+        if (tablePallete.getColumnModel().getColumnCount() > 0) {
+            tablePallete.getColumnModel().getColumn(3).setMinWidth(80);
+            tablePallete.getColumnModel().getColumn(3).setPreferredWidth(80);
+            tablePallete.getColumnModel().getColumn(3).setMaxWidth(80);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -323,37 +306,20 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                             .addComponent(jLabel5)
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel2)
                                     .addComponent(jLabel4)
                                     .addComponent(jLabel6))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
+                                        .addGap(69, 69, 69)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel16)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(textFieldKGTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(jLabel20)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                                .addComponent(textFieldPCSTotal)))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel21)
-                                            .addComponent(jLabel19))
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(textFieldKGRest, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                                            .addComponent(textFieldPCSRest)))
+                                            .addComponent(textFieldKGTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 69, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(textFieldPCSTotal)))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(18, 18, 18)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(textFieldPalleteSize, javax.swing.GroupLayout.DEFAULT_SIZE, 250, Short.MAX_VALUE)
-                                            .addComponent(textFieldbatchInfo)))))
+                                        .addComponent(textFieldbatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(jLabel12)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(textFieldOtherInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -377,7 +343,8 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                                     .addComponent(textFieldOxygenAmmount)
                                     .addComponent(textFieldSealing)
                                     .addComponent(textFieldTotalPalletes, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane3))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -390,65 +357,60 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel3)
+                                    .addComponent(textFieldTotalPalletes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabel13)
+                                    .addComponent(textFieldOxygenAmmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(textFieldSealing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel14))
+                                .addGap(26, 26, 26))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel15)
+                                .addComponent(textFieldBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(13, 13, 13)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel2)
-                            .addComponent(textFieldPalleteSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(jLabel17)
+                            .addComponent(textFieldCompletedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel4)
-                            .addComponent(textFieldKGTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel16)
-                            .addComponent(jLabel19)
-                            .addComponent(textFieldKGRest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(textFieldKGTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
-                            .addComponent(textFieldPCSTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel20)
-                            .addComponent(jLabel21)
-                            .addComponent(textFieldPCSRest, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(textFieldPCSTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(9, 9, 9)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel6)
-                            .addComponent(textFieldbatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel3)
-                                .addComponent(textFieldTotalPalletes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel13)
-                                .addComponent(textFieldOxygenAmmount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(textFieldSealing, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jLabel14))
-                            .addGap(26, 26, 26))
-                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel15)
-                            .addComponent(textFieldBean, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel17)
-                        .addComponent(textFieldCompletedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(textFieldStickSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel11)))
+                            .addComponent(textFieldbatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textFieldStickSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel11))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel12)
+                            .addComponent(textFieldOtherInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel18)
-                    .addComponent(textFieldCompleteDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel12)
-                    .addComponent(textFieldOtherInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(textFieldCompleteDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(49, 49, 49)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -456,42 +418,39 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         try {
             StringBuilder sb = new StringBuilder();
 
-            sb.append("").append(prp.toString()).append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("").append(productionRaportPart.toString()).append(System.lineSeparator()).append(System.lineSeparator());
 
-            sb.append("    ").append("Typ produktu:  ").append(prp.getProductType()).append(System.lineSeparator());
-            sb.append("    ").append("Data pakowania:  ").append(Global.timestampToStrDDMMYYYY(prp.getRaportDate())).append(System.lineSeparator());
-            sb.append("    ").append("Operator:  ").append(prp.getEmp()).append(System.lineSeparator());
-            sb.append("    ").append("Wielkość palety:  ").append(prp.getPCSperPallete()).append("szt/").append(prp.getKGperPallete()).append("Kg").append(System.lineSeparator());
-            sb.append("    ").append("Ilość palet:  ").append(prp.getTotalPallete()).append(System.lineSeparator()).append(System.lineSeparator());
-            sb.append("    ").append("Wyprodukowano KG:  ").append(prp.getTotalWeight()).append(System.lineSeparator());
-            sb.append("    ").append("Reszta KG:  ").append(prp.getRestWeight()).append(System.lineSeparator());
-            sb.append("    ").append("Wyprodukowano SZT:  ").append(prp.getTotalPcs()).append(System.lineSeparator());
-            sb.append("    ").append("Reszta SZT:  ").append(prp.getRestPcs()).append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("    ").append("Typ produktu:  ").append(productionRaportPart.getProductType()).append(System.lineSeparator());
+            sb.append("    ").append("Data pakowania:  ").append(Global.timestampToStrDDMMYYYY(productionRaportPart.getRaportDate())).append(System.lineSeparator());
+            sb.append("    ").append("Operator:  ").append(productionRaportPart.getEmp()).append(System.lineSeparator());
+            sb.append("    ").append("Ilość palet:  ").append(productionRaportPart.getTotalPallete()).append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("    ").append("Wyprodukowano KG:  ").append(productionRaportPart.getTotalWeight()).append(System.lineSeparator());
+            sb.append("    ").append("Wyprodukowano SZT:  ").append(productionRaportPart.getTotalPcs()).append(System.lineSeparator());
             sb.append("    ").append("Informacje dodatkowe  ").append(System.lineSeparator());
 
-            sb.append("    ").append("Numer parti:  ").append(prp.getBatchInfo()).append(System.lineSeparator());
+            sb.append("    ").append("Numer parti:  ").append(productionRaportPart.getBatchInfo()).append(System.lineSeparator());
             sb.append("    ").append("Użyte surowce:  ").append(System.lineSeparator());
 
-            for (int i = 0; i < jTable2.getRowCount(); i++) {
-                sb.append("      ").append(jTable2.getValueAt(i, 0).toString()).append(System.lineSeparator());
+            for (int i = 0; i < tableDirectPackage.getRowCount(); i++) {
+                sb.append("      ").append(tableDirectPackage.getValueAt(i, 0).toString()).append(System.lineSeparator());
             }
 
-            sb.append("    ").append("Ilość tlenu:  ").append(prp.getOxygen()).append(System.lineSeparator());
+            sb.append("    ").append("Ilość tlenu:  ").append(productionRaportPart.getOxygen()).append(System.lineSeparator());
 
-            sb.append("    ").append(Global.getProductTypeName(prp.getType())).append(System.lineSeparator());
+            sb.append("    ").append(Global.getProductTypeName(productionRaportPart.getType())).append(System.lineSeparator());
 
-            if (prp.isSealing()) {
+            if (productionRaportPart.isSealing()) {
                 sb.append("    ").append("Opakowania szczelne").append(System.lineSeparator());
             } else {
                 sb.append("    ").append("Opakowania nieszczelne").append(System.lineSeparator());
             }
 
-            sb.append("    ").append("Wielkość stick:  ").append(prp.getStickSize()).append(System.lineSeparator());
-            sb.append("    ").append("Inne informacje:  ").append(prp.getOtherInfo()).append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("    ").append("Wielkość stick:  ").append(productionRaportPart.getStickSize()).append(System.lineSeparator());
+            sb.append("    ").append("Inne informacje:  ").append(productionRaportPart.getOtherInfo()).append(System.lineSeparator()).append(System.lineSeparator());
 
             sb.append("    ").append("Użyte kawy:  ").append(System.lineSeparator());
 
-            for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
+            for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
 
                 sb.append("      ").append(prca.toString()).append(System.lineSeparator());
 
@@ -520,32 +479,25 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
-    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel20;
-    private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JTable tableDirectPackage;
+    private javax.swing.JTable tablePallete;
+    private javax.swing.JTable tableProductionCoffee;
     private javax.swing.JTextField textFieldBean;
     private javax.swing.JTextField textFieldCompleteDate;
     private javax.swing.JTextField textFieldCompletedBy;
-    private javax.swing.JTextField textFieldKGRest;
     private javax.swing.JTextField textFieldKGTotal;
     private javax.swing.JTextField textFieldOtherInfo;
     private javax.swing.JTextField textFieldOxygenAmmount;
-    private javax.swing.JTextField textFieldPCSRest;
     private javax.swing.JTextField textFieldPCSTotal;
-    private javax.swing.JTextField textFieldPalleteSize;
     private javax.swing.JTextField textFieldProductName;
     private javax.swing.JTextField textFieldSealing;
     private javax.swing.JTextField textFieldStickSize;
