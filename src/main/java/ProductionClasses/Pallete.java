@@ -187,7 +187,7 @@ public class Pallete implements Details {
 
     public void buildLabel(Graphics2D g) throws IOException {
 
-        Font font = new Font("Arial", Font.PLAIN, 14);
+        Font font = new Font("Arial", Font.PLAIN, Global.labelFontSize);
         g.setFont(font);
         g.setBackground(Color.white);
         g.setColor(Color.black);
@@ -248,11 +248,9 @@ public class Pallete implements Details {
         yOffset += Global.labelOffset;
         String employeeCodeFullText = Global.employeeCodeText + this.productionRaportPart.getEmp().getEmployeeID();
         g.drawChars(employeeCodeFullText.toCharArray(), 0, employeeCodeFullText.length(), xOffset, yOffset);
-
     }
 
     private BufferedImage generateEan(String eanContent, String eanTeamplate) throws IOException {
-
         EAN128Bean bean = new EAN128Bean();
         bean.setTemplate(eanTeamplate);
         bean.setGroupSeparator(Global.eanSeparator);
@@ -261,11 +259,10 @@ public class Pallete implements Details {
         bean.generateBarcode(canvas, eanContent);
         canvas.finish();
         return canvas.getBufferedImage();
-
     }
 
     public void printLabel() throws IOException {
-        final BufferedImage output = new BufferedImage((int) Global.a4xDimPixels, (int) Global.a4yDimPixels, BufferedImage.TYPE_INT_RGB);
+        final BufferedImage output = new BufferedImage((int) Global.a4CanvasSizeWidth, (int) Global.a4CanvasSizeHeight, BufferedImage.TYPE_INT_RGB);
 
         Graphics2D g = output.createGraphics();
 
@@ -293,7 +290,7 @@ public class Pallete implements Details {
         try {
             PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
             aset.add(OrientationRequested.LANDSCAPE);
-            aset.add(new MediaPrintableArea(0f, 0f, 210f, 297f, MediaPrintableArea.MM));
+            aset.add(new MediaPrintableArea(Global.a4PrintOffset, Global.a4PrintOffset, Global.a4yDimInches - Global.a4PrintOffset, Global.a4xDimInches - Global.a4PrintOffset, MediaPrintableArea.INCH));
 
             printJob.print(aset);
 

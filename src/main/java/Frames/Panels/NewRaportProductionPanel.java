@@ -139,12 +139,14 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         buttonAssignBatch.setEnabled(true);
         tableDirectPackage.getModel().addTableModelListener(new CheckBoxDirectPackageRaport(2, 3));
         comboBoxProductType.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent arg0) {
                 selectedProductType = (ProductType) comboBoxProductType.getSelectedItem();
             }
         });
 
         tablePallete.getModel().addTableModelListener(new TableModelListener() {
+            @Override
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
                 int column = e.getColumn();
@@ -216,6 +218,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         );
 
         comboBoxProductionLine.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent arg0) {
                 selectedProductionLine = (ProductionLine) comboBoxProductionLine.getSelectedItem();
             }
@@ -631,9 +634,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
             initProductionCoffee();
             JOptionPane.showMessageDialog(this, ("Zarezerwowano kawę" + pc.getProductType().getProductName() + " w ilośći " + pcToSeek + "[kg]."));
-        } catch (ClassCastException e) {
-            JOptionPane.showMessageDialog(this, ("Proszę podać ilośc kawy do rezerwacji."));
-        } catch (ZeroInputException e) {
+        } catch (ClassCastException | ZeroInputException e) {
             JOptionPane.showMessageDialog(this, ("Proszę podać ilośc kawy do rezerwacji."));
         } catch (NotEnoughtCoffeeException e) {
             JOptionPane.showMessageDialog(this, ("Nie wystarczająca ilość kawy " + e.getMessage()));
@@ -647,6 +648,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private void buttonConfirmProductionOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmProductionOrderActionPerformed
 
         try {
+            dbc.clearSession();
             dbc.openSession();
             productionRaportPart.setRaportDate(new Timestamp(System.currentTimeMillis()));
             productionRaportPart.setShift(Global.currentShift());
@@ -703,43 +705,49 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonConfirmProductionOrderActionPerformed
 
     private void buttonAssignBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAssignBatchActionPerformed
-        try {
+        if (selectedProductionLine != null && selectedProductType != null) {
+            try {
+                ProductionRaportPart prp = dbc.getLatestProductionRaportPart(selectedProductionLine, employee);
+                if (prp == null) {
+                    prp = new ProductionRaportPart();
+                    JOptionPane.showMessageDialog(null, "Uwaga!", "Utworzono nowy raport.", JOptionPane.PLAIN_MESSAGE);
+                } else if (prp.getLabTestState() > 0) {
+                    prp = new ProductionRaportPart();
+                    JOptionPane.showMessageDialog(null, "Uwaga!", "Utworzono nowy raport.", JOptionPane.PLAIN_MESSAGE);
+                } else {
+                    DefaultTableModel dtm = (DefaultTableModel) tablePallete.getModel();
+                    dtm.setRowCount(0);
+                    for (Pallete p : prp.getPallete()) {
+                        summaryWeight += p.getNetto();
+                        summaryPcs += p.getQuantity();
+                        summaryPalletes++;
 
-            ProductionRaportPart productionRaportPart = dbc.getLatestProductionRaportPart(selectedProductionLine, employee);
-            if (productionRaportPart.getLabTestState() > 0) {
-                productionRaportPart = new ProductionRaportPart();
-            } else {
-                DefaultTableModel dtm = (DefaultTableModel) tablePallete.getModel();
-                dtm.setRowCount(0);
-                for (Pallete p : productionRaportPart.getPallete()) {
-                    summaryWeight += p.getNetto();
-                    summaryPcs += p.getQuantity();
-                    summaryPalletes++;
+                        dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
 
-                    dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
-
+                    }
+                    dtm.addRow(new Object[]{null, null, null, null, false, false, false});
+                    JOptionPane.showMessageDialog(null, "Uwaga!", "Załadowano istniejący raport.", JOptionPane.PLAIN_MESSAGE);
                 }
-                dtm.addRow(new Object[]{null, null, null, null, false, false, false});
+                prp.setEmp(employee);
+                prp.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
+                prp.setProductType(selectedProductType);
+                prp.setProductionLine(selectedProductionLine);
+
+                dbc.saveObject(prp);
+                dbc.updateObject(prp);
+                String batch = Global.timestampToStrYYMMDD(prp.getExpiryDate()) + 'L' + String.format("%07d", prp.getId());
+                prp.setBatchInfo(batch);
+                textFieldBatchInfo.setText(batch);
+                dbc.updateObject(prp);
+
+                this.productionRaportPart = prp;
+
+                setPreInitControls(false);
+
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            productionRaportPart.setEmp(employee);
-            productionRaportPart.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
-            productionRaportPart.setProductType(selectedProductType);
-            productionRaportPart.setProductionLine(selectedProductionLine);
-
-            dbc.saveObject(productionRaportPart);
-            dbc.updateObject(productionRaportPart);
-            String batch = String.format("%07d", productionRaportPart.getId()) + 'L' + Global.timestampToStrYYMMDD(productionRaportPart.getExpiryDate());
-            productionRaportPart.setBatchInfo(batch);
-            textFieldBatchInfo.setText(batch);
-            dbc.updateObject(productionRaportPart);
-            this.productionRaportPart = productionRaportPart;
-
-            setPreInitControls(false);
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-
 
     }//GEN-LAST:event_buttonAssignBatchActionPerformed
 

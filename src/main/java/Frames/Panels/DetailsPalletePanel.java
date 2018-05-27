@@ -37,6 +37,7 @@ public class DetailsPalletePanel extends javax.swing.JPanel {
             this.p = p;
         }
 
+        @Override
         public synchronized void run() {
             while (g.getGraphics() == null) {
             }

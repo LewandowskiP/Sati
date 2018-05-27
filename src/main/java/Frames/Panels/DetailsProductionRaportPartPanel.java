@@ -14,6 +14,7 @@ import ProductionClasses.ProductionRaportDirectPackage;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
+import SatiInterfaces.Details;
 import java.util.ArrayList;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -71,7 +72,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         }
 
         dtm = (DefaultTableModel) tableProductionCoffee.getModel();
-        dtm.addTableModelListener(new CheckBoxDetailsListener(3));
+
         for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
             String prefix = "";
             if (prca.getProductionCoffee().isReturned()) {
@@ -82,6 +83,21 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             }
             dtm.addRow(new Object[]{prca.getProductionCoffee(), prefix + prca.getProductionCoffee().getProductType(), prca.getWeight(), false, false});
         }
+
+        tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                int row = tableProductionCoffee.rowAtPoint(evt.getPoint());
+                int col = tableProductionCoffee.columnAtPoint(evt.getPoint());
+                if (col == 3) {
+                    Details o = (Details) dbc.findResourceWithProductionCoffee(tableProductionCoffee.getValueAt(row, 0));
+                    o.showDetails();
+                    tableProductionCoffee.setValueAt(false, row, col);
+                }
+
+            }
+        }
+        );
 
         tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override

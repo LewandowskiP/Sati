@@ -136,13 +136,19 @@ public class Global {
     public static final int labelOffset = 20;
     public static final char eanSeparator = '*';
     public static final int dpiResolution = 72;
-    public static final int labelEanDpi = dpiResolution * 3;
+    public static final int labelEanDpi = dpiResolution * 4;
+    public static final int labelFontSize = 14;
 
-    public static final double a4xDimInches = 11.7;
-    public static final double a4yDimInches = 8.3;
+    public static final int a4CanvasSizeWidth = 1754;
+    public static final int a4CanvasSizeHeight = 1240;
 
-    public static final double a4xDimPixels = a4xDimInches * dpiResolution;
-    public static final double a4yDimPixels = a4yDimInches * dpiResolution;
+    public static final float a4PrintOffset = 0.2f;
+
+    public static final float a4xDimInches = 11.7f;
+    public static final float a4yDimInches = 8.3f;
+
+    public static final float a4xDimPixels = a4xDimInches * dpiResolution;
+    public static final float a4yDimPixels = a4yDimInches * dpiResolution;
 
     public static String getProductTypeName(int type) {
         if (type == PRODUCT_TYPE_BEAN) {

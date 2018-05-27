@@ -16,10 +16,10 @@
             jdbc:mysql://localhost:3306/satiproduction
         </property>
         <property name="hibernate.connection.username">
-            PLew
+            root
         </property>
         <property name="hibernate.connection.password">
-            SatiAdmin!@34
+            root
         </property>
         <mapping class="Employee" resource="hibernateMappingEmployee.hbm.xml"/>
         <mapping class="LabTest" resource="hibernateMappingLabTest.hbm.xml"/>
