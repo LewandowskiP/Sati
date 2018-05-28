@@ -42,7 +42,7 @@ public class DetailsPalletePanel extends javax.swing.JPanel {
             while (g.getGraphics() == null) {
             }
             Graphics2D g2d = (Graphics2D) g.getGraphics();
-            g2d.scale(0.8, 0.8);
+            g2d.scale(0.5, 0.5);
             try {
                 p.buildLabel(g2d);
             } catch (IOException ex) {

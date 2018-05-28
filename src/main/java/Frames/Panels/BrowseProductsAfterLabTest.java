@@ -6,6 +6,7 @@
 package Frames.Panels;
 
 import static Frames.Panels.BrowseProductsToStore.accept_column;
+import ProductionClasses.Pallete;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
@@ -54,7 +55,13 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (ProductionRaportPart prp : productsToAccept) {
-            model.addRow(new Object[]{prp, prp.getProductType(), prp.getBatchInfo(), prp.getTotalPcs(), Global.timestampToStrDDMMYYYY(prp.getRaportDate()), prp.getProductionLine() + " zm. " + prp.getShift(), Global.getProductStateState(prp.getLabTestState()), false, false});
+            int acceptedPalletes = 0;
+            for (Pallete p : prp.getPallete()) {
+                if (p.getState() == Global.PALLETE_CHECKED) {
+                    acceptedPalletes++;
+                }
+            }
+            model.addRow(new Object[]{prp, prp.getProductType(), prp.getBatchInfo(), prp.getTotalPallete(), acceptedPalletes, prp.getProductionLine() + " zm. " + prp.getShift(), Global.getProductStateState(prp.getLabTestState()), false, false});
 
         }
 
@@ -124,7 +131,7 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Produkt", "Typ produktu", "Numer partii", "Ilość sztuk", "Data", "Linia", "Stan", "Zat.", "Szcz."
+                "Produkt", "Typ produktu", "Numer partii", "Suma palet", "Palety zatw.", "Linia", "Stan", "Zat.", "Szcz."
             }
         ) {
             Class[] types = new Class [] {
@@ -249,18 +256,16 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-            Vector dataVec = dtm.getDataVector();
             for (int i = 0; i < dtm.getRowCount(); i++) {
                 if ((Boolean) dtm.getValueAt(i, accept_column) == true) {
-                    ProductionRaportPart prp = (ProductionRaportPart) ((Vector) dataVec.elementAt(i)).elementAt(0);
-                    if (prp.getLabTestState() == 3) {
+                    ProductionRaportPart prp = (ProductionRaportPart) dtm.getValueAt(i, 0);
+                    if (prp.getLabTestState() == 3 && dtm.getValueAt(i, 3).equals(dtm.getValueAt(i, 4))) {
                         prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_TO_STORE);
                         dbc.updateObject(prp);
                     } else {
                         JOptionPane.showMessageDialog(null, "Wystąpił błąd sprawdź zaznaczone produkty");
                         break;
                     }
-
                 }
             }
             //JOptionPane.showMessageDialog(null, "Zatwierdzono produkty do zmagazynowania.");

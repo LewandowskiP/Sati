@@ -5,6 +5,7 @@
  */
 package Frames.Panels;
 
+import ProductionClasses.Pallete;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
@@ -49,9 +50,17 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
         dbc.openSession();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        ArrayList<ProductionRaportPart> productsToStore = dbc.getProductsToStore();
-        for (ProductionRaportPart prp : productsToStore) {
-            model.addRow(new Object[]{prp, prp.getProductType(), prp.getBatchInfo(), prp.getTotalPcs(), Global.timestampToStrDDMMYYYY(prp.getRaportDate()), prp.getProductionLine() + " zm. " + prp.getShift(), Global.getProductStateState(prp.getLabTestState()), false, false});
+        ArrayList<Pallete> productsToStore = dbc.getProductsToStore();
+        for (Pallete pallete : productsToStore) {
+            model.addRow(new Object[]{pallete,
+                pallete.getProductionRaportPart().getProductType(),
+                pallete.getId(),
+                pallete.getBatch(),
+                pallete.getQuantity(),
+                pallete.getNetto(),
+                pallete.getProductionRaportPart().getProductionLine() + " zm. " + pallete.getProductionRaportPart().getShift(),
+                false,
+                false});
         }
 
     }
@@ -113,14 +122,14 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Produkt", "Typ produktu", "Numer partii", "Ilość sztuk", "Data", "Linia", "Stan", "Zatw.", "Szcz."
+                "Produkt", "Typ produktu", "Nr Palety", "Lot", "KG", "SZT.", "Linia", "Zatw.", "Szcz."
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true, true
+                false, false, false, false, true, true, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -142,9 +151,6 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(3).setMinWidth(120);
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(120);
             jTable1.getColumnModel().getColumn(3).setMaxWidth(120);
-            jTable1.getColumnModel().getColumn(6).setMinWidth(120);
-            jTable1.getColumnModel().getColumn(6).setPreferredWidth(120);
-            jTable1.getColumnModel().getColumn(6).setMaxWidth(120);
             jTable1.getColumnModel().getColumn(7).setMinWidth(40);
             jTable1.getColumnModel().getColumn(7).setPreferredWidth(40);
             jTable1.getColumnModel().getColumn(7).setMaxWidth(40);

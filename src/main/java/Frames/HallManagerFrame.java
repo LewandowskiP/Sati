@@ -6,6 +6,7 @@
 package Frames;
 
 import Frames.Panels.BrowseInstantCoffeeMixRaportHallManagerPanel;
+import Frames.Panels.BrowsePalleteGeneral;
 import Frames.Panels.BrowseProductTypeHallManagerPanel;
 import Frames.Panels.BrowseProductsAfterLabTest;
 import Frames.Panels.BrowseRoastRaportsHallManagerPanel;
@@ -47,6 +48,7 @@ public class HallManagerFrame extends javax.swing.JFrame {
         buttonBrowseMyRaports = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
+        jButton9 = new javax.swing.JButton();
         scrollPanelHallManagerFrame = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -89,6 +91,13 @@ public class HallManagerFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton9.setText("Przeglądaj palety");
+        jButton9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton9ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout SzefProdukcjiFrameToolsLayout = new javax.swing.GroupLayout(SzefProdukcjiFrameTools);
         SzefProdukcjiFrameTools.setLayout(SzefProdukcjiFrameToolsLayout);
         SzefProdukcjiFrameToolsLayout.setHorizontalGroup(
@@ -104,6 +113,10 @@ public class HallManagerFrame extends javax.swing.JFrame {
                             .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(SzefProdukcjiFrameToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(SzefProdukcjiFrameToolsLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, 240, Short.MAX_VALUE)))
         );
         SzefProdukcjiFrameToolsLayout.setVerticalGroup(
             SzefProdukcjiFrameToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -119,6 +132,11 @@ public class HallManagerFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(327, Short.MAX_VALUE))
+            .addGroup(SzefProdukcjiFrameToolsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(SzefProdukcjiFrameToolsLayout.createSequentialGroup()
+                    .addGap(286, 286, 286)
+                    .addComponent(jButton9)
+                    .addContainerGap(286, Short.MAX_VALUE)))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -165,6 +183,10 @@ public class HallManagerFrame extends javax.swing.JFrame {
         scrollPanelHallManagerFrame.setViewportView(new BrowseProductTypeHallManagerPanel());
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
+        scrollPanelHallManagerFrame.setViewportView(new BrowsePalleteGeneral());
+    }//GEN-LAST:event_jButton9ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SzefProdukcjiFrameTools;
     private javax.swing.JButton buttonBrowseMyRaports;
@@ -172,6 +194,7 @@ public class HallManagerFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton9;
     private javax.swing.JScrollPane scrollPanelHallManagerFrame;
     // End of variables declaration//GEN-END:variables
 }

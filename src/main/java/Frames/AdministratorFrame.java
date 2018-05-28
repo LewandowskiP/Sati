@@ -464,7 +464,7 @@ public class AdministratorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton8ActionPerformed
 
     private void jButton9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton9ActionPerformed
-        scrollPanelAdministratorFrame.setViewportView(new BrowsePalleteGeneral(emp));
+        scrollPanelAdministratorFrame.setViewportView(new BrowsePalleteGeneral());
     }//GEN-LAST:event_jButton9ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

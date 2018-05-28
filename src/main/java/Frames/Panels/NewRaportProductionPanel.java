@@ -646,61 +646,65 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonOpenFileActionPerformed
 
     private void buttonConfirmProductionOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmProductionOrderActionPerformed
+        if (comboBoxBean.getSelectedItem() != null) {
+            try {
 
-        try {
-            dbc.clearSession();
-            dbc.openSession();
-            productionRaportPart.setRaportDate(new Timestamp(System.currentTimeMillis()));
-            productionRaportPart.setShift(Global.currentShift());
-            productionRaportPart.setOtherInfo(textAreaOtherInfo.getText());
-            productionRaportPart.setStickSize((Float) spinnerStickWeight.getValue());
-            productionRaportPart.setOxygen((Float) spinnerOxygen.getValue());
-            productionRaportPart.setTotalWeight(Global.round((Float) summaryWeight, 2));
-            for (int i = 0; i < tableDirectPackage.getRowCount() - 1; i++) {
-                ProductionRaportDirectPackage prdp = new ProductionRaportDirectPackage();
-                prdp.setProductionRaportPart(productionRaportPart);
-                prdp.setDirectPackage(dbc.findDirectPackageWithLabId((String) tableDirectPackage.getValueAt(i, 0)));
-                productionRaportPart.getProductionRaportDirectPackage().add(prdp);
-            }
-            productionRaportPart.setType(comboBoxBean.getSelectedIndex());
-            if (comboBoxSeal.getSelectedIndex() == 1) {
-                productionRaportPart.setSealing(false);
-            } else {
-                productionRaportPart.setSealing(true);
-            }
-            productionRaportPart.setTotalPallete(summaryPalletes);
-            productionRaportPart.setTotalPcs(summaryPcs);
-            if (selectedProductType == null) {
-                throw new ZeroInputException();
-            }
+                dbc.clearSession();
+                dbc.openSession();
+                productionRaportPart.setRaportDate(new Timestamp(System.currentTimeMillis()));
+                productionRaportPart.setShift(Global.currentShift());
+                productionRaportPart.setOtherInfo(textAreaOtherInfo.getText());
+                productionRaportPart.setStickSize((Float) spinnerStickWeight.getValue());
+                productionRaportPart.setOxygen((Float) spinnerOxygen.getValue());
+                productionRaportPart.setTotalWeight(Global.round((Float) summaryWeight, 2));
+                for (int i = 0; i < tableDirectPackage.getRowCount() - 1; i++) {
+                    ProductionRaportDirectPackage prdp = new ProductionRaportDirectPackage();
+                    prdp.setProductionRaportPart(productionRaportPart);
+                    prdp.setDirectPackage(dbc.findDirectPackageWithLabId((String) tableDirectPackage.getValueAt(i, 0)));
+                    productionRaportPart.getProductionRaportDirectPackage().add(prdp);
+                }
+                productionRaportPart.setType(comboBoxBean.getSelectedIndex());
+                if (comboBoxSeal.getSelectedIndex() == 1) {
+                    productionRaportPart.setSealing(false);
+                } else {
+                    productionRaportPart.setSealing(true);
+                }
+                productionRaportPart.setTotalPallete(summaryPalletes);
+                productionRaportPart.setTotalPcs(summaryPcs);
+                if (selectedProductType == null) {
+                    throw new ZeroInputException();
+                }
 
-            productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
-            String[] options = new String[2];
-            options[0] = "Dalej";
-            options[1] = "Odrzuć";
-            dbc.startTransation();
-            int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(productionRaportPart, employee), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-            if (JOptionPane.OK_OPTION == res) {
-                int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-                if (JOptionPane.OK_OPTION == result) {
-                    dbc.saveTransation(productionRaportPart);
-                    dbc.commitTransation();
-                    resetInput();
-                    setPreInitControls(true);
+                productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
+                String[] options = new String[2];
+                options[0] = "Dalej";
+                options[1] = "Odrzuć";
+                dbc.startTransation();
+                int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(productionRaportPart, employee), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                if (JOptionPane.OK_OPTION == res) {
+                    int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                    if (JOptionPane.OK_OPTION == result) {
+                        dbc.saveTransation(productionRaportPart);
+                        dbc.commitTransation();
+                        resetInput();
+                        setPreInitControls(true);
+                    } else {
+                        dbc.rollbackTransation();
+                    }
                 } else {
                     dbc.rollbackTransation();
                 }
-            } else {
+
+                dbc.flush();
+
+            } catch (ZeroInputException e) {
+                JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
+            } catch (Exception e) {
+                e.printStackTrace();
                 dbc.rollbackTransation();
             }
-
-            dbc.flush();
-
-        } catch (ZeroInputException e) {
-            JOptionPane.showMessageDialog(this, ("Proszę uzupełnić wymagane pola w raporcie."));
-        } catch (Exception e) {
-            e.printStackTrace();
-            dbc.rollbackTransation();
+        } else {
+            JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
         }
     }//GEN-LAST:event_buttonConfirmProductionOrderActionPerformed
 
@@ -710,10 +714,10 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 ProductionRaportPart prp = dbc.getLatestProductionRaportPart(selectedProductionLine, employee);
                 if (prp == null) {
                     prp = new ProductionRaportPart();
-                    JOptionPane.showMessageDialog(null, "Uwaga!", "Utworzono nowy raport.", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Nadano nowy numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 } else if (prp.getLabTestState() > 0) {
                     prp = new ProductionRaportPart();
-                    JOptionPane.showMessageDialog(null, "Uwaga!", "Utworzono nowy raport.", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Nadano nowy numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 } else {
                     DefaultTableModel dtm = (DefaultTableModel) tablePallete.getModel();
                     dtm.setRowCount(0);
@@ -726,8 +730,9 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
                     }
                     dtm.addRow(new Object[]{null, null, null, null, false, false, false});
-                    JOptionPane.showMessageDialog(null, "Uwaga!", "Załadowano istniejący raport.", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Załadowano istniejący numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 }
+
                 prp.setEmp(employee);
                 prp.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
                 prp.setProductType(selectedProductType);

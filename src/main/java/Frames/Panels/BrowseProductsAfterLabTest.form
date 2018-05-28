@@ -66,8 +66,8 @@
                 <Column editable="false" title="Produkt" type="java.lang.Object"/>
                 <Column editable="false" title="Typ produktu" type="java.lang.Object"/>
                 <Column editable="false" title="Numer partii" type="java.lang.Object"/>
-                <Column editable="false" title="Ilo&#x15b;&#x107; sztuk" type="java.lang.Object"/>
-                <Column editable="false" title="Data" type="java.lang.Object"/>
+                <Column editable="false" title="Suma palet" type="java.lang.Object"/>
+                <Column editable="false" title="Palety zatw." type="java.lang.Object"/>
                 <Column editable="false" title="Linia" type="java.lang.Object"/>
                 <Column editable="false" title="Stan" type="java.lang.String"/>
                 <Column editable="true" title="Zat." type="java.lang.Boolean"/>

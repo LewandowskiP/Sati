@@ -7,10 +7,10 @@ package Frames.Panels;
 
 import ProductionClasses.Pallete;
 import ProductionManagement.DataBaseConnector;
-import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.JOptionPane;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.event.TableModelEvent;
@@ -28,7 +28,6 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
     /**
      * Creates new form BrowseProductsAfterLabTest
      */
-    Employee emp;
     DataBaseConnector dbc;
 
     private void reload() {
@@ -37,15 +36,15 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (Pallete p : palleteToAccept) {
-            model.addRow(new Object[]{p, p.getProductionRaportPart().getProductType(), p.getBatch(), p.getQuantity(), Global.timestampToStrDDMMYYYY(p.getProdDate()), Global.getPalleteState(p.getState()), false, false});
+            model.addRow(new Object[]{p, p.getProductionRaportPart().getProductType(), p.getBatch(), p.getQuantity(), Global.getPalleteState(p.getState()), false, false});
 
         }
 
     }
 
-    public BrowsePalleteGeneral(Employee e) {
+    public BrowsePalleteGeneral() {
         initComponents();
-        emp = e;
+
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
         }
@@ -59,8 +58,8 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         sorter.setSortKeys(sortKeys);
         jTable1.setRowSorter(sorter);
         model.addTableModelListener(new TableModelListener() {
-            final static int accept_column = 6;
-            final static int details_column = 7;
+            final static int accept_column = 5;
+            final static int details_column = 6;
 
             @Override
             public void tableChanged(TableModelEvent e) {
@@ -80,8 +79,15 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
                         Pallete p = (Pallete) model.getValueAt(row, 0);
-                        p.setState(Global.PALLETE_CHECKED);
-                        dbc.updateObject(p);
+                        if (p.getProductionRaportPart().getLabTestState() == 3) {
+                            p.setState(Global.PALLETE_CHECKED);
+                            dbc.updateObject(p);
+
+                            JOptionPane.showMessageDialog(null, "Paleta zatwierdzona", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
+                        } else {
+
+                            JOptionPane.showMessageDialog(null, "Paleta nie może być zatwierdzona proszę czekać na badanie laboratorium.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
+                        }
                         model.setValueAt(false, row, column);
                         reload();
                     }
@@ -109,14 +115,14 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Paleta", "Typ produktu", "Numer partii", "Ilość sztuk", "Data", "Stan", "Zat.", "Szcz."
+                "Paleta", "Typ produktu", "Numer partii", "Ilość sztuk", "Stan", "Zat.", "Etykieta."
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, true, true
+                false, false, false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -138,15 +144,15 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(3).setMinWidth(150);
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(150);
             jTable1.getColumnModel().getColumn(3).setMaxWidth(150);
-            jTable1.getColumnModel().getColumn(5).setMinWidth(120);
-            jTable1.getColumnModel().getColumn(5).setPreferredWidth(120);
-            jTable1.getColumnModel().getColumn(5).setMaxWidth(120);
+            jTable1.getColumnModel().getColumn(4).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(4).setPreferredWidth(120);
+            jTable1.getColumnModel().getColumn(4).setMaxWidth(120);
+            jTable1.getColumnModel().getColumn(5).setMinWidth(40);
+            jTable1.getColumnModel().getColumn(5).setPreferredWidth(40);
+            jTable1.getColumnModel().getColumn(5).setMaxWidth(40);
             jTable1.getColumnModel().getColumn(6).setMinWidth(40);
             jTable1.getColumnModel().getColumn(6).setPreferredWidth(40);
             jTable1.getColumnModel().getColumn(6).setMaxWidth(40);
-            jTable1.getColumnModel().getColumn(7).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(7).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(7).setMaxWidth(40);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -160,9 +166,9 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents

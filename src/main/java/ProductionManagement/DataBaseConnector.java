@@ -54,30 +54,30 @@ import org.hibernate.cfg.Configuration;
  * @author Przemysław
  */
 public class DataBaseConnector {
-    
+
     static final String CONFIG_URL = "hibernate.cfg.xml";
     SessionFactory sf = null;
     Session s = null;
     Transaction transation = null;
-    
+
     public SessionFactory getSf() {
         return sf;
     }
-    
+
     public DataBaseConnector() {
         Configuration cfg = new Configuration();
         cfg.configure(this.getClass().getClassLoader().getResource(CONFIG_URL));
         sf = cfg.buildSessionFactory();
     }
-    
+
     public void flush() {
         s.flush();
     }
-    
+
     public void refresh(Object o) {
         s.refresh(o);
     }
-    
+
     public void clearSession() {
         openSession();
         s.close();
@@ -86,9 +86,9 @@ public class DataBaseConnector {
         cfg.configure(this.getClass().getClassLoader().getResource(CONFIG_URL));
         sf = cfg.buildSessionFactory();
         s = sf.openSession();
-        
+
     }
-    
+
     public void openSession() {
         if (s != null) {
             if (s.isOpen()) {
@@ -97,57 +97,57 @@ public class DataBaseConnector {
         }
         s = sf.openSession();
     }
-    
+
     public void closeSession() {
-        
+
         if (s != null) {
             if (s.isOpen()) {
                 s.close();
             }
         }
-        
+
     }
-    
+
     public void rollbackTransation() {
         transation.rollback();
-        
+
     }
-    
+
     public void updateObject(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         Transaction t = s.beginTransaction();
         s.update(object);
         t.commit();
-        
+
     }
-    
+
     public void saveOrUpdateObject(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         Transaction t = s.beginTransaction();
         s.saveOrUpdate(object);
         t.commit();
-        
+
     }
-    
+
     public void saveObject(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         Transaction t = s.beginTransaction();
         s.save(object);
         t.commit();
-        
+
     }
-    
+
     public void deleteObject(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -155,48 +155,48 @@ public class DataBaseConnector {
         s.delete(object);
         t.commit();
     }
-    
+
     public void startTransation() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         transation = s.beginTransaction();
     }
-    
+
     public void saveTransation(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         s.saveOrUpdate(object);
     }
-    
+
     public void updateTransation(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         s.update(object);
     }
-    
+
     public void commitTransation() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         transation.commit();
-        
+
     }
-    
+
     public void deleteTransation(Object object) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         s.delete(object);
     }
-    
+
     public void globalFix() {
         Query q;
         int i;
@@ -225,9 +225,9 @@ public class DataBaseConnector {
         hql = "UPDATE coffeetype SET type = UPPER(type) WHERE coffeetype_id >0;";
         s.createSQLQuery(hql).executeUpdate();
     }
-    
+
     public Employee AuthorizeUser(String login, String password) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -242,7 +242,7 @@ public class DataBaseConnector {
         }
         return e;
     }
-    
+
     public Employee getUserWithLogin(String login) {
         if (!s.isOpen()) {
             openSession();
@@ -257,9 +257,9 @@ public class DataBaseConnector {
         }
         return e;
     }
-    
+
     public ArrayList<ProductionCoffee> getProductionCoffeeWithState(int state) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -273,9 +273,9 @@ public class DataBaseConnector {
             Hibernate.initialize(pc.getProductType());
         }
         return alpc;
-        
+
     }
-    
+
     public ProductionRaportPart getLatestProductionRaportPart(ProductionLine productionLine, Employee employee) {
         ProductionRaportPart toReturn = null;
         if (!s.isOpen()) {
@@ -286,20 +286,21 @@ public class DataBaseConnector {
         q.setParameter("emp", employee);
         q.setParameter("productionLine", productionLine);
         List result = (List<ProductionCoffee>) q.list();
+
         if (result.size() > 0) {
             toReturn = (ProductionRaportPart) result.get(0);
-        }
-        Hibernate.initialize(toReturn.getPallete());
-        for (Pallete p : toReturn.getPallete()) {
-            Hibernate.initialize(p);
-        }
-        Hibernate.initialize(toReturn.getProductionRaportDirectPackage());
-        for (ProductionRaportDirectPackage p : toReturn.getProductionRaportDirectPackage()) {
-            Hibernate.initialize(p);
+            Hibernate.initialize(toReturn.getPallete());
+            for (Pallete p : toReturn.getPallete()) {
+                Hibernate.initialize(p);
+            }
+            Hibernate.initialize(toReturn.getProductionRaportDirectPackage());
+            for (ProductionRaportDirectPackage p : toReturn.getProductionRaportDirectPackage()) {
+                Hibernate.initialize(p);
+            }
         }
         return toReturn;
     }
-    
+
     public ArrayList<Pallete> getPalleteWithFromTo(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();
@@ -312,7 +313,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public ArrayList<Pallete> getPalleteWithState(int state) {
         if (!s.isOpen()) {
             openSession();
@@ -325,9 +326,9 @@ public class DataBaseConnector {
         alp.addAll(result);
         return alp;
     }
-    
+
     public ArrayList<CoffeeType> getCoffeeType() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -337,15 +338,15 @@ public class DataBaseConnector {
         List result = (List<CoffeeType>) q.list();
         alct.addAll(result);
         for (CoffeeType ct : alct) {
-            
+
             Hibernate.initialize(ct.getCoffeeAttribute());
         }
-        
+
         return alct;
     }
-    
+
     public ArrayList<CoffeeOwner> getCoffeeOwner() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -356,9 +357,9 @@ public class DataBaseConnector {
         alco.addAll(result);
         return alco;
     }
-    
+
     public ArrayList<CoffeeCountry> getCoffeeCountry() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -367,27 +368,27 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         List result = (List<CoffeeCountry>) q.list();
         alcc.addAll(result);
-        
+
         return alcc;
     }
-    
+
     public ArrayList<PackType> getPackType() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         ArrayList<PackType> alpt = new ArrayList<>();
-        
+
         String hql = "FROM PackType";
         Query q = s.createQuery(hql);
         List result = (List<PackType>) q.list();
-        
+
         alpt.addAll(result);
         return alpt;
     }
-    
+
     public ArrayList<CoffeeGreen> getCoffeeGreen() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -399,9 +400,9 @@ public class DataBaseConnector {
         s.close();
         return alcg;
     }
-    
+
     public ArrayList<AromaType> getAromaType() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -412,9 +413,9 @@ public class DataBaseConnector {
         alat.addAll(result);
         return alat;
     }
-    
+
     public ArrayList<ProductionLine> getProductionLine() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -425,9 +426,9 @@ public class DataBaseConnector {
         alat.addAll(result);
         return alat;
     }
-    
+
     public ArrayList<CoffeeAttribute> getCoffeeAttribute() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -441,9 +442,9 @@ public class DataBaseConnector {
         }
         return alca;
     }
-    
+
     public ArrayList<ProductDestination> getProductDestination() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -452,12 +453,12 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         List result = (List<ProductDestination>) q.list();
         alpd.addAll(result);
-        
+
         return alpd;
     }
-    
+
     public ArrayList<Provider> getProvider() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -466,12 +467,12 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         List result = (List<Provider>) q.list();
         alp.addAll(result);
-        
+
         return alp;
     }
-    
+
     public ArrayList<CoffeeGreen> getCoffeeGreenToExamine() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -481,12 +482,12 @@ public class DataBaseConnector {
         q.setParameter("state", Global.COFFEE_GREEN_TO_EXAMINE);
         List result = (List<CoffeeGreen>) q.list();
         alcg.addAll(result);
-        
+
         return alcg;
     }
-    
+
     public ArrayList<Aroma> getAromaToExamine() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -496,12 +497,12 @@ public class DataBaseConnector {
         q.setParameter("state", Global.TO_EXAMINE);
         List result = (List<Aroma>) q.list();
         ala.addAll(result);
-        
+
         return ala;
     }
-    
+
     public ArrayList<CoffeeGreen> getCoffee() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -510,12 +511,12 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         List result = (List<CoffeeGreen>) q.list();
         alcg.addAll(result);
-        
+
         return alcg;
     }
-    
+
     public ArrayList<Aroma> getAroma() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -524,12 +525,12 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         List result = (List<Aroma>) q.list();
         ala.addAll(result);
-        
+
         return ala;
     }
-    
+
     public ArrayList<ProductType> getProductTypeGroupByNameType() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -539,9 +540,9 @@ public class DataBaseConnector {
         List result = (List<ProductType>) q.list();
         alpt.addAll(result);
         return alpt;
-        
+
     }
-    
+
     public void updateProductName(ProductType old, String newName) {
         if (!s.isOpen()) {
             openSession();
@@ -553,9 +554,9 @@ public class DataBaseConnector {
                 .setParameter("oldType", old.getType());
         int i = q.executeUpdate();
     }
-    
+
     public ArrayList<ProductType> getProductType() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -564,12 +565,12 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         List result = (List<ProductType>) q.list();
         alpt.addAll(result);
-        
+
         return alpt;
     }
-    
+
     public String getMaxLabIdCoffeeGreen() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -583,9 +584,9 @@ public class DataBaseConnector {
         System.out.println(cg.getLabId());
         return cg.getLabId();
     }
-    
+
     public String getMaxLabIdAroma() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -599,9 +600,9 @@ public class DataBaseConnector {
         System.out.println(a.getLabId());
         return a.getLabId();
     }
-    
+
     public int getProductTypeLastVersion(ProductType pt) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -611,9 +612,9 @@ public class DataBaseConnector {
         int ver = (Integer) result.get(0);
         return ver;
     }
-    
+
     public ArrayList<CoffeeGreen> getCoffeeGreenWithCoffeeType(CoffeeType selectedCoffeeType) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -632,9 +633,9 @@ public class DataBaseConnector {
         }
         return alcg;
     }
-    
+
     public ArrayList<CoffeeGreen> getCoffeeGreenWithCoffeeTypeNoState(CoffeeType selectedCoffeeType) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -652,9 +653,9 @@ public class DataBaseConnector {
         }
         return alcg;
     }
-    
+
     public ArrayList<Aroma> getAromaWithAromaType(AromaType selectedAromaType) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -668,13 +669,13 @@ public class DataBaseConnector {
         for (Aroma a : ala) {
             Hibernate.initialize(a.getProvider());
             Hibernate.initialize(a.getAromaType());
-            
+
         }
         return ala;
     }
-    
+
     public ArrayList<Aroma> getAromaWithAromaTypeNoState(AromaType selectedAromaType) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -690,14 +691,14 @@ public class DataBaseConnector {
         }
         return ala;
     }
-    
+
     public CoffeeGreen getCoffeeGreenWithLabId(Object valueAt) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         CoffeeGreen cg;
-        
+
         String hql = "FROM CoffeeGreen C WHERE C.labId = :valueAt";
         Query q = s.createQuery(hql);
         q.setParameter("valueAt", valueAt);
@@ -706,16 +707,16 @@ public class DataBaseConnector {
             return null;
         }
         cg = (CoffeeGreen) result.get(0);
-        
+
         Hibernate.initialize(cg.getPackType());
         Hibernate.initialize(cg.getCoffeeType());
         Hibernate.initialize(cg.getCoffeeType().getCoffeeAttribute());
-        
+
         return cg;
     }
-    
+
     public Aroma getAromaWithLabId(Object valueAt) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -727,12 +728,12 @@ public class DataBaseConnector {
         if (result.isEmpty()) {
             return null;
         }
-        
+
         a = (Aroma) result.get(0);
-        
+
         return a;
     }
-    
+
     public ProductionCoffeeExternalReturn getProductionCoffeeExternalReturnWithLabId(String text) {
         if (!s.isOpen()) {
             openSession();
@@ -745,15 +746,15 @@ public class DataBaseConnector {
         if (result.isEmpty()) {
             return null;
         }
-        
+
         a = (ProductionCoffeeExternalReturn) result.get(0);
 
         //  s.close();
         return a;
     }
-    
+
     public ArrayList<ProductType> getProductVersions(ProductType pt) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -764,22 +765,22 @@ public class DataBaseConnector {
         alpt.addAll(result);
         return alpt;
     }
-    
+
     public ArrayList<ProductionCoffeeSeek> getProductionCoffeeSeekWithEmployee(Employee emp) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
-        
+
         ArrayList<ProductionCoffeeSeek> alpcs = new ArrayList<>();
         String hql = "FROM ProductionCoffeeSeek PCS WHERE PCS.seekedBy = :emp";
         Query q = s.createQuery(hql).setParameter("emp", emp);
         List result = (List<ProductionCoffeeSeek>) q.list();
         alpcs.addAll(result);
         return alpcs;
-        
+
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductionRaportPartWithBatchInfo(String batchInfo) {
         ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
         if (!s.isOpen()) {
@@ -792,9 +793,9 @@ public class DataBaseConnector {
             alprp.addAll(result);
         }
         return alprp;
-        
+
     }
-    
+
     public String getMaxLabIdProductionCoffeeExternalReturn() {
         if (!s.isOpen()) {
             openSession();
@@ -809,7 +810,7 @@ public class DataBaseConnector {
         System.out.println(pcer.getLabId());
         return pcer.getLabId();
     }
-    
+
     public ArrayList<ProductionCoffeeExternalReturn> getProductionCoffeeExternalReturnToExamine() {
         if (!s.isOpen()) {
             openSession();
@@ -828,9 +829,9 @@ public class DataBaseConnector {
         }
         return alpcer;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductsBlocked() {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -841,7 +842,7 @@ public class DataBaseConnector {
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
-            
+
             Hibernate.initialize(prp.getProductType());
             Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
             for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
@@ -852,19 +853,19 @@ public class DataBaseConnector {
         }
         return alprp;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductsToExamine() {
         if (!s.isOpen()) {
             openSession();
         }
         ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState > 0";
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState == 1";
         Query q = s.createQuery(hql);
         // q.setParameter("state", Global.PRODUCTION_RAPORT_PART_WAITING);
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
-            
+
             Hibernate.initialize(prp.getProductType());
             Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
             for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
@@ -875,30 +876,19 @@ public class DataBaseConnector {
         }
         return alprp;
     }
-    
-    public ArrayList<ProductionRaportPart> getProductsToStore() {
+
+    public ArrayList<Pallete> getProductsToStore() {
         if (!s.isOpen()) {
             openSession();
         }
-        ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState >0";
+        ArrayList<Pallete> alprp = new ArrayList<>();
+        String hql = "FROM Pallete P WHERE P.state = 2";
         Query q = s.createQuery(hql);
-        // q.setParameter("state", Global.PRODUCTION_RAPORT_PART_TO_STORE);
-        List result = (List<ProductionRaportPart>) q.list();
+        List result = (List<Pallete>) q.list();
         alprp.addAll(result);
-        for (ProductionRaportPart prp : alprp) {
-            
-            Hibernate.initialize(prp.getProductType());
-            Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
-            for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
-                Hibernate.initialize(prca);
-                Hibernate.initialize(prca.getProductionCoffee());
-                Hibernate.initialize(prca.getProductionRaportPart());
-            }
-        }
         return alprp;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductsToAccept() {
         if (!s.isOpen()) {
             openSession();
@@ -910,7 +900,7 @@ public class DataBaseConnector {
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
-            
+
             Hibernate.initialize(prp.getProductType());
             Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
             for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
@@ -921,9 +911,9 @@ public class DataBaseConnector {
         }
         return alprp;
     }
-    
+
     public ArrayList<RoastRaport> getRoastRaportWithCoffeeGreen(CoffeeGreen cg) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -937,7 +927,7 @@ public class DataBaseConnector {
             Hibernate.initialize(rr);
             Hibernate.initialize(rr.getProductionCoffee());
             Hibernate.initialize(rr.getProductionCoffee().getProductType());
-            
+
             if (rr.getRoastAromaPart() != null) {
                 Hibernate.initialize(rr.getRoastAromaPart());
                 for (RoastAromaPart rap : rr.getRoastAromaPart()) {
@@ -945,21 +935,21 @@ public class DataBaseConnector {
                     Hibernate.initialize(rap.getAroma().getAromaType());
                 }
             }
-            
+
             Hibernate.initialize(rr.getRoastGreenCoffeePart());
             for (RoastGreenCoffeePart rgcp : rr.getRoastGreenCoffeePart()) {
                 Hibernate.initialize(rgcp.getCoffeeGreen());
                 Hibernate.initialize(rgcp.getCoffeeGreen().getCoffeeType());
                 Hibernate.initialize(rgcp.getCoffeeGreen().getCoffeeType().getCoffeeAttribute());
-                
+
             }
             Hibernate.initialize(rr.getRoastPart());
-            
+
         }
-        
+
         return alrr;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductionRaportPartWithProductionCoffee(ProductionCoffee pc) {
         if (!s.isOpen()) {
             openSession();
@@ -971,7 +961,7 @@ public class DataBaseConnector {
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
-            
+
             Hibernate.initialize(prp.getProductType());
             Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
             for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
@@ -981,9 +971,9 @@ public class DataBaseConnector {
             }
         }
         return alprp;
-        
+
     }
-    
+
     public ArrayList<InstantCoffeeMixRaport> getInstantCoffeeMixRaportWithCoffeeGreen(CoffeeGreen cg) {
         if (!s.isOpen()) {
             openSession();
@@ -1005,9 +995,9 @@ public class DataBaseConnector {
             }
         }
         return alicmr;
-        
+
     }
-    
+
     public ArrayList<ProductionCoffee> getProducionCoffeeWithProductionRaportPart(ProductionRaportPart prp) {
         if (!s.isOpen()) {
             openSession();
@@ -1023,7 +1013,7 @@ public class DataBaseConnector {
         }
         return alpc;
     }
-    
+
     public InstantCoffeeMixRaport getInstantCoffeeMixRaportWithProductionCoffee(ProductionCoffee pc) {
         if (!s.isOpen()) {
             openSession();
@@ -1042,11 +1032,11 @@ public class DataBaseConnector {
             }
         }
         return icmr;
-        
+
     }
-    
+
     public RoastRaport getRoastRaportWithProductionCoffee(ProductionCoffee pc) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -1072,9 +1062,9 @@ public class DataBaseConnector {
         }
         return rr;
     }
-    
+
     public ProductionCoffeeExternalReturn getProductionCoffeeExternalReturnWithProductionCoffee(ProductionCoffee pc) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -1086,9 +1076,9 @@ public class DataBaseConnector {
             pcer = (ProductionCoffeeExternalReturn) result.get(0);
         }
         return pcer;
-        
+
     }
-    
+
     public ArrayList<ProductType> getProductType(int productType) {
         if (!s.isOpen()) {
             openSession();
@@ -1100,9 +1090,9 @@ public class DataBaseConnector {
         alpt.addAll(result);
         return alpt;
     }
-    
+
     public ArrayList<RoastRaport> getRoastRaportWithEmployee(Employee e) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -1119,7 +1109,7 @@ public class DataBaseConnector {
             Hibernate.initialize(rr.getProductionLine());
             Hibernate.initialize(rr.getProductionCoffee());
             Hibernate.initialize(rr.getProductionCoffee().getProductType());
-            
+
             if (rr.getRoastAromaPart() != null) {
                 Hibernate.initialize(rr.getRoastAromaPart());
                 for (RoastAromaPart rap : rr.getRoastAromaPart()) {
@@ -1127,23 +1117,23 @@ public class DataBaseConnector {
                     Hibernate.initialize(rap.getAroma().getAromaType());
                 }
             }
-            
+
             Hibernate.initialize(rr.getRoastGreenCoffeePart());
             for (RoastGreenCoffeePart rgcp : rr.getRoastGreenCoffeePart()) {
                 Hibernate.initialize(rgcp.getCoffeeGreen());
                 Hibernate.initialize(rgcp.getCoffeeGreen().getCoffeeType());
                 Hibernate.initialize(rgcp.getCoffeeGreen().getCoffeeType().getCoffeeAttribute());
-                
+
             }
             Hibernate.initialize(rr.getRoastPart());
-            
+
         }
-        
+
         return alrr;
     }
-    
+
     public ArrayList<InstantCoffeeMixRaport> getInstantCoffeeMixRaportWithEmployee(Employee e) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
@@ -1166,56 +1156,56 @@ public class DataBaseConnector {
             Hibernate.initialize(icmr.getProductionLine());
         }
         return alicmr;
-        
+
     }
-    
+
     public ArrayList<Object> getResourcesFromDateToDate(Timestamp from, Timestamp to) {
-        
+
         if (!s.isOpen()) {
             openSession();
         }
         ArrayList<Object> alo = new ArrayList<>();
-        
+
         String hql = "FROM CoffeeGreen CG WHERE CG.arrivalDate < :to AND CG.arrivalDate >= :from";
         Query q = s.createQuery(hql).setParameter("to", to).setParameter("from", from);
         List<Object> result = (ArrayList<Object>) q.list();
         alo.addAll(result);
-        
+
         hql = "FROM Aroma A WHERE A.arrivalDate < :to AND A.arrivalDate >= :from";
         q = s.createQuery(hql).setParameter("to", to).setParameter("from", from);
         result = (ArrayList<Object>) q.list();
         alo.addAll(result);
-        
+
         hql = "FROM ProductionCoffeeExternalReturn PRCA WHERE PRCA.returnDate < :to AND PRCA.returnDate >= :from";
         q = s.createQuery(hql).setParameter("to", to).setParameter("from", from);
         result = (ArrayList<Object>) q.list();
         alo.addAll(result);
-        
+
         hql = "FROM Sugar PRCA WHERE PRCA.arrivalDate < :to AND PRCA.arrivalDate >= :from";
         q = s.createQuery(hql).setParameter("to", to).setParameter("from", from);
         result = (ArrayList<Object>) q.list();
         alo.addAll(result);
-        
+
         hql = "FROM DirectPackage PRCA WHERE PRCA.arrivalDate < :to AND PRCA.arrivalDate >= :from";
         q = s.createQuery(hql).setParameter("to", to).setParameter("from", from);
         result = (ArrayList<Object>) q.list();
         alo.addAll(result);
-        
+
         hql = "FROM ReadyCoffee PRCA WHERE PRCA.arrivalDate < :to AND PRCA.arrivalDate >= :from";
         q = s.createQuery(hql).setParameter("to", to).setParameter("from", from);
         result = (ArrayList<Object>) q.list();
         alo.addAll(result);
-        
+
         return alo;
     }
-    
+
     public Object findResourceWithProductionCoffee(Object valueAt) {
         String hql = "FROM ProductionCoffeeExternalReturn PCER WHERE PCER.productionCoffee = :pc";
         Query q = s.createQuery(hql);
         q.setParameter("pc", valueAt);
-        
+
         List result = (List<ProductionCoffeeExternalReturn>) q.list();
-        
+
         if (result.size() == 1) {
             return result.get(0);
         }
@@ -1225,7 +1215,7 @@ public class DataBaseConnector {
         if (result.size() == 1) {
             return result.get(0);
         }
-        
+
         hql = "FROM RoastRaport RR WHERE RR.productionCoffee = :pc";
         q = s.createQuery(hql);
         q.setParameter("pc", valueAt);
@@ -1233,7 +1223,7 @@ public class DataBaseConnector {
         if (result.size() == 1) {
             return result.get(0);
         }
-        
+
         hql = "FROM ReturnedProduct RP WHERE RP.productionCoffee = :pc";
         q = s.createQuery(hql);
         q.setParameter("pc", valueAt);
@@ -1242,9 +1232,9 @@ public class DataBaseConnector {
             return result.get(0);
         }
         return null;
-        
+
     }
-    
+
     public ArrayList<CoffeeGreen> getCoffeeGreenToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1257,7 +1247,7 @@ public class DataBaseConnector {
         alcg.addAll(result);
         return alcg;
     }
-    
+
     public ArrayList<Aroma> getAromaToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1270,7 +1260,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<ProductionCoffeeExternalReturn> getProductionCoffeeExternalReturnToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1289,7 +1279,7 @@ public class DataBaseConnector {
         }
         return alpcer;
     }
-    
+
     public ArrayList<RoastRaport> getRoastRaportWithFromToWithEmployee(Timestamp from, Timestamp to, Employee e) {
         if (!s.isOpen()) {
             openSession();
@@ -1302,7 +1292,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public ArrayList<RoastRaport> getRoastRaportWithFromTo(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();
@@ -1315,7 +1305,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public Iterable<InstantCoffeeMixRaport> getInstantCoffeeMixRaportWithFromToEmployee(Timestamp from, Timestamp to, Employee e) {
         if (!s.isOpen()) {
             openSession();
@@ -1328,7 +1318,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public Iterable<InstantCoffeeMixRaport> getInstantCoffeeMixRaportWithFromTo(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();
@@ -1341,7 +1331,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public ArrayList<SugarType> getSugarType() {
         if (!s.isOpen()) {
             openSession();
@@ -1353,7 +1343,7 @@ public class DataBaseConnector {
         alst.addAll(result);
         return alst;
     }
-    
+
     public String getMaxLabIdSugar() {
         if (!s.isOpen()) {
             openSession();
@@ -1368,7 +1358,7 @@ public class DataBaseConnector {
         System.out.println(su.getLabId());
         return su.getLabId();
     }
-    
+
     public String getMaxLabIdCardboard() {
         if (!s.isOpen()) {
             openSession();
@@ -1382,9 +1372,9 @@ public class DataBaseConnector {
         Cardboard c = result.get(0);
         System.out.println(c.getLabId());
         return c.getLabId();
-        
+
     }
-    
+
     public ArrayList<CardboardType> getCardboardType() {
         if (!s.isOpen()) {
             openSession();
@@ -1395,9 +1385,9 @@ public class DataBaseConnector {
         List result = (List<CardboardType>) q.list();
         alct.addAll(result);
         return alct;
-        
+
     }
-    
+
     public String getMaxLabIdReadyCoffee() {
         if (!s.isOpen()) {
             openSession();
@@ -1412,7 +1402,7 @@ public class DataBaseConnector {
         System.out.println(c.getLabId());
         return c.getLabId();
     }
-    
+
     public ArrayList<DirectPackageType> getDirectPackageType() {
         if (!s.isOpen()) {
             openSession();
@@ -1424,7 +1414,7 @@ public class DataBaseConnector {
         aldpt.addAll(result);
         return aldpt;
     }
-    
+
     public String getMaxLabIdDirectPackage() {
         if (!s.isOpen()) {
             openSession();
@@ -1439,7 +1429,7 @@ public class DataBaseConnector {
         System.out.println(c.getLabId());
         return c.getLabId();
     }
-    
+
     public ArrayList<Cardboard> getCardboardToExamine() {
         if (!s.isOpen()) {
             openSession();
@@ -1452,7 +1442,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<ReadyCoffee> getReadyCoffeeToExamine() {
         if (!s.isOpen()) {
             openSession();
@@ -1465,7 +1455,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<DirectPackage> getDirectPackageToExamine() {
         if (!s.isOpen()) {
             openSession();
@@ -1478,7 +1468,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<Sugar> getSugarToExamine() {
         if (!s.isOpen()) {
             openSession();
@@ -1491,7 +1481,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<Cardboard> getCardboardToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1504,7 +1494,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<ReadyCoffee> getReadyCoffeeToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1517,7 +1507,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<DirectPackage> getDirectPackageToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1530,7 +1520,7 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public ArrayList<Sugar> getSugarToStore() {
         if (!s.isOpen()) {
             openSession();
@@ -1543,25 +1533,25 @@ public class DataBaseConnector {
         ala.addAll(result);
         return ala;
     }
-    
+
     public Details findWithLabId(String text) {
-        
+
         Object o;
-        
+
         String hql = "FROM CoffeeGreen O WHERE O.labId = :id";
         Query q = s.createQuery(hql).setParameter("id", text);
         List result = q.list();
         if (result.size() > 0) {
             return (Details) result.get(0);
         }
-        
+
         hql = "FROM Aroma O WHERE O.labId = :id";
         q = s.createQuery(hql).setParameter("id", text);
         result = q.list();
         if (result.size() > 0) {
             return (Details) result.get(0);
         }
-        
+
         hql = "FROM ProductionCoffeeExternalReturn O WHERE O.labId = :id";
         q = s.createQuery(hql).setParameter("id", text);
         result = q.list();
@@ -1574,31 +1564,31 @@ public class DataBaseConnector {
         if (result.size() > 0) {
             return (Details) result.get(0);
         }
-        
+
         hql = "FROM DirectPackage O WHERE O.labId = :id";
         q = s.createQuery(hql).setParameter("id", text);
         result = q.list();
         if (result.size() > 0) {
             return (Details) result.get(0);
         }
-        
+
         hql = "FROM Cardboard O WHERE O.labId = :id";
         q = s.createQuery(hql).setParameter("id", text);
         result = q.list();
         if (result.size() > 0) {
             return (Details) result.get(0);
         }
-        
+
         hql = "FROM ReadyCoffee O WHERE O.labId = :id";
         q = s.createQuery(hql).setParameter("id", text);
         result = q.list();
         if (result.size() > 0) {
             return (Details) result.get(0);
         }
-        
+
         return null;
     }
-    
+
     public ReadyCoffee getReadyCoffeeWithProductionCoffee(ProductionCoffee pc) {
         if (!s.isOpen()) {
             openSession();
@@ -1612,7 +1602,7 @@ public class DataBaseConnector {
         }
         return pcer;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductionRaportPartWithFromToAndEmployee(Timestamp from, Timestamp to, Employee e) {
         if (!s.isOpen()) {
             openSession();
@@ -1625,7 +1615,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductionRaportPartWithFromTo(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();
@@ -1638,7 +1628,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public ArrayList<ProductionRaportPart> getProductionRaportPartWithFromToAndProductionLine(Timestamp from, Timestamp to, ProductionLine prodLine) {
         if (!s.isOpen()) {
             openSession();
@@ -1651,7 +1641,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public int setProductTypeState(ProductType pt, boolean b) {
         if (!s.isOpen()) {
             openSession();
@@ -1664,7 +1654,7 @@ public class DataBaseConnector {
         s.getTransaction().commit();
         return result;
     }
-    
+
     public ArrayList<DirectPackage> getDirectPackageWithDirectPackageType(DirectPackageType selectedDirectPackageType) {
         ArrayList<DirectPackage> aldp = new ArrayList<>();
         String hql = "FROM DirectPackage DP WHERE DP.directPackageType = :directPackageType AND DP.state = :state";
@@ -1675,7 +1665,7 @@ public class DataBaseConnector {
         aldp.addAll(result);
         return aldp;
     }
-    
+
     public ArrayList<Cardboard> getCardboardWithCardboardType(CardboardType selectedCardboardType) {
         ArrayList<Cardboard> aldp = new ArrayList<>();
         String hql = "FROM Cardboard C WHERE C.cardboardType = :cardboardType AND C.state = :state";
@@ -1686,13 +1676,13 @@ public class DataBaseConnector {
         aldp.addAll(result);
         return aldp;
     }
-    
+
     public DirectPackage findDirectPackageWithLabId(String string) {
         if (!s.isOpen()) {
             openSession();
         }
         DirectPackage cg;
-        
+
         String hql = "FROM DirectPackage C WHERE C.labId = :valueAt";
         Query q = s.createQuery(hql);
         q.setParameter("valueAt", string);
@@ -1703,13 +1693,13 @@ public class DataBaseConnector {
         cg = (DirectPackage) result.get(0);
         return cg;
     }
-    
+
     public Cardboard findCardboardWithLabId(String string) {
         if (!s.isOpen()) {
             openSession();
         }
         Cardboard cg;
-        
+
         String hql = "FROM Cardboard C WHERE C.labId = :valueAt";
         Query q = s.createQuery(hql);
         q.setParameter("valueAt", string);
@@ -1720,7 +1710,7 @@ public class DataBaseConnector {
         cg = (Cardboard) result.get(0);
         return cg;
     }
-    
+
     public ArrayList<RoastRaport> getRoastRaportWithFromToAndProductionLine(Timestamp from, Timestamp to, ProductionLine productionLine) {
         if (!s.isOpen()) {
             openSession();
@@ -1733,7 +1723,7 @@ public class DataBaseConnector {
         alrr.addAll(result);
         return alrr;
     }
-    
+
     public ArrayList<InstantCoffeeMixRaport> getInstantCoffeeMixRaportWithFromToEmployee(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();
@@ -1746,7 +1736,7 @@ public class DataBaseConnector {
         alicmr.addAll(result);
         return alicmr;
     }
-    
+
     public ArrayList<ProductionCoffeeReturn> getProductionCoffeeReturnWithProductionCoffee(ProductionCoffee productionCoffee) {
         if (!s.isOpen()) {
             openSession();
@@ -1758,6 +1748,6 @@ public class DataBaseConnector {
         List result = (List<ProductionRaportPart>) q.list();
         alpcr.addAll(result);
         return alpcr;
-        
+
     }
 }
