@@ -100,8 +100,8 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                         } else {
                             JOptionPane.showMessageDialog(null, "Niemożliwe do zaakceptowania.", "Informacja", JOptionPane.INFORMATION_MESSAGE);
                         }
-                        reload();
                         model.setValueAt(false, row, column);
+                        reload();
                     }
                 }
                 if (column == block_column) {
@@ -112,10 +112,8 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                             prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_BLOCKED);
                             model.setValueAt(Global.getProductStateState(prp.getLabTestState()), row, 6);
                             dbc.updateObject(prp);
-                        } else // dbc.closeSession();
-                        {
+                        } else {
                             JOptionPane.showMessageDialog(null, "Niemożliwe do zablokowania.", "Informacja", JOptionPane.INFORMATION_MESSAGE);
-
                         }
                         model.setValueAt(false, row, column);
                         reload();

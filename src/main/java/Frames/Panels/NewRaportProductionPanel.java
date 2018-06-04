@@ -9,11 +9,11 @@ import Exceptions.NotEnoughtCoffeeException;
 import Exceptions.ZeroInputException;
 import Listeners.CheckBoxDirectPackageRaport;
 import ProductClasses.ProductType;
+import ProductClasses.ReturnedProduct;
 import ProductionClasses.Pallete;
 import ProductionClasses.ProductionCoffee;
 import ProductionClasses.ProductionCoffeeSeek;
 import ProductionClasses.ProductionLine;
-import ProductionClasses.ProductionOrder;
 import ProductionClasses.ProductionRaportDirectPackage;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
@@ -21,6 +21,7 @@ import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -314,7 +315,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
         comboBoxSeal.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "TAK", "NIE" }));
 
-        comboBoxBean.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ziarno", "Mielona", "Instant" }));
+        comboBoxBean.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Ziarno", "Mielona", "Instant", "Półprodukt" }));
 
         jLabel2.setText("Ziarno/Mielona");
 
@@ -470,7 +471,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel21)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 304, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
                                     .addComponent(jScrollPane3)
                                     .addComponent(jScrollPane1)))
                             .addGroup(layout.createSequentialGroup()
@@ -646,9 +647,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonOpenFileActionPerformed
 
     private void buttonConfirmProductionOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmProductionOrderActionPerformed
-        if (comboBoxBean.getSelectedItem() != null) {
+        if (comboBoxBean.getSelectedIndex() >= 0) {
             try {
-
                 dbc.clearSession();
                 dbc.openSession();
                 productionRaportPart.setRaportDate(new Timestamp(System.currentTimeMillis()));
@@ -684,6 +684,21 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 if (JOptionPane.OK_OPTION == res) {
                     int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                     if (JOptionPane.OK_OPTION == result) {
+                        if (productionRaportPart.getType() == Global.PRODUCT_TYPE_HALF) {
+                            ReturnedProduct rp = new ReturnedProduct();
+                            ProductionCoffee pc = new ProductionCoffee();
+                            pc.setProductType(productionRaportPart.getProductType());
+                            pc.setReturned(false);
+                            pc.setState(Global.PRODUCTION_COFFEE_READY);
+                            pc.setWeight(Global.round((Float) productionRaportPart.getTotalWeight(), 2));
+                            pc.setProdDate(new Timestamp(System.currentTimeMillis()));
+                            rp.setProductionRaportPart(productionRaportPart);
+                            rp.setProductionCoffee(pc);
+                            productionRaportPart.setLabTestDate(new Timestamp(System.currentTimeMillis()));
+                            productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
+                            dbc.saveTransation(pc);
+                            dbc.saveTransation(rp);
+                        }
                         dbc.saveTransation(productionRaportPart);
                         dbc.commitTransation();
                         resetInput();
@@ -732,22 +747,17 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     dtm.addRow(new Object[]{null, null, null, null, false, false, false});
                     JOptionPane.showMessageDialog(null, "Załadowano istniejący numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 }
-
                 prp.setEmp(employee);
                 prp.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
                 prp.setProductType(selectedProductType);
                 prp.setProductionLine(selectedProductionLine);
-
                 dbc.saveObject(prp);
                 dbc.updateObject(prp);
                 String batch = Global.timestampToStrYYMMDD(prp.getExpiryDate()) + 'L' + String.format("%07d", prp.getId());
                 prp.setBatchInfo(batch);
                 textFieldBatchInfo.setText(batch);
                 dbc.updateObject(prp);
-
                 this.productionRaportPart = prp;
-
-                setPreInitControls(false);
 
             } catch (Exception e) {
                 e.printStackTrace();

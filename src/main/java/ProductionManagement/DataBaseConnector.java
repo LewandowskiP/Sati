@@ -859,7 +859,7 @@ public class DataBaseConnector {
             openSession();
         }
         ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState == 1";
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState = 1";
         Query q = s.createQuery(hql);
         // q.setParameter("state", Global.PRODUCTION_RAPORT_PART_WAITING);
         List result = (List<ProductionRaportPart>) q.list();

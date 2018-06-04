@@ -90,6 +90,7 @@ public class Global {
     public static final int PRODUCT_TYPE_BEAN = 0;
     public static final int PRODUCT_TYPE_GRIND = 1;
     public static final int PRODUCT_TYPE_INSTANT = 2;
+    public static final int PRODUCT_TYPE_HALF = 3;
 
     public static final int RESOURCE_TYPE_COFFEE_GREEN = 0;
     public static final int RESOURCE_TYPE_COFFEE_INSTANT = 1;
@@ -153,12 +154,12 @@ public class Global {
     public static String getProductTypeName(int type) {
         if (type == PRODUCT_TYPE_BEAN) {
             return "Ziarno";
-        }
-        if (type == PRODUCT_TYPE_GRIND) {
+        } else if (type == PRODUCT_TYPE_GRIND) {
             return "Mielona";
-        }
-        if (type == PRODUCT_TYPE_INSTANT) {
+        } else if (type == PRODUCT_TYPE_INSTANT) {
             return "Instant";
+        } else if (type == PRODUCT_TYPE_HALF) {
+            return "Półprodukt";
         }
         return "BŁAD";
     }
@@ -211,6 +212,7 @@ public class Global {
                 retString = "Zmagazynowano";
                 break;
             }
+
             default:
                 retString = "Błąd";
         }
