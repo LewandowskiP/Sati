@@ -12,7 +12,7 @@ import java.sql.Timestamp;
  *
  * @author Przemysław
  */
-public class Employee {
+public class Employee implements Comparable {
 
     private int id;
     private String firstName;
@@ -118,6 +118,11 @@ public class Employee {
     @Override
     public String toString() {
         return firstName + " " + lastName;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.toString().compareTo(o.toString());
     }
 
 }

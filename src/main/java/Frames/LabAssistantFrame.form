@@ -26,8 +26,8 @@
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Component id="LaborantFrameToolsPanel" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jScrollPane1" pref="641" max="32767" attributes="0"/>
+              <EmptySpace pref="58" max="32767" attributes="0"/>
+              <Component id="jScrollPane1" min="-2" pref="687" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -59,16 +59,16 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="LaborantFrameLoadGreenCoffeeButton" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
               <Component id="LaborantFrameLoadProductsButton" alignment="0" max="32767" attributes="0"/>
-              <Component id="jButton2" alignment="0" pref="281" max="32767" attributes="0"/>
+              <Component id="jButton2" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonTrackCoffee" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonTrackProduct" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonBrowseGreenCoffee" alignment="1" max="32767" attributes="0"/>
               <Component id="buttonBrowseAroma" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonGenerateTotalProductionRaport" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonEditNames" alignment="0" max="32767" attributes="0"/>
+              <Component id="LaborantFrameLoadGreenCoffeeButton" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">

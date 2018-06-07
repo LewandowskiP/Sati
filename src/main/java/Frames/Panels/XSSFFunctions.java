@@ -174,7 +174,7 @@ public class XSSFFunctions {
             if (data[i] instanceof RoastAromaPart) {
                 int j = offsetColumns;
                 RoastAromaPart rap = (RoastAromaPart) data[i];
-                nextCell(j++, row).setCellValue(rap.getAroma().getAromaType().getType());
+                nextCell(j++, row).setCellValue(rap.getAroma().getLabId() + " " + rap.getAroma().getAromaType().getType());
                 nextCell(j++, row).setCellValue(rap.getQuantity());
             }
             if (data[i] instanceof HistoryData) {
@@ -346,7 +346,7 @@ public class XSSFFunctions {
         calendar.set(Calendar.MILLISECOND, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.set(Calendar.MINUTE, 0);
-        calendar.set(Calendar.HOUR_OF_DAY, 22);
+        calendar.set(Calendar.HOUR_OF_DAY, 14);
         calendar.set(Calendar.DAY_OF_MONTH, 0);
         return calendar.getTime();
 

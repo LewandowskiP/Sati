@@ -149,7 +149,7 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
         ean13 += UPCEANLogicImpl.calcChecksum(ean13);
 
         String gtin = Global.qtinID + ean13;
-        String prodDate = Global.prodDateID + Global.timestampToStrYYMMDD(new Timestamp(System.currentTimeMillis()));
+        String prodDate = Global.prodDateID + Global.timestampToStrYYMMDD(productionRaportPart.getRaportDate());
         String lot = Global.lotID + textFieldBatch.getText();
         String expiryDate = Global.expiryDateID + Global.timestampToStrYYMMDD(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
         String quantity = Global.quantityID + String.format("%08d", (Integer) spinnerPcs.getValue());
@@ -159,7 +159,7 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
         netto = netto.replace(",", "");
         pallete = new Pallete();
         pallete.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
-        pallete.setProdDate(new Timestamp(System.currentTimeMillis()));
+        pallete.setProdDate(productionRaportPart.getRaportDate());
         pallete.setNetto((Float) spinnerNetto.getValue());
         pallete.setQuantity((Integer) spinnerPcs.getValue());
         pallete.setBatch(textFieldBatch.getText());

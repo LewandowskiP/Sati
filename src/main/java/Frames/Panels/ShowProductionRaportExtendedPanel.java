@@ -11,12 +11,15 @@ import ProductClasses.ReadyCoffee;
 import ProductClasses.RoastAromaPart;
 import ProductClasses.RoastGreenCoffeePart;
 import ProductClasses.RoastRaport;
+import ProductionClasses.Pallete;
 import ProductionClasses.ProductionCoffee;
 import ProductionClasses.ProductionCoffeeExternalReturn;
+import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -61,6 +64,7 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
         jTree1.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         jTree1.addTreeSelectionListener(new TreeSelectionListener() {
 
+            @Override
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
                 if (node == null) //Nothing is selected.     
@@ -88,6 +92,7 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
         buttonFind = new javax.swing.JButton();
         labelProductionRaport = new javax.swing.JLabel();
         jButton3 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
 
         javax.swing.tree.DefaultMutableTreeNode treeNode1 = new javax.swing.tree.DefaultMutableTreeNode("Wybierz produkt");
         jTree1.setModel(new javax.swing.tree.DefaultTreeModel(treeNode1));
@@ -116,6 +121,13 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
             }
         });
 
+        jButton1.setText("Wycofaj");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -131,7 +143,10 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 122, Short.MAX_VALUE)
                         .addComponent(jButton2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton3)))
+                        .addComponent(jButton3))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -144,7 +159,9 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
                     .addComponent(jButton3)
                     .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 584, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 562, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jButton1)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -210,7 +227,6 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
                     DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
                     model.setRoot(root);
                 } catch (Exception e) {
-                    e.printStackTrace();
                 }
 
             }
@@ -233,14 +249,36 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
                     text.print(null, null, false, service, null, false);
                 }
             }
-        } catch (Exception e) {
+        } catch (PrinterException e) {
 
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        ProductionRaportPart selected = selectedProductionRaportPart;
+        String options[] = new String[]{"Tak", "Nie"};
+        int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz wycofać raport?" + System.lineSeparator() + selected.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+        if (JOptionPane.OK_OPTION == result) {
+            for (Pallete p : selected.getPallete()) {
+                selected.getPallete().remove(p);
+                dbc.deleteObject(p);
+            }
+            for (ProductionRaportCoffeeAssignment prca : selected.getProductionRaportCoffeeAssignment()) {
+                prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
+                prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
+                dbc.updateObject(prca.getProductionCoffee());
+            }
+            dbc.deleteObject(selected);
+            root = new DefaultMutableTreeNode("Wybierz produkt");
+            selectedProductionRaportPart = null;
+            selectedNode = null;
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonFind;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;

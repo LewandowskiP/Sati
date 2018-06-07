@@ -457,6 +457,12 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             sb.append("    ").append("Wielkość stick:  ").append(productionRaportPart.getStickSize()).append(System.lineSeparator());
             sb.append("    ").append("Inne informacje:  ").append(productionRaportPart.getOtherInfo()).append(System.lineSeparator()).append(System.lineSeparator());
 
+            sb.append("    ").append("Wyprodukowane palety:  ").append(System.lineSeparator());
+
+            for (Pallete p : productionRaportPart.getPallete()) {
+                sb.append("      ").append(p.getEan128Num()).append(" ").append(p.getQuantity()).append(" szt. ").append(p.getNetto()).append(" Kg").append(System.lineSeparator());
+            }
+
             sb.append("    ").append("Użyte kawy:  ").append(System.lineSeparator());
 
             for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {

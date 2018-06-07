@@ -8,11 +8,11 @@ package Frames.Panels;
 import ProductClasses.InstantCoffeeMixRaport;
 import ProductClasses.ProductType;
 import ProductClasses.RoastRaport;
-import ProductionClasses.ProductionLine;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -190,11 +190,11 @@ public class GenerateProductionSummary extends javax.swing.JPanel {
             ArrayList<RoastRaport> alrr = dbc.getRoastRaportWithFromTo(from, to);
             ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithFromTo(from, to);
             ArrayList<InstantCoffeeMixRaport> alicmr = dbc.getInstantCoffeeMixRaportWithFromToEmployee(from, to);
-            ArrayList<RoastData> roast = new ArrayList<RoastData>();
-            ArrayList<ProductionData> grind = new ArrayList<ProductionData>();
-            ArrayList<ProductionData> bean = new ArrayList<ProductionData>();
-            ArrayList<ProductionData> instant = new ArrayList<ProductionData>();
-            ArrayList<MixData> mix = new ArrayList<MixData>();
+            ArrayList<RoastData> roast = new ArrayList<>();
+            ArrayList<ProductionData> grind = new ArrayList<>();
+            ArrayList<ProductionData> bean = new ArrayList<>();
+            ArrayList<ProductionData> instant = new ArrayList<>();
+            ArrayList<MixData> mix = new ArrayList<>();
 
             buildRoasts(roast, alrr);
             buildGrind(grind, alprp);
@@ -249,18 +249,16 @@ public class GenerateProductionSummary extends javax.swing.JPanel {
                 File f = new File(textFieldFullPath.getText());
                 try {
                     f.createNewFile();
-                    FileOutputStream outputStream = new FileOutputStream(f);
-                    wb.write(outputStream);
-                    wb.close();
-                    outputStream.close();
+                    try (FileOutputStream outputStream = new FileOutputStream(f)) {
+                        wb.write(outputStream);
+                        wb.close();
+                    }
                     JOptionPane.showMessageDialog(this, "Wygenerowano");
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_buttonGenerateActionPerformed
@@ -277,7 +275,7 @@ public class GenerateProductionSummary extends javax.swing.JPanel {
     }
 
     private void buildGrind(ArrayList<ProductionData> grind, ArrayList<ProductionRaportPart> alprp) {
-        HashMap<ProductType, ProductionData> hm = new HashMap<ProductType, ProductionData>();
+        HashMap<ProductType, ProductionData> hm = new HashMap<>();
         for (ProductionRaportPart p : alprp) {
             if (p.getType() == Global.PRODUCT_TYPE_GRIND) {
                 float sum = 0;
@@ -302,7 +300,7 @@ public class GenerateProductionSummary extends javax.swing.JPanel {
     }
 
     private void buildBean(ArrayList<ProductionData> bean, ArrayList<ProductionRaportPart> alprp) {
-        HashMap<ProductType, ProductionData> hm = new HashMap<ProductType, ProductionData>();
+        HashMap<ProductType, ProductionData> hm = new HashMap<>();
         for (ProductionRaportPart p : alprp) {
             if (p.getType() == Global.PRODUCT_TYPE_BEAN) {
                 float sum = 0;
@@ -324,7 +322,7 @@ public class GenerateProductionSummary extends javax.swing.JPanel {
     }
 
     private void buildInstant(ArrayList<ProductionData> instant, ArrayList<ProductionRaportPart> alprp) {
-        HashMap<ProductType, ProductionData> hm = new HashMap<ProductType, ProductionData>();
+        HashMap<ProductType, ProductionData> hm = new HashMap<>();
         for (ProductionRaportPart p : alprp) {
             if (p.getType() == Global.PRODUCT_TYPE_INSTANT) {
                 float sum = 0;

@@ -64,6 +64,7 @@ public class RoastGreenCoffeePart implements Comparable {
         this.weight = weight;
     }
 
+    @Override
     public int compareTo(Object o) {
         return this.getCoffeeGreen().getCoffeeType().getId() - ((RoastGreenCoffeePart) o).getCoffeeGreen().getCoffeeType().getId();
     }

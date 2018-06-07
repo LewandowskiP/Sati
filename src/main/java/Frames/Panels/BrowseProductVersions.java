@@ -9,8 +9,10 @@ import Listeners.CheckBoxProductOverwatchListener;
 import ProductClasses.ProductType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -55,6 +57,7 @@ public class BrowseProductVersions extends javax.swing.JPanel {
         jScrollPane2 = new javax.swing.JScrollPane();
         tableProducts = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         tableProducts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -96,6 +99,13 @@ public class BrowseProductVersions extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setText("Zmień EAN");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -106,6 +116,8 @@ public class BrowseProductVersions extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -113,7 +125,9 @@ public class BrowseProductVersions extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -151,8 +165,38 @@ public class BrowseProductVersions extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            String s = (String) JOptionPane.showInputDialog(this, "Podaj nowy EAN", pt.getProductName());
+            if (s != null) {
+                if (s.length() == 13 && StringUtils.isNumeric(s)) {
+                    dbc.openSession();
+                    dbc.startTransation();
+                    for (int i = 0; i < tableProducts.getRowCount(); i++) {
+                        ((ProductType) tableProducts.getValueAt(i, 0)).setEan(s);
+                        dbc.updateTransation(tableProducts.getValueAt(i, 0));
+                    }
+                    dbc.commitTransation();
+                    DefaultTableModel dtm = (DefaultTableModel) tableProducts.getModel();
+                    dtm.setRowCount(0);
+
+                    for (ProductType productType : dbc.getProductVersions(pt)) {
+                        dtm.addRow(new Object[]{productType, Global.timestampToStrDDMMYYYY(productType.getCreateDate()), productType.getVersion(), false});
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "EAN13 nieprawidłowy.");
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Nie wprowadzono wartości.");
+            }
+        } catch (HeadlessException ex) {
+            JOptionPane.showMessageDialog(this, "Błąd.");
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JTable tableProducts;

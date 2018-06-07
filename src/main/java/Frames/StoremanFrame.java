@@ -20,6 +20,8 @@ import Frames.Panels.BrowseResourcesToExamineStoreman;
 import Frames.Panels.BrowseResourcesToStore;
 import Frames.Panels.BrowseResourcesTypesPanel;
 import Frames.Panels.GenerateResourcesSummary;
+import Frames.Panels.ShowCoffeeUsagePanel;
+import Frames.Panels.ShowProductionRaportExtendedPanel;
 import ProductionManagement.Employee;
 import javax.swing.JFrame;
 
@@ -33,6 +35,8 @@ public class StoremanFrame extends javax.swing.JFrame {
 
     /**
      * Creates new form MagazynierFrame
+     *
+     * @param emp
      */
     public StoremanFrame(Employee emp) {
         super.setTitle("Magazynier :" + emp);
@@ -68,6 +72,8 @@ public class StoremanFrame extends javax.swing.JFrame {
         buttonGenerateTotalMixRaport = new javax.swing.JButton();
         buttonEditNames = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
+        buttonTrackCoffee = new javax.swing.JButton();
+        buttonTrackProduct = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -197,6 +203,20 @@ public class StoremanFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonTrackCoffee.setText("Identyfikacja kawy");
+        buttonTrackCoffee.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTrackCoffeeActionPerformed(evt);
+            }
+        });
+
+        buttonTrackProduct.setText("Identyfikacja produktu");
+        buttonTrackProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTrackProductActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout MagazynierFrameToolsPanelLayout = new javax.swing.GroupLayout(MagazynierFrameToolsPanel);
         MagazynierFrameToolsPanel.setLayout(MagazynierFrameToolsPanelLayout);
         MagazynierFrameToolsPanelLayout.setHorizontalGroup(
@@ -216,6 +236,8 @@ public class StoremanFrame extends javax.swing.JFrame {
             .addComponent(buttonGenerateTotalMixRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonEditNames, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonTrackCoffee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonTrackProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         MagazynierFrameToolsPanelLayout.setVerticalGroup(
             MagazynierFrameToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -236,7 +258,11 @@ public class StoremanFrame extends javax.swing.JFrame {
                 .addComponent(jButton1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 111, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTrackCoffee)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTrackProduct)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
@@ -337,6 +363,14 @@ public class StoremanFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(new BrowseAllResourcesPanel());
     }//GEN-LAST:event_jButton5ActionPerformed
 
+    private void buttonTrackCoffeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTrackCoffeeActionPerformed
+        jScrollPane1.setViewportView(new ShowCoffeeUsagePanel());
+    }//GEN-LAST:event_buttonTrackCoffeeActionPerformed
+
+    private void buttonTrackProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTrackProductActionPerformed
+        jScrollPane1.setViewportView(new ShowProductionRaportExtendedPanel());
+    }//GEN-LAST:event_buttonTrackProductActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MagazynierFrameToolsPanel;
     private javax.swing.JButton buttonAddAroma;
@@ -349,6 +383,8 @@ public class StoremanFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonCheckCoffeeStore;
     private javax.swing.JButton buttonEditNames;
     private javax.swing.JButton buttonGenerateTotalMixRaport;
+    private javax.swing.JButton buttonTrackCoffee;
+    private javax.swing.JButton buttonTrackProduct;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

@@ -117,18 +117,18 @@ public class Global {
     public static final String qtinText = "EAN13: ";
 
     public static final String prodDateID = "11";
-    public static final String prodDateText = "Data pakowania: ";
+    public static final String prodDateText = "Production date: ";
     public static final String expiryDateID = "15";
-    public static final String expiryDateText = "Data ważności: ";
+    public static final String expiryDateText = "Expiration date: ";
     public static final String lotID = "10";
     public static final String lotText = "Lot: ";
     public static final String quantityID = "30";
-    public static final String quantityText = "Ilość sztuk: ";
+    public static final String quantityText = "Quantity: ";
     public static final String nettoID = "3102";
-    public static final String nettoText = "Ilość kilogramów: ";
-    public static final String productNameText = "Nazwa produktu: ";
-    public static final String palleteNumberText = "Numer palety:  ";
-    public static final String employeeCodeText = "Kod operatora:  ";
+    public static final String nettoText = "Netto weight: ";
+    public static final String productNameText = "Product name: ";
+    public static final String palleteNumberText = "Pallete number:  ";
+    public static final String employeeCodeText = "Operator code:  ";
     public static String palleteNumberID = "91";
 
     public static final String ean128TemplateLot = "(01)n13+cd(10)an1-19(15)n6";

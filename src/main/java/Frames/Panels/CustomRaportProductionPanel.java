@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
@@ -36,7 +37,7 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Przemysław
  */
-public class NewRaportProductionPanel extends javax.swing.JPanel {
+public class CustomRaportProductionPanel extends javax.swing.JPanel {
 
     DataBaseConnector dbc = null;
     Employee employee;
@@ -75,6 +76,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         comboBoxProductType.setEnabled(state);
         spinnerExpiry.setEnabled(state);
         buttonAssignBatch.setEnabled(state);
+        textFieldBatchInfo.setEnabled(state);
 
         tablePallete.setEnabled(!state);
         tableDirectPackage.setEnabled(!state);
@@ -125,7 +127,16 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         comboBoxProductType.setSelectedItem(null);
     }
 
-    public NewRaportProductionPanel(Employee emp) {
+    private void initOperators() {
+        ArrayList<Employee> ale = dbc.getOperators();
+        Collections.sort(ale);
+        for (Employee e : ale) {
+            comboBoxEmployee.addItem(e);
+        }
+        comboBoxEmployee.setSelectedItem(null);
+    }
+
+    public CustomRaportProductionPanel(Employee emp) {
         initComponents();
         setPreInitControls(true);
         dbc = Global.getDataBaseConnector();
@@ -135,7 +146,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         initProductionLines();
         initProductType();
         initProductionCoffee();
-        textFieldBatchInfo.setEnabled(false);
+        initOperators();
 
         buttonAssignBatch.setEnabled(true);
         tableDirectPackage.getModel().addTableModelListener(new CheckBoxDirectPackageRaport(2, 3));
@@ -273,6 +284,10 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         jSeparator2 = new javax.swing.JSeparator();
+        jLabel13 = new javax.swing.JLabel();
+        spinnerProdDate = new javax.swing.JSpinner();
+        comboBoxEmployee = new javax.swing.JComboBox();
+        jLabel14 = new javax.swing.JLabel();
 
         buttonSendRaport.setText("Rozlicz zarezerwowaną kawę");
         buttonSendRaport.addActionListener(new java.awt.event.ActionListener() {
@@ -424,7 +439,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
         jLabel9.setText("Informacje dodatkowe");
 
-        buttonAssignBatch.setText("Nadaj");
+        buttonAssignBatch.setText("Sprawdź");
         buttonAssignBatch.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAssignBatchActionPerformed(evt);
@@ -434,6 +449,12 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         spinnerExpiry.setModel(new javax.swing.SpinnerDateModel());
 
         jLabel12.setText("Data ważność");
+
+        jLabel13.setText("Data produkcji");
+
+        spinnerProdDate.setModel(new javax.swing.SpinnerDateModel());
+
+        jLabel14.setText("Pracownik");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -471,7 +492,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel21)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 301, Short.MAX_VALUE))
                                     .addComponent(jScrollPane3)
                                     .addComponent(jScrollPane1)))
                             .addGroup(layout.createSequentialGroup()
@@ -498,7 +519,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                                 .addComponent(jLabel12, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                                         .addGap(18, 18, 18)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGroup(layout.createSequentialGroup()
                                                 .addComponent(comboBoxProductType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -507,8 +527,18 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                                 .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(buttonAssignBatch))
-                                            .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                            .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(jLabel13)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(spinnerProdDate, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(4, 4, 4)
+                                                .addComponent(jLabel14)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(comboBoxEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
@@ -527,7 +557,12 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel12)
-                    .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerExpiry, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel13)
+                        .addComponent(spinnerProdDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboBoxEmployee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel14)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel8)
@@ -693,7 +728,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                             pc.setProdDate(productionRaportPart.getRaportDate());
                             rp.setProductionRaportPart(productionRaportPart);
                             rp.setProductionCoffee(pc);
-                            
+
                             productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
                             dbc.saveTransation(pc);
                             dbc.saveTransation(rp);
@@ -725,45 +760,27 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private void buttonAssignBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAssignBatchActionPerformed
         if (selectedProductionLine != null && selectedProductType != null) {
             try {
-                ProductionRaportPart prp = dbc.getLatestProductionRaportPart(selectedProductionLine, employee);
-                if (prp == null) {
-                    prp = new ProductionRaportPart();
-                    JOptionPane.showMessageDialog(null, "Nadano nowy numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
-                } else if (prp.getLabTestState() > 0) {
-                    prp = new ProductionRaportPart();
-                    JOptionPane.showMessageDialog(null, "Nadano nowy numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
+                String batch = textFieldBatchInfo.getText();
+                boolean result = dbc.tryLatestProductionRaportPart(batch);
+                if (!result) {
+                    productionRaportPart = new ProductionRaportPart();
+                    productionRaportPart.setEmp((Employee) comboBoxEmployee.getSelectedItem());
+                    productionRaportPart.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
+                    productionRaportPart.setProductType(selectedProductType);
+                    productionRaportPart.setProductionLine(selectedProductionLine);
+                    productionRaportPart.setRaportDate(new Timestamp(((Date) spinnerProdDate.getValue()).getTime()));
+                    productionRaportPart.setBatchInfo(batch);
+                    textFieldBatchInfo.setText(batch);
+                    setPreInitControls(false);
+                    dbc.saveObject(productionRaportPart);
                 } else {
-                    DefaultTableModel dtm = (DefaultTableModel) tablePallete.getModel();
-                    dtm.setRowCount(0);
-                    for (Pallete p : prp.getPallete()) {
-                        summaryWeight += p.getNetto();
-                        summaryPcs += p.getQuantity();
-                        summaryPalletes++;
-
-                        dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
-
-                    }
-                    dtm.addRow(new Object[]{null, null, null, null, false, false, false});
-                    JOptionPane.showMessageDialog(null, "Załadowano istniejący numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
+                    JOptionPane.showMessageDialog(null, "Raport o tym numerze już istnieje", "Uwaga", JOptionPane.INFORMATION_MESSAGE);
                 }
-                prp.setEmp(employee);
-                prp.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
-                prp.setProductType(selectedProductType);
-                prp.setProductionLine(selectedProductionLine);
-                prp.setRaportDate(new Timestamp(System.currentTimeMillis()));
-                dbc.saveObject(prp);
-                dbc.updateObject(prp);
-                String batch = Global.timestampToStrYYMMDD(prp.getExpiryDate()) + 'L' + String.format("%07d", prp.getId());
-                prp.setBatchInfo(batch);
-                textFieldBatchInfo.setText(batch);
-                dbc.updateObject(prp);
-                this.productionRaportPart = prp;
 
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
-
     }//GEN-LAST:event_buttonAssignBatchActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -773,6 +790,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private javax.swing.JButton buttonProductionCoffeeSeek;
     private javax.swing.JButton buttonSendRaport;
     private javax.swing.JComboBox comboBoxBean;
+    private javax.swing.JComboBox comboBoxEmployee;
     private javax.swing.JComboBox comboBoxProductType;
     private javax.swing.JComboBox comboBoxProductionCoffee;
     private javax.swing.JComboBox comboBoxProductionLine;
@@ -781,6 +799,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel21;
@@ -798,6 +818,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSpinner spinnerExpiry;
     private javax.swing.JSpinner spinnerOxygen;
+    private javax.swing.JSpinner spinnerProdDate;
     private javax.swing.JSpinner spinnerProductionCoffeeSeek;
     private javax.swing.JSpinner spinnerStickWeight;
     private javax.swing.JTable tableDirectPackage;

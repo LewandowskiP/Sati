@@ -22,10 +22,13 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.imageio.ImageIO;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.MediaPrintableArea;
@@ -159,32 +162,6 @@ public class Pallete implements Details {
         }
     }
 
-    public void showDetails(int mode) {
-
-        DataBaseConnector dbc = Global.getDataBaseConnector();
-        dbc.openSession();
-        String[] options;
-        if (mode == Global.MODE_PRINT_DELETE) {
-            options = new String[]{"Drukuj", "Usuń"};
-        } else {
-            options = new String[]{"Drukuj", "Usuń", "Edytuj", "Zamknij",};
-        }
-        int result = JOptionPane.showOptionDialog(null, new DetailsPalletePanel(this), "Podgląd etykiety.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-        if (result == 0) {
-            try {
-                this.printLabel();
-            } catch (IOException ex) {
-                Logger.getLogger(Pallete.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        if (result == 1) {
-            dbc.deleteObject(this);
-        }
-        if (result == 2) {
-//TODO Edit pallete window
-        }
-    }
-
     public void buildLabel(Graphics2D g) throws IOException {
 
         Font font = new Font("Arial", Font.PLAIN, Global.labelFontSize);
@@ -240,6 +217,13 @@ public class Pallete implements Details {
         xOffset = Global.labelOffset;
         yOffset += Global.labelOffset;
         g.drawImage(imageNum.getScaledInstance(imageNum.getWidth(), imageNum.getHeight(), 0), xOffset, yOffset, null);
+
+        xOffset += 300;
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("logo.jpg");
+        BufferedImage logo = ImageIO.read(is);
+        g.drawImage(logo.getScaledInstance(350, 350, 0), xOffset, yOffset, null);
+        xOffset -= 300;
 
         xOffset += Global.labelOffset;
         yOffset += imageNum.getHeight() + Global.labelOffset;

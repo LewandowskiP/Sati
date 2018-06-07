@@ -1750,4 +1750,26 @@ public class DataBaseConnector {
         return alpcr;
 
     }
+
+    public boolean tryLatestProductionRaportPart(String batch) {
+
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.batchInfo = :batch";
+        Query q = s.createQuery(hql);
+        q.setParameter("batch", batch);
+        List result = (List<ProductionRaportPart>) q.list();
+        return result.size() > 0;
+    }
+
+    public ArrayList<Employee> getOperators() {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM Employee E WHERE E.jobPosition = :pos";
+        Query q = s.createQuery(hql);
+        q.setParameter("pos", Global.OPERATOR);
+        return (ArrayList<Employee>) q.list();
+    }
 }

@@ -5,13 +5,13 @@
  */
 package Frames.Panels;
 
-import ProductClasses.ProductType;
 import ProductClasses.RoastRaport;
 import ProductionClasses.ProductionLine;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -44,7 +44,7 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
     String directoryUrl;
     XSSFWorkbook workbook;
 
-    Object[] headerProduction = {"Numer partii", "Data Produkcji", "Maszyna", "Zmiana", "Kod operatora", "Rodzaj wyprodukowanej kawy", "Ilość pobranej kawy", "Wielkość palety", "Ilość palet", "Reszta[szt]", "Razem[szt]", "Reszta[kg]", "Razem[Kg]", "Uwagi"};
+    Object[] headerProduction = {"Numer partii", "Data Produkcji", "Maszyna", "Zmiana", "Kod operatora", "Rodzaj wyprodukowanej kawy", "Ilość pobranej kawy", "Ilość palet", "Razem[szt]", "Razem[Kg]", "Uwagi"};
     Object[] headerRoast = {"Data Produkcji", "Maszyna", "Operator", "Typ Kawy", "Ilość Kawy", "Typ składnika", "Ilość składnika", "Typ produktu", "Kawa zasypana", "Kawa Upalona", "Temperatura", "Kolor", "Uwagi"};
 
     private void transformProduction(ArrayList<ProductionRaportPart> prp) {
@@ -99,7 +99,7 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
             XSSFFunctions.fixCellStyle(sheet, workbook, headerProduction.length, rowNum, 0, 2);
 
             XSSFFunctions.fixCellFormat(sheet, workbook, 1, rowNum, 6, 2);
-            XSSFFunctions.fixCellFormat(sheet, workbook, 2, rowNum, 11, 2);
+            XSSFFunctions.fixCellFormat(sheet, workbook, 1, rowNum, 9, 2);
         }
     }
 
@@ -314,18 +314,16 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
                 File f = new File(textFieldFullPath.getText());
                 try {
                     f.createNewFile();
-                    FileOutputStream outputStream = new FileOutputStream(f);
-                    workbook.write(outputStream);
-                    workbook.close();
-                    outputStream.close();
+                    try (FileOutputStream outputStream = new FileOutputStream(f)) {
+                        workbook.write(outputStream);
+                        workbook.close();
+                    }
                     JOptionPane.showMessageDialog(this, "Wygenerowano");
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_buttonGenerateActionPerformed

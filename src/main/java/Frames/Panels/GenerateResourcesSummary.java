@@ -13,6 +13,7 @@ import ProductClasses.AromaChangeHistory;
 import ProductClasses.AromaType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -195,9 +196,9 @@ public class GenerateResourcesSummary extends javax.swing.JPanel {
             Hyperlink linkAroma = createHelper.createHyperlink(HyperlinkType.DOCUMENT);
             linkAroma.setAddress("'AROMATY'!A1");
 
-            ArrayList<ResourceData> greenData = new ArrayList<ResourceData>();
-            ArrayList<ResourceData> instantData = new ArrayList<ResourceData>();
-            ArrayList<ResourceData> aromaData = new ArrayList<ResourceData>();
+            ArrayList<ResourceData> greenData = new ArrayList<>();
+            ArrayList<ResourceData> instantData = new ArrayList<>();
+            ArrayList<ResourceData> aromaData = new ArrayList<>();
             int instantNum = 1;
             int greenNum = 1;
             int aromaNum = 1;
@@ -209,7 +210,7 @@ public class GenerateResourcesSummary extends javax.swing.JPanel {
             for (Object o : coffeeTypes) {
                 CoffeeType ct = (CoffeeType) o;
                 ArrayList<CoffeeGreen> alcg = dbc.getCoffeeGreenWithCoffeeTypeNoState(ct);
-                ArrayList<HistoryData> alhd = new ArrayList<HistoryData>();
+                ArrayList<HistoryData> alhd = new ArrayList<>();
                 Float currentWeight = new Float(0);
                 for (CoffeeGreen cg : alcg) {
                     currentWeight += cg.getCurrentWeight();
@@ -246,7 +247,7 @@ public class GenerateResourcesSummary extends javax.swing.JPanel {
             for (Object o : aromaTypes) {
                 AromaType at = (AromaType) o;
                 ArrayList<Aroma> ala = dbc.getAromaWithAromaTypeNoState(at);
-                ArrayList<HistoryData> alhd = new ArrayList<HistoryData>();
+                ArrayList<HistoryData> alhd = new ArrayList<>();
                 Float currentWeight = new Float(0);
                 for (Aroma a : ala) {
                     currentWeight += a.getQuantity();
@@ -296,18 +297,16 @@ public class GenerateResourcesSummary extends javax.swing.JPanel {
                 File f = new File(textFieldFullPath.getText());
                 try {
                     f.createNewFile();
-                    FileOutputStream outputStream = new FileOutputStream(f);
-                    workbook.write(outputStream);
-                    workbook.close();
-                    outputStream.close();
+                    try (FileOutputStream outputStream = new FileOutputStream(f)) {
+                        workbook.write(outputStream);
+                        workbook.close();
+                    }
                     JOptionPane.showMessageDialog(this, "Wygenerowano");
                 } catch (FileNotFoundException e) {
-                    e.printStackTrace();
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(this, e.getMessage());
         }
 
