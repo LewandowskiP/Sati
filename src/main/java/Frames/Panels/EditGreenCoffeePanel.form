@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JPanelFormInfo">
+  <NonVisualComponents>
+    <Component class="java.awt.Button" name="button1">
+      <Properties>
+        <Property name="label" type="java.lang.String" value="button1"/>
+      </Properties>
+    </Component>
+  </NonVisualComponents>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" attributes="0">
+                      <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+                      <Component id="labelCoffeeLabId" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="labelCoffeOwner1" max="32767" attributes="0"/>
+                          <Component id="labelCoffeOwner" alignment="0" max="32767" attributes="0"/>
+                          <Component id="jLabel1" alignment="0" min="-2" pref="102" max="-2" attributes="0"/>
+                          <Component id="labelNumberOfPacks" alignment="0" max="32767" attributes="0"/>
+                          <Component id="labelCoffeeDossierNumber" alignment="0" max="32767" attributes="0"/>
+                          <Component id="labelContractNumber" alignment="0" pref="107" max="32767" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Component id="textFieldContractNumber" pref="101" max="32767" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="1" pref="1" max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="comboBoxCoffeeOwner" min="-2" max="-2" attributes="0"/>
+                                  <Component id="comboBoxCoffeeType" min="-2" max="-2" attributes="0"/>
+                                  <Component id="comboBoxProvider" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="46" max="-2" attributes="0"/>
+                          </Group>
+                          <Component id="textFieldDossierNumber" pref="101" max="32767" attributes="0"/>
+                          <Component id="spinnerPacksNumber" alignment="0" max="32767" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Component id="buttonRegisterToLaboratory" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="labelPackType" min="-2" pref="107" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="comboBoxPackType" min="-2" max="-2" attributes="0"/>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="labelWeight" min="-2" pref="107" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="spinnerCoffeeWeight" min="-2" pref="101" max="-2" attributes="0"/>
+                  </Group>
+              </Group>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="labelCoffeeLabId" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="comboBoxCoffeeType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelCoffeOwner1" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="comboBoxCoffeeOwner" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="labelCoffeOwner" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="comboBoxProvider" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelCoffeeDossierNumber" alignment="3" min="-2" pref="17" max="-2" attributes="0"/>
+                  <Component id="textFieldDossierNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace min="-2" pref="6" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelContractNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="textFieldContractNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelPackType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="comboBoxPackType" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelNumberOfPacks" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="spinnerPacksNumber" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="labelWeight" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="spinnerCoffeeWeight" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
+              <EmptySpace type="separate" min="-2" max="-2" attributes="0"/>
+              <Component id="buttonRegisterToLaboratory" min="-2" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Component class="javax.swing.JLabel" name="labelCoffeOwner">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="W&#x142;a&#x15b;ciciel Kawy"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboBoxCoffeeOwner">
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboBoxPackType">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelPackType">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Rodzaj Pakownia"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelNumberOfPacks">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ilo&#x15b;&#x107; Opakowa&#x144;"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelCoffeeDossierNumber">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Dossier"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelContractNumber">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Numer Kontraktu"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JTextField" name="textFieldContractNumber">
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelWeight">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Waga [Kg]"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonRegisterToLaboratory">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Zatwierd&#x17a; zmiany"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonRegisterToLaboratoryActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JTextField" name="textFieldDossierNumber">
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelCoffeOwner1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Typ kawy"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboBoxCoffeeType">
+    </Component>
+    <Component class="javax.swing.JLabel" name="jLabel1">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Producent"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="comboBoxProvider">
+      <Properties>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="spinnerCoffeeWeight">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(new SpinnerNumberModel(new Float(0), new Float(0),null,new Float(0.01)))&#xa;"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JSpinner" name="spinnerPacksNumber">
+      <Properties>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="labelCoffeeLabId">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="COFFEEID"/>
+      </Properties>
+    </Component>
+  </SubComponents>
+</Form>

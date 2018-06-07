@@ -12,10 +12,10 @@ import java.util.Set;
  *
  * @author Przemysław
  */
-public class CoffeeAttribute {
+public class CoffeeAttribute implements Comparable {
 
     private int id;
-    private Set<CoffeeType> coffeeType = new HashSet<CoffeeType>(0);
+    private Set<CoffeeType> coffeeType = new HashSet<>(0);
     private String shortcut;
     private String attributeName;
 
@@ -63,6 +63,11 @@ public class CoffeeAttribute {
     @Override
     public String toString() {
         return attributeName;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+        return this.id - (((CoffeeAttribute) o).getId());
     }
 
 }

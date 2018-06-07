@@ -1603,19 +1603,6 @@ public class DataBaseConnector {
         return pcer;
     }
 
-    public ArrayList<ProductionRaportPart> getProductionRaportPartWithFromToAndEmployee(Timestamp from, Timestamp to, Employee e) {
-        if (!s.isOpen()) {
-            openSession();
-        }
-        ArrayList<ProductionRaportPart> alrr = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.emp = :e AND PRP.raportDate < :to AND PRP.raportDate >= :from";
-        Query q = s.createQuery(hql);
-        q.setParameter("e", e).setParameter("to", to).setParameter("from", from);
-        List result = (List<ProductionRaportPart>) q.list();
-        alrr.addAll(result);
-        return alrr;
-    }
-
     public ArrayList<ProductionRaportPart> getProductionRaportPartWithFromTo(Timestamp from, Timestamp to) {
         if (!s.isOpen()) {
             openSession();

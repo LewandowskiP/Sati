@@ -24,6 +24,7 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" min="-2" pref="285" max="-2" attributes="0"/>
+                          <Component id="jButton1" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                               <Component id="jLabel3" min="-2" max="-2" attributes="0"/>
@@ -37,10 +38,11 @@
                               <Component id="buttonFindByDate" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="buttonDetails" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="buttonEdit" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jButton1" alignment="0" min="-2" pref="101" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="0" pref="429" max="32767" attributes="0"/>
+                      <EmptySpace min="0" pref="361" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
@@ -64,6 +66,7 @@
                   <Component id="spinnerTo" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonFindByDate" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonDetails" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonEdit" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="350" max="32767" attributes="0"/>
@@ -147,6 +150,15 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Od"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonEdit">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Edytuj"/>
+        <Property name="enabled" type="boolean" value="false"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonEditActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

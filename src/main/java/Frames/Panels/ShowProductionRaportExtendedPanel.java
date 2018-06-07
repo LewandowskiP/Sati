@@ -259,10 +259,6 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
         String options[] = new String[]{"Tak", "Nie"};
         int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz wycofać raport?" + System.lineSeparator() + selected.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
         if (JOptionPane.OK_OPTION == result) {
-            for (Pallete p : selected.getPallete()) {
-                selected.getPallete().remove(p);
-                dbc.deleteObject(p);
-            }
             for (ProductionRaportCoffeeAssignment prca : selected.getProductionRaportCoffeeAssignment()) {
                 prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
                 prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);

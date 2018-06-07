@@ -1,6 +1,9 @@
 package GreenCoffeeClasses;
 
 import SatiInterfaces.HaveType;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -17,7 +20,7 @@ public class CoffeeType implements Comparable, HaveType {
 
     private int id;
     private String type;
-    private Set<CoffeeAttribute> coffeeAttribute = new HashSet<CoffeeAttribute>(0);
+    private Set<CoffeeAttribute> coffeeAttribute = new HashSet<>(0);
 
     public CoffeeType() {
     }
@@ -64,16 +67,38 @@ public class CoffeeType implements Comparable, HaveType {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(type);
-
-        for (CoffeeAttribute ct : coffeeAttribute) {
+        Object[] cta = this.coffeeAttribute.toArray();
+        Arrays.sort(cta);
+        for (Object ct : cta) {
             sb.append(" ");
-            sb.append(ct.getShortcut());
+            sb.append(((CoffeeAttribute) ct).getShortcut());
         }
-
         return sb.toString();
     }
 
+    @Override
     public int compareTo(Object o) {
         return this.getType().compareToIgnoreCase((o.toString()));
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final CoffeeType other = (CoffeeType) obj;
+
+        return other.getId() == this.getId();
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode() + 5;
+        return hash;
+    }
+
 }
