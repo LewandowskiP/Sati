@@ -10,23 +10,13 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
-import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import java.util.List;
-import javax.print.PrintService;
-import javax.print.PrintServiceLookup;
-import javax.print.attribute.HashPrintRequestAttributeSet;
-import javax.print.attribute.PrintRequestAttributeSet;
-import javax.print.attribute.standard.OrientationRequested;
-import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
-import javax.swing.SwingUtilities;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableColumn;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -34,14 +24,15 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Przemysław
  */
-public class BrowseProductsToStore extends javax.swing.JPanel {
+public class BrowseProductsToExport extends javax.swing.JPanel {
 
     /**
      * Creates new form BrowseProductsAfterLabTest
      */
     Employee emp;
     DataBaseConnector dbc;
-    final static int details_column = 7;
+    final static int accept_column = 7;
+    final static int details_column = 8;
 
     private void reload() {
         dbc.openSession();
@@ -62,7 +53,7 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
 
     }
 
-    public BrowseProductsToStore(Employee e) {
+    public BrowseProductsToExport(Employee e) {
         initComponents();
         emp = e;
         dbc = Global.getDataBaseConnector();
@@ -117,14 +108,14 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Produkt", "Typ produktu", "Nr Palety", "Lot", "KG", "SZT.", "Linia", "Szcz."
+                "Produkt", "Typ produktu", "Nr Palety", "Lot", "KG", "SZT.", "Linia"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true
+                false, false, false, false, false, true, false
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -146,12 +137,9 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(3).setMinWidth(120);
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(120);
             jTable1.getColumnModel().getColumn(3).setMaxWidth(120);
-            jTable1.getColumnModel().getColumn(7).setMinWidth(40);
-            jTable1.getColumnModel().getColumn(7).setPreferredWidth(40);
-            jTable1.getColumnModel().getColumn(7).setMaxWidth(40);
         }
 
-        jButton1.setText("Drukuj listę");
+        jButton1.setText("Eksportuj");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
@@ -183,32 +171,7 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        int num = 7;
-        final TableColumnModel model = jTable1.getColumnModel();
-        final List<TableColumn> removed = new ArrayList<>();
-        int columnCount = model.getColumnCount();
-        for (int i = num; i < columnCount; ++i) {
-            TableColumn col = model.getColumn(num);
-            removed.add(col);
-            model.removeColumn(col);
-        }
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
-                aset.add(OrientationRequested.LANDSCAPE);
-                PrintService service = PrintServiceLookup.lookupDefaultPrintService();
-                try {
-                    jTable1.print(JTable.PrintMode.FIT_WIDTH, null, null, false, aset, false, service);
-                } catch (PrinterException e) {
-                    e.printStackTrace();
-                }
-                for (TableColumn col : removed) {
-                    model.addColumn(col);
-                }
-            }
-        });
-
+        //TODO Export file to symphony
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

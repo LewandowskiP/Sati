@@ -693,7 +693,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                             pc.setProdDate(productionRaportPart.getRaportDate());
                             rp.setProductionRaportPart(productionRaportPart);
                             rp.setProductionCoffee(pc);
-                            
+
                             productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
                             dbc.saveTransation(pc);
                             dbc.saveTransation(rp);
@@ -747,13 +747,14 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     JOptionPane.showMessageDialog(null, "Załadowano istniejący numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 }
                 prp.setEmp(employee);
+                prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_NEW);
                 prp.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
                 prp.setProductType(selectedProductType);
                 prp.setProductionLine(selectedProductionLine);
                 prp.setRaportDate(new Timestamp(System.currentTimeMillis()));
                 dbc.saveObject(prp);
                 dbc.updateObject(prp);
-                String batch = Global.timestampToStrYYMMDD(prp.getExpiryDate()) + 'L' + String.format("%07d", prp.getId());
+                String batch = String.format("%08d", prp.getId());
                 prp.setBatchInfo(batch);
                 textFieldBatchInfo.setText(batch);
                 dbc.updateObject(prp);

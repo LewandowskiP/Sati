@@ -1608,7 +1608,7 @@ public class DataBaseConnector {
             openSession();
         }
         ArrayList<ProductionRaportPart> alrr = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.raportDate < :to AND PRP.raportDate >= :from";
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.raportDate < :to AND PRP.raportDate >= :from AND PRP.latTestState > 0";
         Query q = s.createQuery(hql);
         q.setParameter("to", to).setParameter("from", from);
         List result = (List<ProductionRaportPart>) q.list();

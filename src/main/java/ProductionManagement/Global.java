@@ -81,6 +81,7 @@ public class Global {
     public static final int PRODUCTION_RAPORT_PART_BLOCKED = 2;
     public static final int PRODUCTION_RAPORT_PART_ACCEPTED = 3;
     public static final int PRODUCTION_RAPORT_PART_TO_STORE = 4;
+    public static final int PRODUCTION_RAPORT_PART_NEW = -1;
 
     public static final int PRODUCTION_RAPORT_PART_STORED = 0;
 
@@ -106,6 +107,7 @@ public class Global {
     public static final int PALLETE_WAITING = 1;
     public static final int PALLETE_CHECKED = 2;
     public static final int PALLETE_STORED = 3;
+    public static final int PALLETE_MIGRATED = 4;
 
     public static final int MODE_PRINT_DELETE = 1;
     public static final int MODE_ALL = 2;
@@ -131,7 +133,7 @@ public class Global {
     public static final String employeeCodeText = "Operator code:  ";
     public static String palleteNumberID = "91";
 
-    public static final String ean128TemplateLot = "(01)n13+cd(10)an1-19(15)n6";
+    public static final String ean128TemplateLot = "(01)n13+cd(10)n1-19(15)n6";
     public static final String ean128TemplatePallete = "(11)n6(3102)n6(30)n8";
     public static final String ean128TemplateNum = "(91)an1-30";
     public static final int labelOffset = 20;
