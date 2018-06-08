@@ -31,8 +31,6 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
      */
     Employee emp;
     DataBaseConnector dbc;
-    final static int accept_column = 7;
-    final static int details_column = 8;
 
     private void reload() {
         dbc.openSession();
@@ -59,35 +57,12 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
         dbc = Global.getDataBaseConnector();
         reload();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-
         List<RowSorter.SortKey> sortKeys;
         sortKeys = new ArrayList(25);
         sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         jTable1.setRowSorter(sorter);
-
-        model.addTableModelListener(new TableModelListener() {
-
-            @Override
-            public void tableChanged(TableModelEvent e) {
-                int row = e.getFirstRow();
-                int column = e.getColumn();
-                DefaultTableModel model = (DefaultTableModel) e.getSource();
-                dbc.openSession();
-                if (column == details_column) {
-                    Boolean checked = (Boolean) model.getValueAt(row, column);
-                    if (checked) {
-                        Details prp = (Details) model.getValueAt(row, 0);
-                        prp.showDetails();
-                        model.setValueAt(false, row, column);
-                    }
-                }
-
-            }
-        });
-
     }
 
     /**

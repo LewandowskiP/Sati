@@ -5,7 +5,6 @@
  */
 package Frames.Panels;
 
-import static Frames.Panels.BrowseProductsToStore.accept_column;
 import ProductionClasses.Pallete;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportPart;
@@ -13,11 +12,8 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.awt.print.PrinterException;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Vector;
-import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashPrintRequestAttributeSet;
@@ -25,7 +21,6 @@ import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
-import javax.swing.JTextArea;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.SwingUtilities;
@@ -48,6 +43,7 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
      */
     Employee emp;
     DataBaseConnector dbc;
+    static int accept_column = 7;
 
     private void reload() {
         dbc.openSession();
@@ -98,7 +94,7 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
                 if (column == details_column) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
-                        String options[] = new String[]{"OK"};
+
                         ProductionRaportPart prp = (ProductionRaportPart) model.getValueAt(row, 0);
                         prp.showDetails();
                         model.setValueAt(false, row, column);
@@ -227,7 +223,7 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int num = 7;
         final TableColumnModel model = jTable1.getColumnModel();
-        final List<TableColumn> removed = new ArrayList<TableColumn>();
+        final List<TableColumn> removed = new ArrayList<>();
         int columnCount = model.getColumnCount();
         for (int i = num; i < columnCount; ++i) {
             TableColumn col = model.getColumn(num);
