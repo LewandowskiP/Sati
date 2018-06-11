@@ -5,178 +5,156 @@
  */
 package ProductionClasses;
 
-import ProductClasses.InstantCoffeeMixRaport;
 import ProductClasses.ProductType;
-import ProductClasses.RoastRaport;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.util.Date;
-import javax.swing.text.DateFormatter;
 
 /**
  *
  * @author Przemysław
  */
-public class ProductionOrder {
-    
-     private int id;
-     private int state;
-     private int positionInQueue;
-     private String quantity;
-     private String otherInfo;
-     private ProductType productType;
-     private ProductionLine productionLine;
-     private Employee orderedBy;
-     private Employee completedBy;
+public class ProductionOrder implements Comparable {
 
-     private Timestamp orderTime;
-     private Timestamp completeTime;
+    private int id;
+    private int state;
+    private int positionInQueue;
+    private Integer quantity;
+    private String otherInfo;
+    private ProductType productType;
+    private ProductionLine productionLine;
+    private Employee orderedBy;
+    private Employee completedBy;
 
-     private RoastRaport roastRaport;
-     private ProductionRaportPart productionRaportPart;
-     private InstantCoffeeMixRaport instantCoffeeMixRaport;
-     
-     
-/*
-     public InstantCoffeeMixRaport getInstantCoffeeMixRaport() {
-     return instantCoffeeMixRaport;
-     }
+    private Timestamp orderTime;
+    private Timestamp completeTime;
 
-     public void setInstantCoffeeMixRaport(InstantCoffeeMixRaport instantCoffeeMixRaport) {
-     this.instantCoffeeMixRaport = instantCoffeeMixRaport;
-     }
+    public void makeOrder(ProductionLine productionLine,
+            ProductType productType,
+            Employee orderedBy,
+            Integer quantity,
+            String otherInfo,
+            int positionInQueue) {
+        this.productionLine = productionLine;
+        this.productType = productType;
+        this.orderedBy = orderedBy;
+        this.quantity = quantity;
+        this.otherInfo = otherInfo;
+        this.state = Global.PRODUCTION_ORDER_ORDERED;
+        this.positionInQueue = positionInQueue;
+        this.orderTime = new Timestamp(System.currentTimeMillis());
+    }
 
-     public void moveUp() {
-     this.positionInQueue--;
-     }
+    public void upQueue() {
+        this.positionInQueue--;
+    }
 
-     public ProductionRaportPart getProductionRaportPart() {
-     return productionRaportPart;
-     }
+    public void downQueue() {
+        this.positionInQueue++;
+    }
 
-     public void setProductionRaportPart(ProductionRaportPart productionRaportPart) {
-     this.productionRaportPart = productionRaportPart;
-     }
+    public void completeOrder(Employee completedBy) {
+        this.completedBy = completedBy;
+        this.completeTime = new Timestamp(System.currentTimeMillis());
+        this.state = Global.PRODUCTION_ORDER_COMPLETED;
+    }
 
-     public ProductionOrder(int id, int state, int positionInQueue, String quantity, String otherInfo, ProductType productType, ProductionLine productionLine, Employee orderedBy, Employee completedBy, Timestamp orderTime, Timestamp completeTime) {
-     this.id = id;
-     this.state = state;
-     this.positionInQueue = positionInQueue;
-     this.quantity = quantity;
-     this.otherInfo = otherInfo;
-     this.productType = productType;
-     this.productionLine = productionLine;
-     this.orderedBy = orderedBy;
-     this.completedBy = completedBy;
-     this.orderTime = orderTime;
-     this.completeTime = completeTime;
-     }
+    public int getId() {
+        return id;
+    }
 
-     public RoastRaport getRoastRaport() {
-     return roastRaport;
-     }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-     public void setRoastRaport(RoastRaport roastRaport) {
-     this.roastRaport = roastRaport;
-     }
+    public int getState() {
+        return state;
+    }
 
-     public ProductionOrder() {
-     }
+    public void setState(int state) {
+        this.state = state;
+    }
 
-     public int getId() {
-     return id;
-     }
+    public int getPositionInQueue() {
+        return positionInQueue;
+    }
 
-     public void setId(int id) {
-     this.id = id;
-     }
+    public void setPositionInQueue(int positionInQueue) {
+        this.positionInQueue = positionInQueue;
+    }
 
-     public int getState() {
-     return state;
-     }
+    public Integer getQuantity() {
+        return quantity;
+    }
 
-     public void setState(int state) {
-     this.state = state;
-     }
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
+    }
 
-     public int getPositionInQueue() {
-     return positionInQueue;
-     }
+    public String getOtherInfo() {
+        return otherInfo;
+    }
 
-     public void setPositionInQueue(int positionInQueue) {
-     this.positionInQueue = positionInQueue;
-     }
+    public void setOtherInfo(String otherInfo) {
+        this.otherInfo = otherInfo;
+    }
 
-     public ProductType getProductType() {
-     return productType;
-     }
+    public ProductType getProductType() {
+        return productType;
+    }
 
-     public void setProductType(ProductType productType) {
-     this.productType = productType;
-     }
+    public void setProductType(ProductType productType) {
+        this.productType = productType;
+    }
 
-     public ProductionLine getProductionLine() {
-     return productionLine;
-     }
+    public ProductionLine getProductionLine() {
+        return productionLine;
+    }
 
-     public void setProductionLine(ProductionLine productionLine) {
-     this.productionLine = productionLine;
-     }
+    public void setProductionLine(ProductionLine productionLine) {
+        this.productionLine = productionLine;
+    }
 
-     public Employee getOrderedBy() {
-     return orderedBy;
-     }
+    public Employee getOrderedBy() {
+        return orderedBy;
+    }
 
-     public void setOrderedBy(Employee orderedBy) {
-     this.orderedBy = orderedBy;
-     }
+    public void setOrderedBy(Employee orderedBy) {
+        this.orderedBy = orderedBy;
+    }
 
-     public Employee getCompletedBy() {
-     return completedBy;
-     }
+    public Employee getCompletedBy() {
+        return completedBy;
+    }
 
-     public void setCompletedBy(Employee completedBy) {
-     this.completedBy = completedBy;
-     }
+    public void setCompletedBy(Employee completedBy) {
+        this.completedBy = completedBy;
+    }
 
-     public String getQuantity() {
-     return quantity;
-     }
+    public Timestamp getOrderTime() {
+        return orderTime;
+    }
 
-     public void setQuantity(String quantity) {
-     this.quantity = quantity;
-     }
+    public void setOrderTime(Timestamp orderTime) {
+        this.orderTime = orderTime;
+    }
 
-     public Timestamp getOrderTime() {
-     return orderTime;
-     }
+    public Timestamp getCompleteTime() {
+        return completeTime;
+    }
 
-     public void setOrderTime(Timestamp orderTime) {
-     this.orderTime = orderTime;
-     }
+    public void setCompleteTime(Timestamp completeTime) {
+        this.completeTime = completeTime;
+    }
 
-     public Timestamp getCompleteTime() {
-     return completeTime;
-     }
+    @Override
+    public int compareTo(Object o) {
+        return this.positionInQueue - ((ProductionOrder) o).getPositionInQueue();
+    }
 
-     public void setCompleteTime(Timestamp completeTime) {
-     this.completeTime = completeTime;
-     }
+    @Override
+    public String toString() {
+        return positionInQueue + 1 + ". " + productType.getProductName() + " " + quantity + " Kg/Szt. Uwagi:" + otherInfo;
+    }
 
-     public String getOtherInfo() {
-     return otherInfo;
-     }
-
-     public void setOtherInfo(String otherInfo) {
-     this.otherInfo = otherInfo;
-     }
-
-     @Override
-     public String toString() {
-     return productType + " " + quantity + " " + Global.timestampToStrDDMMYYYY(orderTime) + " " + otherInfo;
-
-     }
-     */
 }

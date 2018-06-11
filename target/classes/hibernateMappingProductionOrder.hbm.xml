@@ -11,9 +11,7 @@
         </id>
         <property name="state" column="state" type="int"/>
         <property name="positionInQueue" column="positionInQueue" type="int"/>
-        <property name="quantity" type="string">
-            <column name="quantity" length="30"/>
-        </property>
+        <property name="quantity" type="int"/>
       
         <property name="otherInfo" type="string">
             <column name="otherInfo" length="50"/>
@@ -24,10 +22,6 @@
         <many-to-one name="completedBy" column="completedBy" class="ProductionManagement.Employee"    not-null="false"   />
         <many-to-one name="productType" column="productType" class="ProductClasses.ProductType"   not-null="false"  />
         <many-to-one name="productionLine" column="productionLine" class="ProductionLine"   not-null="true" />
-        <many-to-one name="roastRaport" column="roastRaport" class="ProductClasses.RoastRaport"   not-null="false" />
-        <many-to-one name="productionRaportPart" column="productionRaportPart" class="ProductionClasses.ProductionRaportPart"   not-null="false" />
-        <many-to-one name="instantCoffeeMixRaport" column="instantCoffeeMixRaport" class="ProductClasses.InstantCoffeeMixRaport"   not-null="false" />
-    
     </class> 
   
 

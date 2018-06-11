@@ -34,6 +34,7 @@ import ProductionClasses.ProductionCoffeeExternalReturn;
 import ProductionClasses.ProductionCoffeeReturn;
 import ProductionClasses.ProductionCoffeeSeek;
 import ProductionClasses.ProductionLine;
+import ProductionClasses.ProductionOrder;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportDirectPackage;
 
@@ -1758,5 +1759,20 @@ public class DataBaseConnector {
         Query q = s.createQuery(hql);
         q.setParameter("pos", Global.OPERATOR);
         return (ArrayList<Employee>) q.list();
+    }
+
+    public ArrayList<ProductionOrder> getProductionOrders(ProductionLine productionLine) {
+
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductionOrder PO WHERE (PO.state = :state2 OR PO.state = :state1) AND PO.productionLine = :productionLine";
+        Query q = s.createQuery(hql);
+        q.setParameter("state1", Global.PRODUCTION_ORDER_ORDERED);
+        q.setParameter("state2", Global.PRODUCTION_ORDER_INPROGRESS);
+        q.setParameter("productionLine", productionLine);
+
+        return (ArrayList<ProductionOrder>) q.list();
+
     }
 }

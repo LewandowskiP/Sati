@@ -14,6 +14,7 @@ import Frames.Panels.AddProductionLinePanel;
 import Frames.Panels.AddReadyCoffeePanel;
 import Frames.Panels.BrowsePalleteGeneral;
 import Frames.Panels.BrowseResourcesToExamine;
+import Frames.Panels.ManageProductionOrders;
 import Frames.Panels.NewRaportProductionPanel;
 import GreenCoffeeClasses.CoffeeAttribute;
 import GreenCoffeeClasses.CoffeeGreen;
@@ -102,7 +103,7 @@ public class AdministratorFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonAddCoffeeType.setText("Kawa Typ");
+        buttonAddCoffeeType.setText("production order");
         buttonAddCoffeeType.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAddCoffeeTypeActionPerformed(evt);
@@ -355,7 +356,7 @@ public class AdministratorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonAddAromaTypeActionPerformed
 
     private void buttonAddCoffeeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCoffeeTypeActionPerformed
-        scrollPanelAdministratorFrame.setViewportView(new AddReadyCoffeePanel(emp));
+        scrollPanelAdministratorFrame.setViewportView(new ManageProductionOrders(emp));
     }//GEN-LAST:event_buttonAddCoffeeTypeActionPerformed
 
     private void buttonProductCountryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProductCountryActionPerformed

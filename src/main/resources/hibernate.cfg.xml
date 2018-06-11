@@ -55,6 +55,6 @@
         <mapping class="ProductionRaportDirectPackage" resource="hibernateMappingProductionRaportDirectPackage.hbm.xml"/>
         <mapping class="ReturnedProduct" resource="hibernateMappingReturnedProduct.hbm.xml"/>
         <mapping class="Pallete" resource="hibernateMappingPallete.hbm.xml"/>
-      
+        <mapping class="ProductionOrder" resource="hibernateMappingProductionOrder.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

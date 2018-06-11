@@ -69,6 +69,13 @@ public class Global {
     public static final int PRODUCT_ACCEPTED = 2;
     public static final int PRODUCT_COMPLETED = 3;
     public static final int PRODUCT_STORED = 4;
+    
+    
+    
+    public static final int PRODUCTION_ORDER_ORDERED = 1;
+    public static final int PRODUCTION_ORDER_INPROGRESS = 2;
+    public static final int PRODUCTION_ORDER_COMPLETED = 3;
+    
 
     public static final boolean FILE_READ_ONLY = false;
     public static final boolean FILE_WRITEABLE = true;
