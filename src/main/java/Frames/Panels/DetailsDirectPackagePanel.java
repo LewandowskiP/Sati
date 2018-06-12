@@ -25,7 +25,7 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
      */
     private final DirectPackage directPackage;
 
-    public void loadData() {
+    private void loadData() {
         textFieldCoffeeName.setText(directPackage.getDirectPackageType().toString());
         textFieldLabId.setText(directPackage.getLabId());
         textFieldProvider.setText(directPackage.getProvider().toString());
@@ -38,6 +38,7 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
     public DetailsDirectPackagePanel(DirectPackage dp) {
         initComponents();
         directPackage = dp;
+        loadData();
 
     }
 

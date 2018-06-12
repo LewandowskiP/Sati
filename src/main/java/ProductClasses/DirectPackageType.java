@@ -44,4 +44,22 @@ public class DirectPackageType implements Comparable, HaveType {
         return this.toString().compareToIgnoreCase(o.toString());
     }
 
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode() + 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DirectPackageType other = (DirectPackageType) obj;
+        return other.getId() == this.getId();
+    }
+
 }

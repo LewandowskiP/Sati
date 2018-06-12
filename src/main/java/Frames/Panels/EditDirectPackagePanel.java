@@ -30,38 +30,40 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
     DataBaseConnector dbc;
     Employee emp;
     private final DirectPackage directPackage;
-
+    
     public EditDirectPackagePanel(DirectPackage dp) {
         initComponents();
         this.directPackage = dp;
-
+        
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
             dbc.clearSession();
-
+            
         }
         dbc.openSession();
         aldpt = dbc.getDirectPackageType();
         Object[] o = aldpt.toArray();
         Arrays.sort(o);
-
+        
         comboBoxDirectPackageType.removeAllItems();
         for (Object ob : o) {
             DirectPackageType dpt = (DirectPackageType) ob;
             comboBoxDirectPackageType.addItem(dpt);
         }
         comboBoxDirectPackageType.setSelectedItem(dp.getDirectPackageType());
-
+        
         alp = dbc.getProvider();
         o = alp.toArray();
         Arrays.sort(o);
-
+        
         comboBoxProvider.removeAllItems();
         for (Object ob : o) {
             comboBoxProvider.addItem(ob);
         }
         comboBoxProvider.setSelectedItem(dp.getProvider());
-
+        
+        labelLabId.setText(dp.getLabId());
+        
         spinnerWeight.setValue(dp.getWeight());
         spinnerWeight.setEnabled(false);
     }

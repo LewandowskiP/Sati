@@ -24,7 +24,7 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
      */
     private final Aroma aroma;
 
-    public void loadData() {
+    private void loadData() {
         textFieldArrivalWeight.setText(Float.toString(aroma.getArrivalQuantity()));
         textFieldCurrentWeight.setText(Float.toString(aroma.getQuantity()));
         textFieldCoffeeName.setText(aroma.getAromaType().toString());
@@ -37,7 +37,7 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
     public DetailsAromaPanel(Aroma a) {
         initComponents();
         aroma = a;
-
+        loadData();
     }
 
     /**

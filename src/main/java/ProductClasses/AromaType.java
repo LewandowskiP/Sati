@@ -33,10 +33,12 @@ public class AromaType implements Comparable, HaveType {
         this.id = id;
     }
 
+    @Override
     public String getType() {
         return type;
     }
 
+    @Override
     public void setType(String type) {
         this.type = type;
     }
@@ -46,8 +48,28 @@ public class AromaType implements Comparable, HaveType {
         return type;
     }
 
+    @Override
     public int compareTo(Object o) {
         return this.toString().compareToIgnoreCase(o.toString());
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = super.hashCode() + 7;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+
+        final AromaType other = (AromaType) obj;
+        return other.getId() == this.getId();
     }
 
 }

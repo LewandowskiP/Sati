@@ -190,6 +190,7 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
     private void buttonDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDetailsActionPerformed
         Details det = (Details) selectedObject;
         det.showDetails();
+        reload();
     }//GEN-LAST:event_buttonDetailsActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

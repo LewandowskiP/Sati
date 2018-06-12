@@ -58,4 +58,24 @@ public class PackType implements Comparable, HaveType {
     public int compareTo(Object o) {
         return this.getType().compareToIgnoreCase(o.toString());
     }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 97 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final PackType other = (PackType) obj;
+        return this.id == other.id;
+    }
+
 }
