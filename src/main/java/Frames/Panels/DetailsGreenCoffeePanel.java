@@ -22,22 +22,26 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
     /**
      * Creates new form GreenCoffeeDetailsPanel
      */
-    private CoffeeGreen coffeeGreen;
+    private final CoffeeGreen coffeeGreen;
+
+    private void loadData() {
+        textFieldArrivalWeight.setText(Float.toString(coffeeGreen.getArrivalWeight()));
+        textFieldCoffeeName.setText(coffeeGreen.getCoffeeType().toString());
+        textFieldContractNumber.setText(coffeeGreen.getContractNumber());
+        textFieldCurrentWeight.setText(Float.toString(coffeeGreen.getCurrentWeight()));
+        textFieldDossier.setText(coffeeGreen.getDossierNumber());
+        textFieldLabId.setText(coffeeGreen.getLabId());
+        textFieldOwner.setText(coffeeGreen.getCoffeeOwner().toString());
+        textFieldPackType.setText(coffeeGreen.getPackType().toString());
+        textFieldProvider.setText(coffeeGreen.getProvider().toString());
+        textFieldStoreman.setText(coffeeGreen.getStoreman().toString());
+        textFieldArrivalDate.setText(coffeeGreen.getArrivalDate().toString());
+    }
 
     public DetailsGreenCoffeePanel(CoffeeGreen cg) {
         initComponents();
         coffeeGreen = cg;
-        textFieldArrivalWeight.setText(Float.toString(cg.getArrivalWeight()));
-        textFieldCoffeeName.setText(cg.getCoffeeType().toString());
-        textFieldContractNumber.setText(cg.getContractNumber());
-        textFieldCurrentWeight.setText(Float.toString(cg.getCurrentWeight()));
-        textFieldDossier.setText(cg.getDossierNumber());
-        textFieldLabId.setText(cg.getLabId());
-        textFieldOwner.setText(cg.getCoffeeOwner().toString());
-        textFieldPackType.setText(cg.getPackType().toString());
-        textFieldProvider.setText(cg.getProvider().toString());
-        textFieldStoreman.setText(cg.getStoreman().toString());
-        textFieldArrivalDate.setText(cg.getArrivalDate().toString());
+        loadData();
     }
 
     /**
@@ -74,6 +78,7 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
         textFieldArrivalDate = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        buttonEdit2 = new javax.swing.JButton();
 
         jLabel1.setText("Nazwa kawy");
 
@@ -140,6 +145,13 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
             }
         });
 
+        buttonEdit2.setText("Edytuj");
+        buttonEdit2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEdit2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -150,9 +162,7 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonShowLabTest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 112, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -178,8 +188,12 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
                             .addComponent(textFieldDossier)
                             .addComponent(textFieldOwner)
                             .addComponent(textFieldProvider)
-                            .addComponent(textFieldLabId))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(textFieldLabId)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonEdit2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 159, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(13, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -231,9 +245,12 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
                 .addGap(21, 21, 21)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonShowLabTest)
-                    .addComponent(jButton1)
                     .addComponent(jButton2))
-                .addGap(14, 14, 14))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonEdit2)
+                    .addComponent(jButton1))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -297,7 +314,20 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void buttonEdit2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEdit2ActionPerformed
+        if (Global.getEmployee().getJobPosition() == Global.ADMINISTRATOR
+                || Global.getEmployee().getJobPosition() == Global.STOREMAN
+                || Global.getEmployee().getJobPosition() == Global.OFFICE
+                || Global.getEmployee().getJobPosition() == Global.LAB_ASSISTANT) {
+            coffeeGreen.edit();
+            loadData();
+        } else {
+            JOptionPane.showMessageDialog(null, "Brak uprawnień!", "Uwaga!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_buttonEdit2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonEdit2;
     private javax.swing.JButton buttonShowLabTest;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

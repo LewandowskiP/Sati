@@ -7,11 +7,14 @@ package ProductClasses;
 
 import Frames.Panels.DetailsAromaPanel;
 import Frames.Panels.DetailsDirectPackagePanel;
+import Frames.Panels.EditDirectPackagePanel;
+import Frames.Panels.EditGreenCoffeePanel;
 import GreenCoffeeClasses.Provider;
 import ProductionManagement.Employee;
 import ProductionManagement.LabTest;
 import SatiExtends.Test;
 import SatiInterfaces.Details;
+import SatiInterfaces.Editable;
 import java.sql.Timestamp;
 import javax.swing.JOptionPane;
 
@@ -19,7 +22,7 @@ import javax.swing.JOptionPane;
  *
  * @author Przemysław
  */
-public class DirectPackage extends Test implements Details {
+public class DirectPackage extends Test implements Details, Editable {
 
     private int id;
     private int quantity;
@@ -113,9 +116,16 @@ public class DirectPackage extends Test implements Details {
         return this.getLabId() + "  " + directPackageType;
     }
 
+    @Override
       public void showDetails() {
         String[] options = new String[]{"OK"};
         JOptionPane.showOptionDialog(null, new DetailsDirectPackagePanel(this), "Podgląd opakowania bezpośredniego.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
+
+    @Override
+    public void edit() {
+   
+        String[] option = {"Cofnij"};
+        int result = JOptionPane.showOptionDialog(null, new EditDirectPackagePanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);  }
 
 }

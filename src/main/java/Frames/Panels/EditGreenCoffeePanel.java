@@ -7,27 +7,18 @@ package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeCountry;
 import GreenCoffeeClasses.CoffeeGreen;
-import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 import GreenCoffeeClasses.CoffeeOwner;
-import ProductionManagement.LabTest;
 import GreenCoffeeClasses.CoffeeType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import GreenCoffeeClasses.PackType;
 import GreenCoffeeClasses.Provider;
-import ProductClasses.AromaType;
-import ProductClasses.RoastAromaPart;
-import ProductClasses.RoastGreenCoffeePart;
-import ProductClasses.RoastPart;
-import ProductionClasses.ProductionCoffee;
 import ProductionManagement.Global;
-import java.sql.Timestamp;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -248,26 +239,20 @@ public class EditGreenCoffeePanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void buttonRegisterToLaboratoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterToLaboratoryActionPerformed
-        // TODO add your handling code here:
         try {
             dbc.openSession();
             dbc.startTransation();
-
             cg.setCoffeeOwner((CoffeeOwner) comboBoxCoffeeOwner.getSelectedItem());
             cg.setContractNumber(textFieldContractNumber.getText());
             cg.setCoffeeType((CoffeeType) comboBoxCoffeeType.getSelectedItem());
             cg.setDossierNumber(textFieldDossierNumber.getText());
             cg.setProvider((Provider) comboBoxProvider.getSelectedItem());
-
             dbc.saveTransation(cg);
-
             JOptionPane.showMessageDialog(null, "Zmieniono dane.", "Informacja", JOptionPane.INFORMATION_MESSAGE);
             dbc.commitTransation();
-            
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Sprawdź wprowadzone dane", "Błąd", JOptionPane.ERROR_MESSAGE);
             dbc.rollbackTransation();
-            return;
         }
     }//GEN-LAST:event_buttonRegisterToLaboratoryActionPerformed
 

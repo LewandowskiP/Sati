@@ -6,12 +6,14 @@ package GreenCoffeeClasses;
  * and open the template in the editor.
  */
 import Frames.Panels.DetailsGreenCoffeePanel;
+import Frames.Panels.EditGreenCoffeePanel;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.LabTest;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import SatiExtends.Test;
 import SatiInterfaces.Details;
+import SatiInterfaces.Editable;
 import java.sql.Timestamp;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -20,7 +22,7 @@ import javax.swing.JOptionPane;
  *
  * @author Przemysław
  */
-public class CoffeeGreen extends Test implements Details {
+public class CoffeeGreen extends Test implements Details, Editable {
 
     private int id;
     private Timestamp arrivalDate;
@@ -158,6 +160,10 @@ public class CoffeeGreen extends Test implements Details {
 
     }
 
-   
+    @Override
+    public void edit() {
+        String[] option = {"Cofnij"};
+        int result = JOptionPane.showOptionDialog(null, new EditGreenCoffeePanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+    }
 
 }

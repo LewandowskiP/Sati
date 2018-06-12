@@ -6,12 +6,15 @@
 package ProductClasses;
 
 import Frames.Panels.DetailsAromaPanel;
+import Frames.Panels.EditAromaPanel;
+import Frames.Panels.EditGreenCoffeePanel;
 
 import GreenCoffeeClasses.Provider;
 import ProductionManagement.Employee;
 
 import SatiExtends.Test;
 import SatiInterfaces.Details;
+import SatiInterfaces.Editable;
 import java.sql.Timestamp;
 import java.util.Set;
 import javax.swing.JOptionPane;
@@ -20,7 +23,7 @@ import javax.swing.JOptionPane;
  *
  * @author Przemysław
  */
-public class Aroma extends Test implements Details {
+public class Aroma extends Test implements Details, Editable {
 
     private int id;
     private float quantity;
@@ -106,9 +109,16 @@ public class Aroma extends Test implements Details {
         return this.getLabId() + " " + aromaType;
     }
 
+    @Override
     public void showDetails() {
         String[] options = new String[]{"OK"};
         JOptionPane.showOptionDialog(null, new DetailsAromaPanel(this), "Podgląd aromatu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+    }
+
+    @Override
+    public void edit() {
+        String[] option = {"Cofnij"};
+        int result = JOptionPane.showOptionDialog(null, new EditAromaPanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
     }
 
 }

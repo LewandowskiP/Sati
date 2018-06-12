@@ -7,9 +7,11 @@ package Frames.Panels;
 
 import ProductClasses.DirectPackage;
 import ProductionManagement.Global;
+import java.awt.print.PrinterException;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
+import javax.swing.JOptionPane;
 import javax.swing.JTextArea;
 
 /**
@@ -21,17 +23,22 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
     /**
      * Creates new form GreenCoffeeDetailsPanel
      */
-    private DirectPackage directPackage;
+    private final DirectPackage directPackage;
+
+    public void loadData() {
+        textFieldCoffeeName.setText(directPackage.getDirectPackageType().toString());
+        textFieldLabId.setText(directPackage.getLabId());
+        textFieldProvider.setText(directPackage.getProvider().toString());
+        textFieldStoreman.setText(directPackage.getStoreman().toString());
+        textFieldArrivalDate.setText(directPackage.getArrivalDate().toString());
+        textFieldWeight.setText(String.valueOf(directPackage.getWeight()));
+
+    }
 
     public DetailsDirectPackagePanel(DirectPackage dp) {
         initComponents();
         directPackage = dp;
-        textFieldCoffeeName.setText(dp.getDirectPackageType().toString());
-        textFieldLabId.setText(dp.getLabId());
-        textFieldProvider.setText(dp.getProvider().toString());
-        textFieldStoreman.setText(dp.getStoreman().toString());
-        textFieldArrivalDate.setText(dp.getArrivalDate().toString());
-        textFieldWeight.setText(String.valueOf(dp.getWeight()));
+
     }
 
     /**
@@ -57,6 +64,7 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         textFieldWeight = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
+        buttonEdit = new javax.swing.JButton();
 
         jLabel1.setText("Nazwa opakowania");
 
@@ -96,6 +104,13 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
 
         jLabel4.setText("Ilość");
 
+        buttonEdit.setText("Edytuj");
+        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEditActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -126,6 +141,8 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
                         .addComponent(buttonShowLabTest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonEdit)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,7 +184,8 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
                 .addGap(24, 24, 24)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonShowLabTest)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(buttonEdit))
                 .addContainerGap(77, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -216,12 +234,23 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
                     text.print(null, null, false, service, null, false);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (PrinterException e) {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
+        if (Global.getEmployee().getJobPosition() == Global.ADMINISTRATOR
+                || Global.getEmployee().getJobPosition() == Global.STOREMAN
+                || Global.getEmployee().getJobPosition() == Global.OFFICE
+                || Global.getEmployee().getJobPosition() == Global.LAB_ASSISTANT) {
+            directPackage.edit();
+        } else {
+            JOptionPane.showMessageDialog(null, "Brak uprawnień!", "Uwaga!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_buttonEditActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonEdit;
     private javax.swing.JButton buttonShowLabTest;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;

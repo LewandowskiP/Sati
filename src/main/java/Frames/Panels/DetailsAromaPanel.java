@@ -22,18 +22,22 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
     /**
      * Creates new form GreenCoffeeDetailsPanel
      */
-    private Aroma aroma;
+    private final Aroma aroma;
+
+    public void loadData() {
+        textFieldArrivalWeight.setText(Float.toString(aroma.getArrivalQuantity()));
+        textFieldCurrentWeight.setText(Float.toString(aroma.getQuantity()));
+        textFieldCoffeeName.setText(aroma.getAromaType().toString());
+        textFieldLabId.setText(aroma.getLabId());
+        textFieldProvider.setText(aroma.getProvider().toString());
+        textFieldStoreman.setText(aroma.getStoreman().toString());
+        textFieldArrivalDate.setText(aroma.getArrivalDate().toString());
+    }
 
     public DetailsAromaPanel(Aroma a) {
         initComponents();
         aroma = a;
-        textFieldArrivalWeight.setText(Float.toString(a.getArrivalQuantity()));
-        textFieldCurrentWeight.setText(Float.toString(a.getQuantity()));
-        textFieldCoffeeName.setText(a.getAromaType().toString());
-        textFieldLabId.setText(a.getLabId());
-        textFieldProvider.setText(a.getProvider().toString());
-        textFieldStoreman.setText(a.getStoreman().toString());
-        textFieldArrivalDate.setText(a.getArrivalDate().toString());
+
     }
 
     /**
@@ -62,6 +66,7 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
         textFieldArrivalDate = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        buttonEdit2 = new javax.swing.JButton();
 
         jLabel1.setText("Nazwa aromatu");
 
@@ -112,6 +117,13 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
             }
         });
 
+        buttonEdit2.setText("Edytuj");
+        buttonEdit2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonEdit2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -120,13 +132,11 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel11)
-                        .addGap(53, 53, 53)
-                        .addComponent(textFieldArrivalDate, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonShowLabTest)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jButton2)
+                        .addComponent(jButton2))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonEdit2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1))
                     .addGroup(layout.createSequentialGroup()
@@ -134,22 +144,20 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
                             .addComponent(jLabel2)
                             .addComponent(jLabel1)
                             .addComponent(jLabel3)
-                            .addComponent(jLabel8))
+                            .addComponent(jLabel8)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(textFieldArrivalDate, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textFieldStoreman, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textFieldCurrentWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textFieldArrivalWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textFieldProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(textFieldCoffeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldLabId, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel9)
-                        .addGap(49, 49, 49)
-                        .addComponent(textFieldCurrentWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(48, 48, 48)
-                        .addComponent(textFieldStoreman, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(textFieldLabId, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(88, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -185,7 +193,10 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonShowLabTest)
-                    .addComponent(jButton2)
+                    .addComponent(jButton2))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonEdit2)
                     .addComponent(jButton1))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -247,7 +258,21 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void buttonEdit2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEdit2ActionPerformed
+        if (Global.getEmployee().getJobPosition() == Global.ADMINISTRATOR
+                || Global.getEmployee().getJobPosition() == Global.STOREMAN
+                || Global.getEmployee().getJobPosition() == Global.OFFICE
+                || Global.getEmployee().getJobPosition() == Global.LAB_ASSISTANT) {
+            aroma.edit();
+        } else {
+            JOptionPane.showMessageDialog(null, "Brak uprawnień!", "Uwaga!", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_buttonEdit2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonEdit;
+    private javax.swing.JButton buttonEdit1;
+    private javax.swing.JButton buttonEdit2;
     private javax.swing.JButton buttonShowLabTest;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;

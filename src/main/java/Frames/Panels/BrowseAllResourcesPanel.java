@@ -7,10 +7,12 @@ package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeGreen;
 import ProductClasses.Aroma;
+import ProductClasses.DirectPackage;
 import ProductionClasses.ProductionCoffeeExternalReturn;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
+import SatiInterfaces.Editable;
 import java.sql.Timestamp;
 import java.util.Date;
 import javax.swing.DefaultListModel;
@@ -62,7 +64,6 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
         spinnerTo = new javax.swing.JSpinner();
         spinnerFrom = new javax.swing.JSpinner();
         jLabel3 = new javax.swing.JLabel();
-        buttonEdit = new javax.swing.JButton();
 
         jLabel1.setText("Wpisz numer zlecenia kontroli");
 
@@ -99,14 +100,6 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
 
         jLabel3.setText("Od");
 
-        buttonEdit.setText("Edytuj");
-        buttonEdit.setEnabled(false);
-        buttonEdit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonEditActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -132,10 +125,8 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(buttonFindByDate)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonDetails)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonEdit)))
-                        .addGap(0, 361, Short.MAX_VALUE)))
+                                .addComponent(buttonDetails)))
+                        .addGap(0, 429, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -154,8 +145,7 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
                     .addComponent(jLabel4)
                     .addComponent(spinnerTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonFindByDate)
-                    .addComponent(buttonDetails)
-                    .addComponent(buttonEdit))
+                    .addComponent(buttonDetails))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
                 .addContainerGap())
@@ -186,11 +176,7 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
             @Override
             public void valueChanged(ListSelectionEvent e) {
                 selectedObject = listRaports.getSelectedValue();
-                if (selectedObject instanceof CoffeeGreen) {
-                    buttonEdit.setEnabled(true);
-                } else {
-                    buttonEdit.setEnabled(false);
-                }
+
             }
         });
         jScrollPane1.setViewportView(listRaports);
@@ -199,7 +185,6 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
 
     private void buttonFindByDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindByDateActionPerformed
         reload();
-        // dbc.closeSession();
     }//GEN-LAST:event_buttonFindByDateActionPerformed
 
     private void buttonDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDetailsActionPerformed
@@ -207,15 +192,8 @@ public class BrowseAllResourcesPanel extends javax.swing.JPanel {
         det.showDetails();
     }//GEN-LAST:event_buttonDetailsActionPerformed
 
-    private void buttonEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEditActionPerformed
-        String[] option = {"Cofnij"};
-        int result = JOptionPane.showOptionDialog(this, new EditGreenCoffeePanel((CoffeeGreen) selectedObject), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        reload();
-    }//GEN-LAST:event_buttonEditActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonDetails;
-    private javax.swing.JButton buttonEdit;
     private javax.swing.JButton buttonFindByDate;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
