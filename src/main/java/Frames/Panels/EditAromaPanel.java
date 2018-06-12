@@ -82,7 +82,6 @@ public class EditAromaPanel extends javax.swing.JPanel {
         comboBoxAromaType = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         comboBoxProvider = new javax.swing.JComboBox();
-        checkBoxVermin = new javax.swing.JCheckBox();
         spinnerQuantity = new javax.swing.JSpinner();
 
         labelLabId.setText("AROMAID");
@@ -99,8 +98,6 @@ public class EditAromaPanel extends javax.swing.JPanel {
         labelCoffeOwner1.setText("Typ Aromatu");
 
         jLabel1.setText("Producent");
-
-        checkBoxVermin.setText("Szkodniki obecne");
 
         spinnerQuantity.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
 
@@ -128,8 +125,7 @@ public class EditAromaPanel extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGap(25, 25, 25)
                                         .addComponent(spinnerQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(buttonRegisterToLaboratory)
-                            .addComponent(checkBoxVermin)))
+                            .addComponent(buttonRegisterToLaboratory)))
                     .addComponent(labelLabId))
                 .addContainerGap(66, Short.MAX_VALUE))
         );
@@ -150,8 +146,6 @@ public class EditAromaPanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelWeight)
                     .addComponent(spinnerQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(checkBoxVermin)
                 .addGap(18, 18, 18)
                 .addComponent(buttonRegisterToLaboratory)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -175,7 +169,6 @@ public class EditAromaPanel extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonRegisterToLaboratory;
-    private javax.swing.JCheckBox checkBoxVermin;
     private javax.swing.JComboBox comboBoxAromaType;
     private javax.swing.JComboBox comboBoxProvider;
     private javax.swing.JLabel jLabel1;
