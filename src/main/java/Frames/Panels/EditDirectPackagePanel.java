@@ -82,10 +82,8 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
         comboBoxDirectPackageType = new javax.swing.JComboBox();
         jLabel1 = new javax.swing.JLabel();
         comboBoxProvider = new javax.swing.JComboBox();
-        buttonNewProvider = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
         spinnerWeight = new javax.swing.JSpinner();
-        jButton3 = new javax.swing.JButton();
 
         labelLabId.setText("DIRECTPACKAGEID");
 
@@ -102,21 +100,7 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
 
         jLabel1.setText("Producent");
 
-        buttonNewProvider.setText("+");
-        buttonNewProvider.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonNewProviderActionPerformed(evt);
-            }
-        });
-
         spinnerWeight.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
-
-        jButton3.setText("+");
-        jButton3.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton3ActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -131,8 +115,7 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(26, 26, 26)
-                                .addComponent(jLabel3)
-                                .addGap(219, 219, 219))
+                                .addComponent(jLabel3))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(labelCoffeOwner1, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -140,17 +123,11 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                                     .addComponent(labelWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(26, 26, 26)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(buttonNewProvider))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(comboBoxDirectPackageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(comboBoxDirectPackageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(spinnerWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                     .addComponent(buttonRegisterToLaboratory))
-                .addContainerGap())
+                .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -160,13 +137,11 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(labelCoffeOwner1)
-                    .addComponent(comboBoxDirectPackageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton3))
+                    .addComponent(comboBoxDirectPackageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
-                    .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonNewProvider))
+                    .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel3)
@@ -192,51 +167,10 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonRegisterToLaboratoryActionPerformed
 
-    private void buttonNewProviderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewProviderActionPerformed
-
-        String[] option = {"Cofnij"};
-        int result = JOptionPane.showOptionDialog(this, new AddProviderPanel(), "Dodaj nowego dostawcę", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-
-        dbc.clearSession();
-        dbc.openSession();
-        alp = dbc.getProvider();
-        Object[] o = alp.toArray();
-        Arrays.sort(o);
-
-        comboBoxProvider.removeAllItems();
-        for (Object ob : o) {
-            comboBoxProvider.addItem(ob);
-        }
-        comboBoxProvider.setSelectedItem(directPackage.getProvider());
-
-    }//GEN-LAST:event_buttonNewProviderActionPerformed
-
-    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        String[] option = {"Cofnij"};
-        int result = JOptionPane.showOptionDialog(this, new AddDirectPackageTypePanel(), "Dodaj nowy typ aromatu", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-        if (JOptionPane.OK_OPTION == result) {
-            dbc.clearSession();
-            dbc.openSession();
-            aldpt = dbc.getDirectPackageType();
-            Object[] o = aldpt.toArray();
-            Arrays.sort(o);
-
-            comboBoxDirectPackageType.removeAllItems();
-            for (Object ob : o) {
-                DirectPackageType dpt = (DirectPackageType) ob;
-                comboBoxDirectPackageType.addItem(dpt);
-            }
-            comboBoxDirectPackageType.setSelectedItem(directPackage.getDirectPackageType());
-
-        }
-    }//GEN-LAST:event_jButton3ActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonNewProvider;
     private javax.swing.JButton buttonRegisterToLaboratory;
     private javax.swing.JComboBox comboBoxDirectPackageType;
     private javax.swing.JComboBox comboBoxProvider;
-    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel labelCoffeOwner1;
