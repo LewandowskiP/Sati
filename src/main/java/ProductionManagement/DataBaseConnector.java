@@ -73,6 +73,7 @@ public class DataBaseConnector {
 
     public void flush() {
         s.flush();
+        
     }
 
     public void refresh(Object o) {
@@ -1774,5 +1775,21 @@ public class DataBaseConnector {
 
         return (ArrayList<ProductionOrder>) q.list();
 
+    }
+
+    public int getLatestProductionOrderPosition(ProductionLine selectedProductionLine) {
+        int toReturn = 0;
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "SELECT MAX(positionInQueue) FROM ProductionOrder PO WHERE PO.productionLine = :productionLine AND PO.state < 3";
+        Query q = s.createQuery(hql);
+        q.setParameter("productionLine", selectedProductionLine);
+        List result = q.list();
+        if (result.get(0) != null) {
+            Integer i = (Integer) result.get(0);
+            toReturn = i + 1;
+        }
+        return toReturn;
     }
 }

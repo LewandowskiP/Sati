@@ -753,7 +753,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 prp.setProductionLine(selectedProductionLine);
                 prp.setRaportDate(new Timestamp(System.currentTimeMillis()));
                 dbc.saveObject(prp);
-                dbc.updateObject(prp);
                 String batch = String.format("%08d", prp.getId());
                 prp.setBatchInfo(batch);
                 textFieldBatchInfo.setText(batch);

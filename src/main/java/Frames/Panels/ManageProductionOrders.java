@@ -45,13 +45,10 @@ public class ManageProductionOrders extends javax.swing.JPanel {
     DefaultListModel dlm;
 
     private void initProductionLines() {
-
         ArrayList<ProductionLine> alpl = dbc.getProductionLine();
         comboBoxProductionLine.removeAllItems();
         for (ProductionLine pl : alpl) {
-            if (!pl.isRoast()) {
-                comboBoxProductionLine.addItem(pl);
-            }
+            comboBoxProductionLine.addItem(pl);
         }
         comboBoxProductionLine.setSelectedItem(null);
     }
@@ -59,13 +56,13 @@ public class ManageProductionOrders extends javax.swing.JPanel {
     private void loadProductionOrders(ProductionLine productionLine) {
         ArrayList<ProductionOrder> alpo = dbc.getProductionOrders(productionLine);
         dlm = new DefaultListModel();
-
         dlm.removeAllElements();
         Collections.sort(alpo);
         for (ProductionOrder po : alpo) {
             dlm.addElement(po);
         }
         listOrders.setModel(dlm);
+        listOrders.setSelectedValue(selectedProductionOrderValue, true);
     }
 
     public ManageProductionOrders(Employee emp) {
@@ -76,7 +73,6 @@ public class ManageProductionOrders extends javax.swing.JPanel {
         dlm.removeAllElements();
         this.emp = emp;
         listOrders.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
         comboBoxProductionLine.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent arg0) {
@@ -94,7 +90,6 @@ public class ManageProductionOrders extends javax.swing.JPanel {
             public void valueChanged(ListSelectionEvent e) {
                 selectedProductionOrderValue = (ProductionOrder) listOrders.getSelectedValue();
                 selectedProductionOrderIndex = listOrders.getSelectedIndex();
-
             }
         }
         );
@@ -219,6 +214,7 @@ public class ManageProductionOrders extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonUpQueueActionPerformed
 
     private void buttonDownQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDownQueueActionPerformed
+
         if (selectedProductionOrderIndex < listOrders.getModel().getSize() - 1) {
             selectedProductionOrderValue.downQueue();
             ProductionOrder tmp = (ProductionOrder) dlm.get(selectedProductionOrderIndex + 1);
@@ -254,7 +250,6 @@ public class ManageProductionOrders extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonDeleteOrderActionPerformed
 
     private void buttonNewOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewOrderActionPerformed
-
         try {
             String[] options = {"Dodaj", "Cofnij"};
             NewProductionOrder npo = new NewProductionOrder();
@@ -266,7 +261,7 @@ public class ManageProductionOrders extends javax.swing.JPanel {
                         emp,
                         npo.getQuantity(),
                         npo.getInfo(),
-                        listOrders.getModel().getSize()
+                        dbc.getLatestProductionOrderPosition(selectedProductionLine)
                 );
                 dbc.startTransation();
                 dbc.saveTransation(productionOrder);
@@ -275,8 +270,6 @@ public class ManageProductionOrders extends javax.swing.JPanel {
             }
         } catch (HeadlessException e) {
             dbc.rollbackTransation();
-        } finally {
-
         }
     }//GEN-LAST:event_buttonNewOrderActionPerformed
 
