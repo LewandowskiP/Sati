@@ -64,6 +64,9 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
         spinnerNetto = new javax.swing.JSpinner();
         textFieldBatch = new javax.swing.JTextField();
         spinnerExpiry = new javax.swing.JSpinner();
+        jLabel5 = new javax.swing.JLabel();
+        spinnerWeightPerPcs = new javax.swing.JSpinner();
+        jButton2 = new javax.swing.JButton();
 
         jButton1.setText("Generuj");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -89,13 +92,28 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
         spinnerExpiry.setModel(new javax.swing.SpinnerDateModel());
         spinnerExpiry.setEnabled(false);
 
+        jLabel5.setText("Waga sztuki [g]");
+
+        spinnerWeightPerPcs.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), Float.valueOf(5000.0f), Float.valueOf(1.0f)));
+
+        jButton2.setText("#");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spinnerPcs))
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
                             .addComponent(jLabel4)
@@ -105,16 +123,18 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
                             .addComponent(jLabel3)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addComponent(spinnerExpiry)))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel2)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(spinnerNetto))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(jLabel1)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(spinnerPcs, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel2))
+                        .addGap(5, 5, 5)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jButton2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(spinnerNetto, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(spinnerWeightPerPcs))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -126,8 +146,13 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
                     .addComponent(spinnerPcs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(spinnerWeightPerPcs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(3, 3, 3)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
-                    .addComponent(spinnerNetto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(spinnerNetto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
@@ -144,50 +169,67 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
 
-        String ean13 = productionRaportPart.getProductType().getEan();
+        if (((Float) spinnerNetto.getValue()) > 0 && ((Integer) spinnerPcs.getValue()) > 0) {
+            String ean13 = productionRaportPart.getProductType().getEan();
 
-        ean13 += UPCEANLogicImpl.calcChecksum(ean13);
+            ean13 += UPCEANLogicImpl.calcChecksum(ean13);
 
-        String gtin = Global.qtinID + ean13;
-        String prodDate = Global.prodDateID + Global.timestampToStrYYMMDD(productionRaportPart.getRaportDate());
-        String lot = Global.lotID + textFieldBatch.getText();
-        String expiryDate = Global.expiryDateID + Global.timestampToStrYYMMDD(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
-        String quantity = Global.quantityID + String.format("%08d", (Integer) spinnerPcs.getValue());
-        DecimalFormat formatter = new DecimalFormat("0000.00");
+            String gtin = Global.qtinID + ean13;
+            String prodDate = Global.prodDateID + Global.timestampToStrYYMMDD(productionRaportPart.getRaportDate());
+            String lot = Global.lotID + textFieldBatch.getText();
+            String expiryDate = Global.expiryDateID + Global.timestampToStrYYMMDD(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
+            String quantity = Global.quantityID + String.format("%08d", (Integer) spinnerPcs.getValue());
+            DecimalFormat formatter = new DecimalFormat("0000.00");
 
-        String netto = Global.nettoID + formatter.format(spinnerNetto.getValue());
-        netto = netto.replace(",", "");
-        pallete = new Pallete();
-        pallete.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
-        pallete.setProdDate(productionRaportPart.getRaportDate());
-        pallete.setNetto((Float) spinnerNetto.getValue());
-        pallete.setQuantity((Integer) spinnerPcs.getValue());
-        pallete.setBatch(textFieldBatch.getText());
-        pallete.setEan128Lot(gtin + Global.eanSeparator + lot + Global.eanSeparator + expiryDate);
-        pallete.setEan128Pallete(prodDate + Global.eanSeparator + netto + Global.eanSeparator + quantity);
-        pallete.setState(Global.PALLETE_WAITING);
-        pallete.setProductionRaportPart(productionRaportPart);
-        dbc.saveObject(pallete);
-        dbc.refresh(pallete);
-        String number = Global.palleteNumberID + String.format("%d", pallete.getId());
-        pallete.setEan128Num(number);
-        dbc.updateObject(pallete);
-        dbc.refresh(pallete);
+            String netto = Global.nettoID + formatter.format(spinnerNetto.getValue());
+            netto = netto.replace(",", "");
+            pallete = new Pallete();
+            pallete.setExpiryDate(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
+            pallete.setProdDate(productionRaportPart.getRaportDate());
+            pallete.setNetto((Float) spinnerNetto.getValue());
+            pallete.setQuantity((Integer) spinnerPcs.getValue());
+            pallete.setBatch(textFieldBatch.getText());
+            pallete.setEan128Lot(gtin + Global.eanSeparator + lot + Global.eanSeparator + expiryDate);
+            pallete.setEan128Pallete(prodDate + Global.eanSeparator + netto + Global.eanSeparator + quantity);
+            pallete.setState(Global.PALLETE_WAITING);
+            pallete.setProductionRaportPart(productionRaportPart);
+            dbc.saveObject(pallete);
+            dbc.refresh(pallete);
+            String number = Global.palleteNumberID + String.format("%d", pallete.getId());
+            pallete.setEan128Num(number);
+            dbc.updateObject(pallete);
+            dbc.refresh(pallete);
 
-        JOptionPane.showMessageDialog(null, "Wygenerowano etykietę", "Uwaga", JOptionPane.PLAIN_MESSAGE);
-
+            JOptionPane.showMessageDialog(null, "Wygenerowano etykietę", "Uwaga", JOptionPane.PLAIN_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(null, "Proszę uzupełnić brakujące dane.", "Uwaga", JOptionPane.PLAIN_MESSAGE);
+        }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        int quantity = (int) spinnerPcs.getValue();
+        float weight = (float) spinnerWeightPerPcs.getValue();
+        if (quantity > 0 && weight > 0) {
+            float nettoSum = weight * quantity;
+            spinnerNetto.setValue(nettoSum);
+        } else {
+            JOptionPane.showMessageDialog(null, "Wprowadzono błędne dane", "Uwaga", JOptionPane.PLAIN_MESSAGE);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JSpinner spinnerExpiry;
     private javax.swing.JSpinner spinnerNetto;
     private javax.swing.JSpinner spinnerPcs;
+    private javax.swing.JSpinner spinnerWeightPerPcs;
     private javax.swing.JTextField textFieldBatch;
     // End of variables declaration//GEN-END:variables
 }

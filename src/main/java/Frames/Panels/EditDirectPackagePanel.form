@@ -16,7 +16,7 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Component id="labelLabId" min="-2" max="-2" attributes="0"/>
@@ -39,6 +39,11 @@
                                   <Component id="comboBoxDirectPackageType" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="spinnerWeight" min="-2" pref="111" max="-2" attributes="0"/>
                               </Group>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="buttonHide" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="buttonUnhide" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -71,9 +76,14 @@
                       <Component id="spinnerWeight" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="buttonRegisterToLaboratory" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="buttonHide" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonUnhide" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="32767" attributes="0"/>
+              <Component id="buttonRegisterToLaboratory" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="21" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -124,6 +134,22 @@
           <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
         </Property>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonHide">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Ukryj"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonHideActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonUnhide">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Odkryj"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonUnhideActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

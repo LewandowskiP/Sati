@@ -117,15 +117,16 @@ public class DirectPackage extends Test implements Details, Editable {
     }
 
     @Override
-      public void showDetails() {
+    public void showDetails() {
         String[] options = new String[]{"OK"};
         JOptionPane.showOptionDialog(null, new DetailsDirectPackagePanel(this), "Podgląd opakowania bezpośredniego.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
 
     @Override
     public void edit() {
-   
+
         String[] option = {"Cofnij"};
-        int result = JOptionPane.showOptionDialog(null, new EditDirectPackagePanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);  }
+        int result = JOptionPane.showOptionDialog(null, new EditDirectPackagePanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+    }
 
 }

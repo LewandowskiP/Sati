@@ -285,6 +285,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
         jLabel11.setText("Wybierz kawę do rezerwacji");
 
+        spinnerProductionCoffeeSeek.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
+
         buttonProductionCoffeeSeek.setText("Zarezerwuj kawę");
         buttonProductionCoffeeSeek.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -328,6 +330,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         jLabel19.setText("Wielkość Stick [g]");
 
         textAreaOtherInfo.setColumns(20);
+        textAreaOtherInfo.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         textAreaOtherInfo.setRows(5);
         jScrollPane2.setViewportView(textAreaOtherInfo);
 
@@ -595,13 +598,15 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     pcs.getProductionCoffee().setWeight(Global.round(pcs.getProductionCoffee().getWeight() + pcs.getWeight(), 2));
                     if (pcs.getProductionCoffee().getWeight() > 0) {
                         pcs.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
-                        pcs.getProductionCoffee().setUsed(true);
+                        if (pcs.getWeight() > 0) {
+                            pcs.getProductionCoffee().setUsed(true);
+                        }
                     }
                     dbc.updateObject(pcs.getProductionCoffee());
                     dbc.deleteObject(pcs);
                 }
 
-                setPreInitControls(false);
+                setPreInitControls(true);
                 initProductionLines();
                 initProductionCoffee();
             } else {
@@ -632,7 +637,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             }
             dbc.updateObject(pc);
             dbc.saveObject(pcs);
-
             initProductionCoffee();
             JOptionPane.showMessageDialog(this, ("Zarezerwowano kawę" + pc.getProductType().getProductName() + " w ilośći " + pcToSeek + "[kg]."));
         } catch (ClassCastException | ZeroInputException e) {
@@ -651,6 +655,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             try {
                 dbc.clearSession();
                 dbc.openSession();
+                dbc.startTransation();
                 productionRaportPart.setShift(Global.currentShift());
                 productionRaportPart.setOtherInfo(textAreaOtherInfo.getText());
                 productionRaportPart.setStickSize((Float) spinnerStickWeight.getValue());
@@ -673,12 +678,10 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 if (selectedProductType == null) {
                     throw new ZeroInputException();
                 }
-
                 productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
                 String[] options = new String[2];
                 options[0] = "Dalej";
                 options[1] = "Odrzuć";
-                dbc.startTransation();
                 int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(productionRaportPart, employee), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION == res) {
                     int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -693,14 +696,18 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                             pc.setProdDate(productionRaportPart.getRaportDate());
                             rp.setProductionRaportPart(productionRaportPart);
                             rp.setProductionCoffee(pc);
-
                             productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
                             dbc.saveTransation(pc);
                             dbc.saveTransation(rp);
                         }
                         dbc.saveTransation(productionRaportPart);
                         dbc.commitTransation();
+
                         resetInput();
+                        dbc.clearSession();
+                        initProductionCoffee();
+                        initProductionLines();
+                        initProductType();
                         setPreInitControls(true);
                     } else {
                         dbc.rollbackTransation();
@@ -709,10 +716,9 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     dbc.rollbackTransation();
                 }
 
-                dbc.flush();
-
             } catch (ZeroInputException e) {
                 JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
+                dbc.rollbackTransation();
             } catch (Exception e) {
                 e.printStackTrace();
                 dbc.rollbackTransation();
@@ -729,7 +735,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 if (prp == null) {
                     prp = new ProductionRaportPart();
                     JOptionPane.showMessageDialog(null, "Nadano nowy numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
-                } else if (prp.getLabTestState() > 0) {
+                } else if (prp.getLabTestState() >= 0) {
                     prp = new ProductionRaportPart();
                     JOptionPane.showMessageDialog(null, "Nadano nowy numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 } else {
@@ -739,9 +745,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                         summaryWeight += p.getNetto();
                         summaryPcs += p.getQuantity();
                         summaryPalletes++;
-
                         dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
-
                     }
                     dtm.addRow(new Object[]{null, null, null, null, false, false, false});
                     JOptionPane.showMessageDialog(null, "Załadowano istniejący numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
@@ -758,7 +762,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 textFieldBatchInfo.setText(batch);
                 dbc.updateObject(prp);
                 this.productionRaportPart = prp;
-
+                setPreInitControls(false);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -25,16 +25,21 @@ public class ProductionOrder implements Comparable {
     private ProductionLine productionLine;
     private Employee orderedBy;
     private Employee completedBy;
-
+    private boolean important;
     private Timestamp orderTime;
     private Timestamp completeTime;
+    private Timestamp deadline;
 
     public void makeOrder(ProductionLine productionLine,
+            boolean important,
+            Timestamp deadline,
             ProductType productType,
             Employee orderedBy,
             Integer quantity,
             String otherInfo,
             int positionInQueue) {
+        this.important = important;
+        this.deadline = deadline;
         this.productionLine = productionLine;
         this.productType = productType;
         this.orderedBy = orderedBy;
@@ -51,6 +56,22 @@ public class ProductionOrder implements Comparable {
 
     public void downQueue() {
         this.positionInQueue++;
+    }
+
+    public boolean isImportant() {
+        return important;
+    }
+
+    public void setImportant(boolean important) {
+        this.important = important;
+    }
+
+    public Timestamp getDeadline() {
+        return deadline;
+    }
+
+    public void setDeadline(Timestamp deadline) {
+        this.deadline = deadline;
     }
 
     public void completeOrder(Employee completedBy) {

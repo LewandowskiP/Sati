@@ -12,10 +12,11 @@
         <property name="state" column="state" type="int"/>
         <property name="positionInQueue" column="positionInQueue" type="int"/>
         <property name="quantity" type="int"/>
-      
+        <property name="important" type="boolean"/>
         <property name="otherInfo" type="string">
             <column name="otherInfo" length="50"/>
         </property>
+        <property name="deadline" column="deadline" type="timestamp"/>
         <property name="orderTime" column="orderTime" type="timestamp"/>
         <property name="completeTime" column="completeTime" type="timestamp"/>
         <many-to-one name="orderedBy" column="orderedBy" class="ProductionManagement.Employee"    not-null="true"   />

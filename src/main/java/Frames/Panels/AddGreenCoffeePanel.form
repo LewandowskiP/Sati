@@ -259,11 +259,21 @@
       </Events>
     </Component>
     <Component class="javax.swing.JSpinner" name="spinnerCoffeeWeight">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0.0" minimum="0.0" numberType="java.lang.Float" stepSize="1.0" type="number"/>
+        </Property>
+      </Properties>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_CreateCodeCustom" type="java.lang.String" value="new javax.swing.JSpinner(new SpinnerNumberModel(new Float(0), new Float(0),null,new Float(0.01)))&#xa;"/>
       </AuxValues>
     </Component>
     <Component class="javax.swing.JSpinner" name="spinnerPacksNumber">
+      <Properties>
+        <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
+          <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
+        </Property>
+      </Properties>
     </Component>
     <Component class="javax.swing.JButton" name="jButton1">
       <Properties>

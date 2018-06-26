@@ -49,9 +49,9 @@ public class OperatorFrame extends javax.swing.JFrame {
         buttonBrowseProductionRaports = new javax.swing.JButton();
         buttonBrowseProductionCoffeeMixRaports = new javax.swing.JButton();
         buttonNewRoastingRaport = new javax.swing.JButton();
-        buttonBrowseGreenCoffee = new javax.swing.JButton();
-        buttonBrowseAroma = new javax.swing.JButton();
         buttonBrowseMyRaports = new javax.swing.JButton();
+        buttonNewRoastingRaport1 = new javax.swing.JButton();
+        buttonNewRoastingRaport2 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -94,37 +94,27 @@ public class OperatorFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonBrowseGreenCoffee.setText("Sprawdź dostępne kawy zielone");
-        buttonBrowseGreenCoffee.setToolTipText("");
-        buttonBrowseGreenCoffee.setBorder(null);
-        buttonBrowseGreenCoffee.setBorderPainted(false);
-        buttonBrowseGreenCoffee.setMaximumSize(new java.awt.Dimension(120, 120));
-        buttonBrowseGreenCoffee.setMinimumSize(new java.awt.Dimension(120, 120));
-        buttonBrowseGreenCoffee.setPreferredSize(new java.awt.Dimension(120, 120));
-        buttonBrowseGreenCoffee.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonBrowseGreenCoffeeActionPerformed(evt);
-            }
-        });
-
-        buttonBrowseAroma.setText("Sprawdź dostępne aromaty");
-        buttonBrowseAroma.setToolTipText("");
-        buttonBrowseAroma.setBorder(null);
-        buttonBrowseAroma.setBorderPainted(false);
-        buttonBrowseAroma.setMaximumSize(new java.awt.Dimension(120, 120));
-        buttonBrowseAroma.setMinimumSize(new java.awt.Dimension(120, 120));
-        buttonBrowseAroma.setPreferredSize(new java.awt.Dimension(120, 120));
-        buttonBrowseAroma.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonBrowseAromaActionPerformed(evt);
-            }
-        });
-
         buttonBrowseMyRaports.setText("Sprawdź raporty palenia");
         buttonBrowseMyRaports.setPreferredSize(new java.awt.Dimension(73, 30));
         buttonBrowseMyRaports.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonBrowseMyRaportsActionPerformed(evt);
+            }
+        });
+
+        buttonNewRoastingRaport1.setText("Sprawdź dostępne kawy");
+        buttonNewRoastingRaport1.setPreferredSize(new java.awt.Dimension(73, 30));
+        buttonNewRoastingRaport1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNewRoastingRaport1ActionPerformed(evt);
+            }
+        });
+
+        buttonNewRoastingRaport2.setText("Sprawdź dostępne aromaty");
+        buttonNewRoastingRaport2.setPreferredSize(new java.awt.Dimension(73, 30));
+        buttonNewRoastingRaport2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNewRoastingRaport2ActionPerformed(evt);
             }
         });
 
@@ -136,10 +126,10 @@ public class OperatorFrame extends javax.swing.JFrame {
             .addComponent(buttonNewProductionCoffeeMixRaport, javax.swing.GroupLayout.DEFAULT_SIZE, 269, Short.MAX_VALUE)
             .addComponent(buttonBrowseProductionRaports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonBrowseProductionCoffeeMixRaports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(buttonBrowseGreenCoffee, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(buttonBrowseAroma, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonBrowseMyRaports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonNewRoastingRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonNewRoastingRaport1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonNewRoastingRaport2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         OperatorFrameToolsPanelLayout.setVerticalGroup(
             OperatorFrameToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -155,10 +145,10 @@ public class OperatorFrame extends javax.swing.JFrame {
                 .addGap(70, 70, 70)
                 .addComponent(buttonNewRoastingRaport, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonBrowseGreenCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonNewRoastingRaport1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonBrowseAroma, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonNewRoastingRaport2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(7, 7, 7)
                 .addComponent(buttonBrowseMyRaports, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(229, Short.MAX_VALUE))
         );
@@ -206,30 +196,30 @@ public class OperatorFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(new NewRaportRoastPanel(emp));
     }//GEN-LAST:event_buttonNewRoastingRaportActionPerformed
 
-    private void buttonBrowseGreenCoffeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBrowseGreenCoffeeActionPerformed
-        JFrame browseAvailableGreenCoffeeFrame = new BrowseAvailableGreenCoffeeFrame();
-        browseAvailableGreenCoffeeFrame.setVisible(true);
-    }//GEN-LAST:event_buttonBrowseGreenCoffeeActionPerformed
-
-    private void buttonBrowseAromaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBrowseAromaActionPerformed
-        JFrame browseAvailableAromaFrame = new BrowseAvailableAromaFrame();
-        browseAvailableAromaFrame.setVisible(true);
-    }//GEN-LAST:event_buttonBrowseAromaActionPerformed
-
     private void buttonBrowseMyRaportsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBrowseMyRaportsActionPerformed
         jScrollPane1.setViewportView(new BrowseMyRoastRaportsPanel(emp));
     }//GEN-LAST:event_buttonBrowseMyRaportsActionPerformed
 
+    private void buttonNewRoastingRaport1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewRoastingRaport1ActionPerformed
+        JFrame browseAvailableGreenCoffeeFrame = new BrowseAvailableGreenCoffeeFrame();
+        browseAvailableGreenCoffeeFrame.setVisible(true);
+    }//GEN-LAST:event_buttonNewRoastingRaport1ActionPerformed
+
+    private void buttonNewRoastingRaport2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewRoastingRaport2ActionPerformed
+        JFrame browseAvailableAromaFrame = new BrowseAvailableAromaFrame();
+        browseAvailableAromaFrame.setVisible(true);
+    }//GEN-LAST:event_buttonNewRoastingRaport2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel OperatorFrameToolsPanel;
-    private javax.swing.JButton buttonBrowseAroma;
-    private javax.swing.JButton buttonBrowseGreenCoffee;
     private javax.swing.JButton buttonBrowseMyRaports;
     private javax.swing.JButton buttonBrowseProductionCoffeeMixRaports;
     private javax.swing.JButton buttonBrowseProductionRaports;
     private javax.swing.JButton buttonNewProductionCoffeeMixRaport;
     private javax.swing.JButton buttonNewProductionRaport;
     private javax.swing.JButton buttonNewRoastingRaport;
+    private javax.swing.JButton buttonNewRoastingRaport1;
+    private javax.swing.JButton buttonNewRoastingRaport2;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

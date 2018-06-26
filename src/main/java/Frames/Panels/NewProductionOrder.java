@@ -11,8 +11,10 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 
 /**
  *
@@ -36,6 +38,15 @@ public class NewProductionOrder extends javax.swing.JPanel {
 
     public String getInfo() {
         return (String) jTextField1.getText();
+    }
+
+    public Timestamp getDeadline() {
+        Timestamp toReturn = new Timestamp(((Date) spinnerDeadline.getValue()).getTime());
+        return toReturn;
+    }
+
+    public boolean isImportant() {
+        return checkBoxImportant.isSelected();
     }
 
     private void initProductType() {
@@ -72,6 +83,9 @@ public class NewProductionOrder extends javax.swing.JPanel {
         jLabel2 = new javax.swing.JLabel();
         jSpinner1 = new javax.swing.JSpinner();
         jTextField1 = new javax.swing.JTextField();
+        jLabel3 = new javax.swing.JLabel();
+        spinnerDeadline = new javax.swing.JSpinner();
+        checkBoxImportant = new javax.swing.JCheckBox();
 
         jLabel1.setText("Ilość [Kg]");
 
@@ -88,6 +102,12 @@ public class NewProductionOrder extends javax.swing.JPanel {
 
         jLabel2.setText("Dodatkowe informacje");
 
+        jLabel3.setText("Termin ostateczny");
+
+        spinnerDeadline.setModel(new javax.swing.SpinnerDateModel());
+
+        checkBoxImportant.setText("Zlecenie ważne");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -95,19 +115,26 @@ public class NewProductionOrder extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(jLabel1)
-                    .addComponent(jLabel2))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comboBoxProductType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonOpenFile)
-                        .addGap(0, 53, Short.MAX_VALUE))
-                    .addComponent(jTextField1))
+                        .addComponent(checkBoxImportant)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel10)
+                            .addComponent(jLabel1)
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel3))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jTextField1)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(jSpinner1, javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(comboBoxProductType, javax.swing.GroupLayout.Alignment.LEADING, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonOpenFile)
+                                .addGap(0, 53, Short.MAX_VALUE))
+                            .addComponent(spinnerDeadline))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -122,11 +149,17 @@ public class NewProductionOrder extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(jSpinner1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(spinnerDeadline, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(checkBoxImportant)
+                .addContainerGap(79, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -139,11 +172,14 @@ public class NewProductionOrder extends javax.swing.JPanel {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonOpenFile;
+    private javax.swing.JCheckBox checkBoxImportant;
     private javax.swing.JComboBox comboBoxProductType;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
     private javax.swing.JSpinner jSpinner1;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JSpinner spinnerDeadline;
     // End of variables declaration//GEN-END:variables
 }

@@ -30,42 +30,49 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
     DataBaseConnector dbc;
     Employee emp;
     private final DirectPackage directPackage;
-    
+
     public EditDirectPackagePanel(DirectPackage dp) {
         initComponents();
         this.directPackage = dp;
-        
+
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
             dbc.clearSession();
-            
+
         }
         dbc.openSession();
         aldpt = dbc.getDirectPackageType();
         Object[] o = aldpt.toArray();
         Arrays.sort(o);
-        
+
         comboBoxDirectPackageType.removeAllItems();
         for (Object ob : o) {
             DirectPackageType dpt = (DirectPackageType) ob;
             comboBoxDirectPackageType.addItem(dpt);
         }
         comboBoxDirectPackageType.setSelectedItem(dp.getDirectPackageType());
-        
+
         alp = dbc.getProvider();
         o = alp.toArray();
         Arrays.sort(o);
-        
+
         comboBoxProvider.removeAllItems();
         for (Object ob : o) {
             comboBoxProvider.addItem(ob);
         }
         comboBoxProvider.setSelectedItem(dp.getProvider());
-        
+
         labelLabId.setText(dp.getLabId());
-        
+
         spinnerWeight.setValue(dp.getWeight());
-        spinnerWeight.setEnabled(false);
+        if (directPackage.getState() == Global.READY_TO_USE) {
+            buttonHide.setEnabled(true);
+            buttonUnhide.setEnabled(false);
+        } else if (directPackage.getState() == Global.OUT_OF_STORE) {
+            buttonHide.setEnabled(false);
+            buttonUnhide.setEnabled(true);
+        }
+
     }
 
     /**
@@ -86,6 +93,8 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
         comboBoxProvider = new javax.swing.JComboBox();
         jLabel3 = new javax.swing.JLabel();
         spinnerWeight = new javax.swing.JSpinner();
+        buttonHide = new javax.swing.JButton();
+        buttonUnhide = new javax.swing.JButton();
 
         labelLabId.setText("DIRECTPACKAGEID");
 
@@ -103,6 +112,20 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
         jLabel1.setText("Producent");
 
         spinnerWeight.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
+
+        buttonHide.setText("Ukryj");
+        buttonHide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonHideActionPerformed(evt);
+            }
+        });
+
+        buttonUnhide.setText("Odkryj");
+        buttonUnhide.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonUnhideActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -127,7 +150,11 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(comboBoxDirectPackageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spinnerWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                    .addComponent(spinnerWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(buttonHide)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(buttonUnhide))))
                     .addComponent(buttonRegisterToLaboratory))
                 .addGap(26, 26, 26))
         );
@@ -150,9 +177,13 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(labelWeight)
                         .addComponent(spinnerWeight, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonHide)
+                    .addComponent(buttonUnhide))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(buttonRegisterToLaboratory)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(21, 21, 21))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -161,6 +192,7 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
             dbc.startTransation();
             directPackage.setDirectPackageType((DirectPackageType) comboBoxDirectPackageType.getSelectedItem());
             directPackage.setProvider((Provider) comboBoxProvider.getSelectedItem());
+            directPackage.setWeight((Float) spinnerWeight.getValue());
             dbc.updateTransation(directPackage);
             dbc.commitTransation();
         } catch (Exception e) {
@@ -169,8 +201,34 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_buttonRegisterToLaboratoryActionPerformed
 
+    private void buttonHideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonHideActionPerformed
+        directPackage.setState(Global.OUT_OF_STORE);
+
+        if (directPackage.getState() == Global.READY_TO_USE) {
+            buttonHide.setEnabled(true);
+            buttonUnhide.setEnabled(false);
+        } else if (directPackage.getState() == Global.OUT_OF_STORE) {
+            buttonHide.setEnabled(false);
+            buttonUnhide.setEnabled(true);
+        }
+    }//GEN-LAST:event_buttonHideActionPerformed
+
+    private void buttonUnhideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUnhideActionPerformed
+        directPackage.setState(Global.READY_TO_USE);
+
+        if (directPackage.getState() == Global.READY_TO_USE) {
+            buttonHide.setEnabled(true);
+            buttonUnhide.setEnabled(false);
+        } else if (directPackage.getState() == Global.OUT_OF_STORE) {
+            buttonHide.setEnabled(false);
+            buttonUnhide.setEnabled(true);
+        }
+    }//GEN-LAST:event_buttonUnhideActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonHide;
     private javax.swing.JButton buttonRegisterToLaboratory;
+    private javax.swing.JButton buttonUnhide;
     private javax.swing.JComboBox comboBoxDirectPackageType;
     private javax.swing.JComboBox comboBoxProvider;
     private javax.swing.JLabel jLabel1;

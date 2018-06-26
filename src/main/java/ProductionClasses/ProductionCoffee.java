@@ -100,7 +100,7 @@ public class ProductionCoffee implements Comparable {
     }
 
     public int compareTo(Object o) {
-        return this.toString().compareTo(o.toString());
+        return this.productType.toString().compareTo(((ProductionCoffee) o).getProductType().toString());
     }
 
 }

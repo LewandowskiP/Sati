@@ -55,11 +55,8 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Component id="buttonCheckAromaStore" alignment="0" max="32767" attributes="0"/>
-              <Component id="buttonAddGreenCoffee" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonAddAroma" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonAddCoffeeExternalReturn" alignment="0" max="32767" attributes="0"/>
-              <Component id="buttonCheckCoffeeStore" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton3" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonAddSugar" alignment="0" max="32767" attributes="0"/>
@@ -73,13 +70,16 @@
               <Component id="buttonTrackCoffee" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonTrackProduct" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton6" alignment="0" max="32767" attributes="0"/>
+              <Component id="buttonAddCoffeeGreen" alignment="0" max="32767" attributes="0"/>
+              <Component id="buttonAromaStore" alignment="0" max="32767" attributes="0"/>
+              <Component id="buttonCoffeeStore" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
           <Group type="103" groupAlignment="0" attributes="0">
               <Group type="102" alignment="0" attributes="0">
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="buttonAddGreenCoffee" min="-2" pref="25" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="13" max="-2" attributes="0"/>
+                  <Component id="buttonAddCoffeeGreen" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonAddAroma" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -106,10 +106,10 @@
                   <Component id="jButton6" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton2" min="-2" pref="25" max="-2" attributes="0"/>
-                  <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
-                  <Component id="buttonCheckCoffeeStore" min="-2" pref="25" max="-2" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="buttonCheckAromaStore" min="-2" pref="25" max="-2" attributes="0"/>
+                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                  <Component id="buttonCoffeeStore" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+                  <Component id="buttonAromaStore" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonGenerateTotalMixRaport" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -120,72 +120,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="buttonAddGreenCoffee">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Wprowad&#x17a; kaw&#x119;"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
-            </Property>
-            <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAddGreenCoffeeActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="buttonCheckCoffeeStore">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl stan magazyny kawy"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
-            </Property>
-            <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCheckCoffeeStoreActionPerformed"/>
-          </Events>
-        </Component>
-        <Component class="javax.swing.JButton" name="buttonCheckAromaStore">
-          <Properties>
-            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl stan magazynu aromat&#xf3;w"/>
-            <Property name="toolTipText" type="java.lang.String" value=""/>
-            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-              <Border info="null"/>
-            </Property>
-            <Property name="borderPainted" type="boolean" value="false"/>
-            <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-            <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-            <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
-              <Dimension value="[120, 120]"/>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCheckAromaStoreActionPerformed"/>
-          </Events>
-        </Component>
         <Component class="javax.swing.JButton" name="buttonAddAroma">
           <Properties>
             <Property name="text" type="java.lang.String" value="Wprowad&#x17a; aromat"/>
@@ -300,10 +234,34 @@
         </Component>
         <Component class="javax.swing.JButton" name="jButton6">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl zmagazynowane palety do eksporu"/>
+            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl zmagazynowane palety do eksportu"/>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton6ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="buttonAddCoffeeGreen">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Wprowad&#x17a; kaw&#x119;"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAddCoffeeGreenActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="buttonAromaStore">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl stan magazynu aromat&#xf3;w"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAromaStoreActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="buttonCoffeeStore">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Wy&#x15b;wietl stan magazynu kawy"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCoffeeStoreActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

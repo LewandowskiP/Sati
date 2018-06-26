@@ -57,9 +57,6 @@ public class StoremanFrame extends javax.swing.JFrame {
     private void initComponents() {
 
         MagazynierFrameToolsPanel = new javax.swing.JPanel();
-        buttonAddGreenCoffee = new javax.swing.JButton();
-        buttonCheckCoffeeStore = new javax.swing.JButton();
-        buttonCheckAromaStore = new javax.swing.JButton();
         buttonAddAroma = new javax.swing.JButton();
         buttonAddCoffeeExternalReturn = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
@@ -75,50 +72,14 @@ public class StoremanFrame extends javax.swing.JFrame {
         buttonTrackCoffee = new javax.swing.JButton();
         buttonTrackProduct = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        buttonAddCoffeeGreen = new javax.swing.JButton();
+        buttonAromaStore = new javax.swing.JButton();
+        buttonCoffeeStore = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         MagazynierFrameToolsPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Dostępne Funkcje"));
-
-        buttonAddGreenCoffee.setText("Wprowadź kawę");
-        buttonAddGreenCoffee.setToolTipText("");
-        buttonAddGreenCoffee.setBorder(null);
-        buttonAddGreenCoffee.setBorderPainted(false);
-        buttonAddGreenCoffee.setMaximumSize(new java.awt.Dimension(120, 120));
-        buttonAddGreenCoffee.setMinimumSize(new java.awt.Dimension(120, 120));
-        buttonAddGreenCoffee.setPreferredSize(new java.awt.Dimension(120, 120));
-        buttonAddGreenCoffee.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonAddGreenCoffeeActionPerformed(evt);
-            }
-        });
-
-        buttonCheckCoffeeStore.setText("Wyświetl stan magazyny kawy");
-        buttonCheckCoffeeStore.setToolTipText("");
-        buttonCheckCoffeeStore.setBorder(null);
-        buttonCheckCoffeeStore.setBorderPainted(false);
-        buttonCheckCoffeeStore.setMaximumSize(new java.awt.Dimension(120, 120));
-        buttonCheckCoffeeStore.setMinimumSize(new java.awt.Dimension(120, 120));
-        buttonCheckCoffeeStore.setPreferredSize(new java.awt.Dimension(120, 120));
-        buttonCheckCoffeeStore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCheckCoffeeStoreActionPerformed(evt);
-            }
-        });
-
-        buttonCheckAromaStore.setText("Wyświetl stan magazynu aromatów");
-        buttonCheckAromaStore.setToolTipText("");
-        buttonCheckAromaStore.setBorder(null);
-        buttonCheckAromaStore.setBorderPainted(false);
-        buttonCheckAromaStore.setMaximumSize(new java.awt.Dimension(120, 120));
-        buttonCheckAromaStore.setMinimumSize(new java.awt.Dimension(120, 120));
-        buttonCheckAromaStore.setPreferredSize(new java.awt.Dimension(120, 120));
-        buttonCheckAromaStore.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonCheckAromaStoreActionPerformed(evt);
-            }
-        });
 
         buttonAddAroma.setText("Wprowadź aromat");
         buttonAddAroma.addActionListener(new java.awt.event.ActionListener() {
@@ -218,10 +179,31 @@ public class StoremanFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton6.setText("Wyświetl zmagazynowane palety do eksporu");
+        jButton6.setText("Wyświetl zmagazynowane palety do eksportu");
         jButton6.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton6ActionPerformed(evt);
+            }
+        });
+
+        buttonAddCoffeeGreen.setText("Wprowadź kawę");
+        buttonAddCoffeeGreen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAddCoffeeGreenActionPerformed(evt);
+            }
+        });
+
+        buttonAromaStore.setText("Wyświetl stan magazynu aromatów");
+        buttonAromaStore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAromaStoreActionPerformed(evt);
+            }
+        });
+
+        buttonCoffeeStore.setText("Wyświetl stan magazynu kawy");
+        buttonCoffeeStore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonCoffeeStoreActionPerformed(evt);
             }
         });
 
@@ -229,11 +211,8 @@ public class StoremanFrame extends javax.swing.JFrame {
         MagazynierFrameToolsPanel.setLayout(MagazynierFrameToolsPanelLayout);
         MagazynierFrameToolsPanelLayout.setHorizontalGroup(
             MagazynierFrameToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(buttonCheckAromaStore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(buttonAddGreenCoffee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonAddAroma, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonAddCoffeeExternalReturn, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(buttonCheckCoffeeStore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton4, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonAddSugar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -247,12 +226,15 @@ public class StoremanFrame extends javax.swing.JFrame {
             .addComponent(buttonTrackCoffee, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonTrackProduct, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonAddCoffeeGreen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonAromaStore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonCoffeeStore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         MagazynierFrameToolsPanelLayout.setVerticalGroup(
             MagazynierFrameToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(MagazynierFrameToolsPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(buttonAddGreenCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(13, 13, 13)
+                .addComponent(buttonAddCoffeeGreen)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonAddAroma)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -280,9 +262,9 @@ public class StoremanFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(buttonCheckCoffeeStore, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(buttonCheckAromaStore, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(buttonCoffeeStore)
+                .addGap(7, 7, 7)
+                .addComponent(buttonAromaStore)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonGenerateTotalMixRaport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -311,20 +293,6 @@ public class StoremanFrame extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void buttonAddGreenCoffeeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddGreenCoffeeActionPerformed
-
-        jScrollPane1.setViewportView(new AddGreenCoffeePanel(emp));
-
-    }//GEN-LAST:event_buttonAddGreenCoffeeActionPerformed
-
-    private void buttonCheckCoffeeStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCheckCoffeeStoreActionPerformed
-        jScrollPane1.setViewportView(new BrowseAvailableGreenCoffeeStoremanPanel(emp));
-    }//GEN-LAST:event_buttonCheckCoffeeStoreActionPerformed
-
-    private void buttonCheckAromaStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCheckAromaStoreActionPerformed
-        jScrollPane1.setViewportView(new BrowseAvailableAromaStoremanPanel(emp));
-    }//GEN-LAST:event_buttonCheckAromaStoreActionPerformed
 
     private void buttonAddAromaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddAromaActionPerformed
         jScrollPane1.setViewportView(new AddAromaPanel(emp));
@@ -386,16 +354,28 @@ public class StoremanFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(new BrowseResourcesToStore(emp));
     }//GEN-LAST:event_jButton6ActionPerformed
 
+    private void buttonAddCoffeeGreenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCoffeeGreenActionPerformed
+        jScrollPane1.setViewportView(new AddGreenCoffeePanel(emp));
+    }//GEN-LAST:event_buttonAddCoffeeGreenActionPerformed
+
+    private void buttonAromaStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAromaStoreActionPerformed
+        jScrollPane1.setViewportView(new BrowseAvailableAromaStoremanPanel(emp));
+    }//GEN-LAST:event_buttonAromaStoreActionPerformed
+
+    private void buttonCoffeeStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCoffeeStoreActionPerformed
+        jScrollPane1.setViewportView(new BrowseAvailableGreenCoffeeStoremanPanel(emp));
+    }//GEN-LAST:event_buttonCoffeeStoreActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MagazynierFrameToolsPanel;
     private javax.swing.JButton buttonAddAroma;
     private javax.swing.JButton buttonAddBoughtCoffee;
     private javax.swing.JButton buttonAddCoffeeExternalReturn;
+    private javax.swing.JButton buttonAddCoffeeGreen;
     private javax.swing.JButton buttonAddDirectPackage;
-    private javax.swing.JButton buttonAddGreenCoffee;
     private javax.swing.JButton buttonAddSugar;
-    private javax.swing.JButton buttonCheckAromaStore;
-    private javax.swing.JButton buttonCheckCoffeeStore;
+    private javax.swing.JButton buttonAromaStore;
+    private javax.swing.JButton buttonCoffeeStore;
     private javax.swing.JButton buttonEditNames;
     private javax.swing.JButton buttonGenerateTotalMixRaport;
     private javax.swing.JButton buttonTrackCoffee;

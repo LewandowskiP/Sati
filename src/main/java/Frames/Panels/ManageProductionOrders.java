@@ -257,6 +257,8 @@ public class ManageProductionOrders extends javax.swing.JPanel {
             if (JOptionPane.OK_OPTION == result) {
                 ProductionOrder productionOrder = new ProductionOrder();
                 productionOrder.makeOrder(selectedProductionLine,
+                        npo.isImportant(),
+                        npo.getDeadline(),
                         npo.getProductType(),
                         emp,
                         npo.getQuantity(),

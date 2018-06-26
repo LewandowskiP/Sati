@@ -341,6 +341,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
 
         jLabel5.setText("Wprowadź użyte kawy zielone");
 
+        textFieldOtherInfo.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
         jScrollPane5.setViewportView(textFieldOtherInfo);
 
         jLabel8.setText("Wybierz linie produkcyjną");

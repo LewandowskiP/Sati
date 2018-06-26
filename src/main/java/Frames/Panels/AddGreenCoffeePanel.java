@@ -203,6 +203,10 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
             }
         });
 
+        spinnerCoffeeWeight.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
+
+        spinnerPacksNumber.setModel(new javax.swing.SpinnerNumberModel(Integer.valueOf(0), Integer.valueOf(0), null, Integer.valueOf(1)));
+
         jButton1.setText("Wyczyść");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

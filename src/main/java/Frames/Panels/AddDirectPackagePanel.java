@@ -135,7 +135,7 @@ public class AddDirectPackagePanel extends javax.swing.JPanel {
             }
         });
 
-        spinnerWeight.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), Float.valueOf(0.0f), null, Float.valueOf(1.0f)));
+        spinnerWeight.setModel(new javax.swing.SpinnerNumberModel(Float.valueOf(0.0f), null, null, Float.valueOf(1.0f)));
 
         jButton3.setText("+");
         jButton3.addActionListener(new java.awt.event.ActionListener() {

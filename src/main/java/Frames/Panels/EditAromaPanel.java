@@ -31,7 +31,7 @@ public class EditAromaPanel extends javax.swing.JPanel {
     DataBaseConnector dbc;
     Employee emp;
     Aroma aroma;
-
+    
     public EditAromaPanel(Aroma a) {
         initComponents();
         labelLabId.setText(a.getLabId());
@@ -44,26 +44,27 @@ public class EditAromaPanel extends javax.swing.JPanel {
         alat = dbc.getAromaType();
         Object[] o = alat.toArray();
         Arrays.sort(o);
-
+        
         comboBoxAromaType.removeAllItems();
         for (Object ob : o) {
             AromaType at = (AromaType) ob;
             comboBoxAromaType.addItem(at);
         }
         comboBoxAromaType.setSelectedItem(a.getAromaType());
-
+        
         alp = dbc.getProvider();
         o = alp.toArray();
         Arrays.sort(o);
-
+        
         comboBoxProvider.removeAllItems();
         for (Object ob : o) {
             comboBoxProvider.addItem(ob);
         }
         comboBoxProvider.setSelectedItem(a.getProvider());
-
+        
         spinnerQuantity.setValue(a.getArrivalQuantity());
-
+        spinnerQuantity.setEnabled(false);
+        
     }
 
     /**
