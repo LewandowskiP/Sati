@@ -1,7 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
+/* 
+ * Copyright 2018 Cafe Sati Polska.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package Frames.Panels;
 
@@ -10,8 +20,16 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
+import java.awt.FileDialog;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.event.TableModelEvent;
@@ -19,6 +37,8 @@ import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVPrinter;
 
 /**
  *
@@ -31,22 +51,22 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
      */
     Employee emp;
     DataBaseConnector dbc;
+    ArrayList<Pallete> productsToExport;
+    String[] header = {"kod_towaru", "kod_kreskowy", "nazwa_partii", "ilosc", "jm"};
 
     private void reload() {
         dbc.openSession();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        ArrayList<Pallete> productsToStore = dbc.getProductsToStore();
-        for (Pallete pallete : productsToStore) {
+        productsToExport = dbc.getProductsToStore();
+        for (Pallete pallete : productsToExport) {
             model.addRow(new Object[]{pallete,
                 pallete.getProductionRaportPart().getProductType(),
                 pallete.getId(),
                 pallete.getBatch(),
                 pallete.getQuantity(),
                 pallete.getNetto(),
-                pallete.getProductionRaportPart().getProductionLine() + " zm. " + pallete.getProductionRaportPart().getShift(),
-                false,
-                false});
+                pallete.getProductionRaportPart().getProductionLine() + " zm. " + pallete.getProductionRaportPart().getShift()});
         }
 
     }
@@ -56,13 +76,6 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
         emp = e;
         dbc = Global.getDataBaseConnector();
         reload();
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-        List<RowSorter.SortKey> sortKeys;
-        sortKeys = new ArrayList(25);
-        sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
-        jTable1.setRowSorter(sorter);
     }
 
     /**
@@ -146,7 +159,31 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //TODO Export file to symphony
+
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File(""));
+        chooser.setDialogTitle("Wybierz katalog zapisu.");
+        chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+        chooser.setAcceptAllFileFilterUsed(false);
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+            String fileUrl = chooser.getSelectedFile() + Global.timestampToStrYYMMDD(new Timestamp(System.currentTimeMillis())) + ".csv";
+            try (FileWriter out = new FileWriter(fileUrl)) {
+                CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(header).withDelimiter(';'));
+                for (Pallete p : productsToExport) {
+                    printer.printRecord(
+                            p.getProductionRaportPart().getProductType(),
+                            p.getProductionRaportPart().getProductType().getEan(),
+                            p.getBatch(),
+                            p.getQuantity(),
+                            "szt");
+                }
+                out.close();
+            } catch (Exception ex) {
+                Logger.getLogger(BrowseProductsToExport.class.getName()).log(Level.SEVERE, null, ex);
+                ex.printStackTrace();
+            }
+        }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
