@@ -242,7 +242,7 @@ public class OfficeFrame extends javax.swing.JFrame {
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -355,14 +355,17 @@ public class OfficeFrame extends javax.swing.JFrame {
             dbc.openSession();
             ArrayList<ProductType> alpt = dbc.getProductType();
             for (ProductType pt : alpt) {
-                pt.getFileURL().replace("\\\\DBC-SATICAFE\\Public\\", "P:\\");
-                pt.getFileURL().replace("\\\\192.168.17.10\\public\\", "P:\\");
+                dbc.startTransation();
+                pt.setFileURL(pt.getFileURL().replace("\\\\DBC-SATICAFE\\Public\\", "P:\\"));
+                pt.setFileURL(pt.getFileURL().replace("\\\\192.168.17.10\\public\\", "P:\\"));
                 if (pt.getFileURLinstant() != null) {
-                    pt.getFileURLinstant().replace("\\\\DBC-SATICAFE\\Public\\", "P:\\");
-                    pt.getFileURLinstant().replace("\\\\192.168.17.10\\public\\", "P:\\");
+                    pt.setFileURLinstant(pt.getFileURLinstant().replace("\\\\DBC-SATICAFE\\Public\\", "P:\\"));
+                    pt.setFileURLinstant(pt.getFileURLinstant().replace("\\\\192.168.17.10\\public\\", "P:\\"));
                 }
-                dbc.updateObject(pt);
+                dbc.saveTransation(pt);
             }
+            dbc.commitTransation();
+
             JOptionPane.showMessageDialog(null, "Naprawiono adresy plików.");
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Wystapił bład");

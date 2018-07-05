@@ -232,7 +232,7 @@ public class Pallete implements Details {
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
         InputStream is = classloader.getResourceAsStream("logo.jpg");
         BufferedImage logo = ImageIO.read(is);
-        g.drawImage(logo.getScaledInstance(350, 350, 0), xOffset, yOffset, null);
+        g.drawImage(logo.getScaledInstance(382, 90, 0), xOffset, yOffset, null);
         xOffset -= 300;
 
         xOffset += Global.labelOffset;

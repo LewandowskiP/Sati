@@ -278,7 +278,7 @@ public class DetailsReadyCoffeePanel extends javax.swing.JPanel {
             sb.append("    ").append("    ").append("Wynik badania technicznego: ").append(readyCoffee.getLabTest().getTechnical()).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Data badania: ").append((Global.timestampToStrDDMMYYYY(readyCoffee.getLabTest().getExamineDate()))).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Badanie wykonał(a): ").append(readyCoffee.getLabTest().getLabAssistant().toString()).append(System.lineSeparator());
-
+            sb.append(readyCoffee.getLabTest().getDetails());
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();

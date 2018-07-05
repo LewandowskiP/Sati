@@ -83,7 +83,7 @@ public class DataBaseConnector {
 
     public void flush() {
         s.flush();
-        
+
     }
 
     public void refresh(Object o) {
@@ -871,9 +871,10 @@ public class DataBaseConnector {
             openSession();
         }
         ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState = 1";
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState = :waiting OR PRP.labTestState = :block";
         Query q = s.createQuery(hql);
-        // q.setParameter("state", Global.PRODUCTION_RAPORT_PART_WAITING);
+        q.setParameter("waiting", Global.PRODUCTION_RAPORT_PART_WAITING);
+        q.setParameter("block", Global.PRODUCTION_RAPORT_PART_BLOCKED);
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
@@ -1101,6 +1102,17 @@ public class DataBaseConnector {
         List result = (List<ProductType>) q.list();
         alpt.addAll(result);
         return alpt;
+    }
+
+    public ProductType getProductTypeWithId(int id) {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductType PT WHERE PT.id = :productType";
+        Query q = s.createQuery(hql).setParameter("productType", id);
+        List result = (List<ProductType>) q.list();
+
+        return (ProductType) result.get(0);
     }
 
     public ArrayList<RoastRaport> getRoastRaportWithEmployee(Employee e) {

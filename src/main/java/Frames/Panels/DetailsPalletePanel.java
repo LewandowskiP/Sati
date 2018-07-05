@@ -52,7 +52,7 @@ public class DetailsPalletePanel extends javax.swing.JPanel {
             while (g.getGraphics() == null) {
             }
             Graphics2D g2d = (Graphics2D) g.getGraphics();
-            g2d.scale(0.5, 0.5);
+            g2d.scale(0.6, 0.6);
             try {
                 p.buildLabel(g2d);
             } catch (IOException ex) {
@@ -89,7 +89,7 @@ public class DetailsPalletePanel extends javax.swing.JPanel {
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 820, Short.MAX_VALUE)
+            .addGap(0, 530, Short.MAX_VALUE)
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)

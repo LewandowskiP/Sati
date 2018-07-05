@@ -17,6 +17,7 @@ package Frames.Panels;
 
 import ProductClasses.DirectPackage;
 import ProductionManagement.Global;
+import ProductionManagement.LabTest;
 import java.awt.print.PrinterException;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -42,14 +43,12 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
         textFieldStoreman.setText(directPackage.getStoreman().toString());
         textFieldArrivalDate.setText(directPackage.getArrivalDate().toString());
         textFieldWeight.setText(String.valueOf(directPackage.getWeight()));
-
     }
 
     public DetailsDirectPackagePanel(DirectPackage dp) {
         initComponents();
         directPackage = dp;
         loadData();
-
     }
 
     /**
@@ -234,6 +233,8 @@ public class DetailsDirectPackagePanel extends javax.swing.JPanel {
             sb.append("    ").append("    ").append("Wynik badania technicznego: ").append(directPackage.getLabTest().getTechnical()).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Data badania: ").append((Global.timestampToStrDDMMYYYY(directPackage.getLabTest().getExamineDate()))).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Badanie wykonał(a): ").append(directPackage.getLabTest().getLabAssistant().toString()).append(System.lineSeparator());
+
+            sb.append(directPackage.getLabTest().getDetails());
 
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);

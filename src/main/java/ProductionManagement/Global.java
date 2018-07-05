@@ -79,13 +79,10 @@ public class Global {
     public static final int PRODUCT_ACCEPTED = 2;
     public static final int PRODUCT_COMPLETED = 3;
     public static final int PRODUCT_STORED = 4;
-    
-    
-    
+
     public static final int PRODUCTION_ORDER_ORDERED = 1;
     public static final int PRODUCTION_ORDER_INPROGRESS = 2;
     public static final int PRODUCTION_ORDER_COMPLETED = 3;
-    
 
     public static final boolean FILE_READ_ONLY = false;
     public static final boolean FILE_WRITEABLE = true;
@@ -153,11 +150,11 @@ public class Global {
     public static final String ean128TemplateLot = "(01)n13+cd(10)n1-19(15)n6";
     public static final String ean128TemplatePallete = "(11)n6(3102)n6(30)n8";
     public static final String ean128TemplateNum = "(91)an1-30";
-    public static final int labelOffset = 20;
+    public static final int labelOffset = 26;
     public static final char eanSeparator = '*';
     public static final int dpiResolution = 72;
     public static final int labelEanDpi = dpiResolution * 4;
-    public static final int labelFontSize = 14;
+    public static final int labelFontSize = 24;
 
     public static final int a4CanvasSizeWidth = 1754;
     public static final int a4CanvasSizeHeight = 1240;

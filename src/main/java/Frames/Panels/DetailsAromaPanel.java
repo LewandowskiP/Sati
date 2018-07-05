@@ -252,7 +252,7 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
             sb.append("    ").append("    ").append("Wynik badania technicznego: ").append(aroma.getLabTest().getTechnical()).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Data badania: ").append((Global.timestampToStrDDMMYYYY(aroma.getLabTest().getExamineDate()))).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Badanie wykonał(a): ").append(aroma.getLabTest().getLabAssistant().toString()).append(System.lineSeparator());
-
+            sb.append(aroma.getLabTest().getDetails());
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();

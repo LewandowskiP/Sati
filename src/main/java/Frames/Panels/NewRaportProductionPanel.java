@@ -419,9 +419,9 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             tablePallete.getColumnModel().getColumn(0).setMinWidth(0);
             tablePallete.getColumnModel().getColumn(0).setPreferredWidth(0);
             tablePallete.getColumnModel().getColumn(0).setMaxWidth(0);
-            tablePallete.getColumnModel().getColumn(1).setMinWidth(160);
-            tablePallete.getColumnModel().getColumn(1).setPreferredWidth(160);
-            tablePallete.getColumnModel().getColumn(1).setMaxWidth(160);
+            tablePallete.getColumnModel().getColumn(1).setMinWidth(100);
+            tablePallete.getColumnModel().getColumn(1).setPreferredWidth(100);
+            tablePallete.getColumnModel().getColumn(1).setMaxWidth(100);
             tablePallete.getColumnModel().getColumn(4).setMinWidth(50);
             tablePallete.getColumnModel().getColumn(4).setPreferredWidth(50);
             tablePallete.getColumnModel().getColumn(4).setMaxWidth(50);
@@ -455,6 +455,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jSeparator1)
+                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -484,24 +485,11 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(jLabel21)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 299, Short.MAX_VALUE))
+                                        .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE))
                                     .addComponent(jScrollPane3)
                                     .addComponent(jScrollPane1)))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel5)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel9)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel11)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(buttonProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                             .addComponent(jLabel7)
@@ -520,9 +508,22 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                                 .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
                                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(buttonAssignBatch))
-                                            .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.TRAILING))
+                                            .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                    .addComponent(jLabel5)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel9)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel11)
+                                            .addComponent(jLabel6))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(buttonProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -551,11 +552,13 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel11)
-                    .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel6)
-                    .addComponent(buttonProductionCoffeeSeek))
+                    .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(buttonProductionCoffeeSeek))
+                .addGap(8, 8, 8)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel1)
@@ -767,7 +770,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 prp.setProductionLine(selectedProductionLine);
                 prp.setRaportDate(new Timestamp(System.currentTimeMillis()));
                 dbc.saveObject(prp);
-                String batch = String.format("%08d", prp.getId());
+                String batch = String.format("%06d", prp.getId());
                 prp.setBatchInfo(batch);
                 textFieldBatchInfo.setText(batch);
                 dbc.updateObject(prp);

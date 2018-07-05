@@ -308,7 +308,7 @@ public class DetailsGreenCoffeePanel extends javax.swing.JPanel {
             sb.append("    ").append("    ").append("Wynik badania technicznego: ").append(coffeeGreen.getLabTest().getTechnical()).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Data badania: ").append((Global.timestampToStrDDMMYYYY(coffeeGreen.getLabTest().getExamineDate()))).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Badanie wykonał(a): ").append(coffeeGreen.getLabTest().getLabAssistant().toString()).append(System.lineSeparator()).append(System.lineSeparator());
-
+            sb.append(coffeeGreen.getLabTest().getDetails());
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();

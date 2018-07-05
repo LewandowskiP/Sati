@@ -81,6 +81,9 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
         } else if (directPackage.getState() == Global.OUT_OF_STORE) {
             buttonHide.setEnabled(false);
             buttonUnhide.setEnabled(true);
+        } else {
+            buttonHide.setEnabled(false);
+            buttonUnhide.setEnabled(false);
         }
 
     }
@@ -160,12 +163,12 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(comboBoxDirectPackageType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(spinnerWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(buttonHide)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(buttonUnhide))))
-                    .addComponent(buttonRegisterToLaboratory))
+                                    .addComponent(spinnerWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                    .addComponent(buttonRegisterToLaboratory)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(buttonHide)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonUnhide)))
                 .addGap(26, 26, 26))
         );
         layout.setVerticalGroup(
@@ -191,9 +194,9 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonHide)
                     .addComponent(buttonUnhide))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonRegisterToLaboratory)
-                .addGap(21, 21, 21))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 
@@ -225,7 +228,6 @@ public class EditDirectPackagePanel extends javax.swing.JPanel {
 
     private void buttonUnhideActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUnhideActionPerformed
         directPackage.setState(Global.READY_TO_USE);
-
         if (directPackage.getState() == Global.READY_TO_USE) {
             buttonHide.setEnabled(true);
             buttonUnhide.setEnabled(false);

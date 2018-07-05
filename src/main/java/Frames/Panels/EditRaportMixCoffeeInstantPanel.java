@@ -116,7 +116,7 @@ public class EditRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Object.class, java.lang.Integer.class, java.lang.Integer.class, java.lang.Boolean.class, java.lang.Float.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.String.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Float.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
                 false, false, true, true, true, true, true, true
@@ -248,7 +248,7 @@ public class EditRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
                 icmp.setWeight((Float) tableInstantCoffeeMixPart.getModel().getValueAt(i, 5));
                 icmp.setSealOk((Boolean) tableInstantCoffeeMixPart.getModel().getValueAt(i, 4));
                 icmp.setSerialNumber(String.valueOf(tableInstantCoffeeMixPart.getModel().getValueAt(i, 3)));
-                icmp.setCardBoardNumber((Integer) tableInstantCoffeeMixPart.getModel().getValueAt(i, 2));
+                icmp.setCardBoardNumber(String.valueOf(tableInstantCoffeeMixPart.getModel().getValueAt(i, 2)));
                 icmp.setCoffeeGreen(dbc.getCoffeeGreenWithLabId(tableInstantCoffeeMixPart.getModel().getValueAt(i, 0)));
                 if (icmp.getCoffeeGreen() == null) {
                     throw new ResourceNotFoundException((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 0));

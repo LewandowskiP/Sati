@@ -29,12 +29,26 @@ import Frames.Panels.NewRaportProductionPanel;
 import GreenCoffeeClasses.CoffeeAttribute;
 import GreenCoffeeClasses.CoffeeGreen;
 import GreenCoffeeClasses.CoffeeType;
+import ProductClasses.ProductType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 /**
  *
@@ -106,7 +120,7 @@ public class AdministratorFrame extends javax.swing.JFrame {
             }
         });
 
-        buttonAddCoffeeOwner.setText("Kawa Właściciel");
+        buttonAddCoffeeOwner.setText("Zmiana eanów");
         buttonAddCoffeeOwner.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 buttonAddCoffeeOwnerActionPerformed(evt);
@@ -286,7 +300,7 @@ public class AdministratorFrame extends javax.swing.JFrame {
                     .addComponent(jButton8)
                     .addComponent(jButton9))
                 .addGap(18, 18, 18)
-                .addComponent(scrollPanelAdministratorFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
+                .addComponent(scrollPanelAdministratorFrame, javax.swing.GroupLayout.DEFAULT_SIZE, 786, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -394,8 +408,44 @@ public class AdministratorFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_buttonAddCoffeeCountryActionPerformed
 
     private void buttonAddCoffeeOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCoffeeOwnerActionPerformed
-        JFrame palaczFrame = new CEOFrame(emp);
-        palaczFrame.setVisible(true);
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new File(""));
+        DataBaseConnector dbc = Global.getDataBaseConnector();
+        if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+
+            try {
+                InputStream ExcelFileToRead = new FileInputStream(chooser.getSelectedFile());
+                XSSFWorkbook wb = new XSSFWorkbook(ExcelFileToRead);
+                XSSFSheet sheet = wb.getSheetAt(0);
+                XSSFRow row;
+                XSSFCell cellId;
+                XSSFCell cellEan;
+                Integer id;
+                Long ean;
+                Iterator rows = sheet.rowIterator();
+                ArrayList<ProductType> alpt;
+                while (rows.hasNext()) {
+                    row = (XSSFRow) rows.next();
+                    cellId = row.getCell(0);
+                    id = ((Double) cellId.getNumericCellValue()).intValue();
+                    System.out.println(id);
+                    cellEan = row.getCell(1);
+                    ean = ((Double) cellEan.getNumericCellValue()).longValue();
+
+                    ProductType pt = dbc.getProductTypeWithId(id);
+                    alpt = dbc.getProductVersions(pt);
+                    for (ProductType prodType : alpt) {
+                        prodType.setEan(String.format("%013d", ean));
+                        dbc.saveOrUpdateObject(prodType);
+                    }
+
+                }
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(AdministratorFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(AdministratorFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }//GEN-LAST:event_buttonAddCoffeeOwnerActionPerformed
 
     private void buttonAddCoffeeTestActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddCoffeeTestActionPerformed

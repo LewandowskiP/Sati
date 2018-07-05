@@ -46,12 +46,10 @@ public class BrowseProductVersions extends javax.swing.JPanel {
         dbc.openSession();
         DefaultTableModel dtm = (DefaultTableModel) tableProducts.getModel();
         dtm.setRowCount(0);
-
         for (ProductType productType : dbc.getProductVersions(pt)) {
             dtm.addRow(new Object[]{productType, Global.timestampToStrDDMMYYYY(productType.getCreateDate()), productType.getVersion(), false});
         }
         dtm.addTableModelListener(new CheckBoxProductOverwatchListener());
-
     }
 
     /**
@@ -177,7 +175,7 @@ public class BrowseProductVersions extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
-            String s = (String) JOptionPane.showInputDialog(this, "Podaj nowy EAN", pt.getProductName());
+            String s = (String) JOptionPane.showInputDialog(null, "Podaj nowy EAN", "Uwaga!", JOptionPane.INFORMATION_MESSAGE);
             if (s != null) {
                 if (s.length() == 13 && StringUtils.isNumeric(s)) {
                     dbc.openSession();

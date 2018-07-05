@@ -27,7 +27,7 @@ public class InstantCoffeeMixPart implements Comparable {
     int id;
 
     CoffeeGreen coffeeGreen;
-    int cardBoardNumber;
+    String cardBoardNumber;
     String serialNumber;
     boolean sealOk;
 
@@ -59,11 +59,11 @@ public class InstantCoffeeMixPart implements Comparable {
         this.coffeeGreen = coffeeGreen;
     }
 
-    public int getCardBoardNumber() {
+    public String getCardBoardNumber() {
         return cardBoardNumber;
     }
 
-    public void setCardBoardNumber(int cardBoardNumber) {
+    public void setCardBoardNumber(String cardBoardNumber) {
         this.cardBoardNumber = cardBoardNumber;
     }
 

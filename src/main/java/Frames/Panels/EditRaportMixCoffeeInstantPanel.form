@@ -73,8 +73,8 @@
               <Table columnCount="8" rowCount="10">
                 <Column editable="false" title="Nr Kontr Surowca" type="java.lang.String"/>
                 <Column editable="false" title="Kawa" type="java.lang.Object"/>
-                <Column editable="true" title="Nr Kartona" type="java.lang.Integer"/>
-                <Column editable="true" title="Nr Parti" type="java.lang.Integer"/>
+                <Column editable="true" title="Nr Kartona" type="java.lang.String"/>
+                <Column editable="true" title="Nr Parti" type="java.lang.String"/>
                 <Column editable="true" title="Szczel." type="java.lang.Boolean"/>
                 <Column editable="true" title="Waga" type="java.lang.Float"/>
                 <Column editable="true" title="+" type="java.lang.Boolean"/>

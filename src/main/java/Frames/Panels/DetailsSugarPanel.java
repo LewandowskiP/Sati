@@ -43,7 +43,7 @@ public class DetailsSugarPanel extends javax.swing.JPanel {
         textFieldProvider.setText(s.getProvider().toString());
         textFieldStoreman.setText(s.getStoreman().toString());
         textFieldArrivalDate.setText(s.getArrivalDate().toString());
-        
+
     }
 
     /**
@@ -188,7 +188,7 @@ public class DetailsSugarPanel extends javax.swing.JPanel {
             sb.append("    ").append("Data ważności:  ").append(Global.timestampToStrDDMMYYYY(sugar.getExpiryDate())).append(System.lineSeparator());
             sb.append("    ").append("Zmagazynował(a):  ").append(sugar.getStoreman().toString()).append(System.lineSeparator());
             sb.append("    ").append("Producent:  ").append(sugar.getProvider()).append(System.lineSeparator());
-           
+
             sb.append("    ").append("Dane badania: ").append(System.lineSeparator());
             if (sugar.getLabTest().isAccepted()) {
                 sb.append("    ").append("    ").append("Stan: ").append("ZATWIERDZONY").append(System.lineSeparator());
@@ -204,7 +204,7 @@ public class DetailsSugarPanel extends javax.swing.JPanel {
             sb.append("    ").append("    ").append("Wynik badania technicznego: ").append(sugar.getLabTest().getTechnical()).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Data badania: ").append((Global.timestampToStrDDMMYYYY(sugar.getLabTest().getExamineDate()))).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Badanie wykonał(a): ").append(sugar.getLabTest().getLabAssistant().toString()).append(System.lineSeparator());
-
+            sb.append(sugar.getLabTest().getDetails());
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();

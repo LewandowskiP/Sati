@@ -19,24 +19,15 @@ import ProductionClasses.Pallete;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
-import SatiInterfaces.Details;
-import java.awt.FileDialog;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFileChooser;
-import javax.swing.RowSorter;
-import javax.swing.SortOrder;
-import javax.swing.event.TableModelEvent;
-import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
-import javax.swing.table.TableRowSorter;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -166,7 +157,7 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
         chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
         chooser.setAcceptAllFileFilterUsed(false);
         if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-            String fileUrl = chooser.getSelectedFile() + Global.timestampToStrYYMMDD(new Timestamp(System.currentTimeMillis())) + ".csv";
+            String fileUrl = chooser.getSelectedFile() + "\\" + Global.timestampToStrYYMMDD(new Timestamp(System.currentTimeMillis())) + ".csv";
             try (FileWriter out = new FileWriter(fileUrl)) {
                 CSVPrinter printer = new CSVPrinter(out, CSVFormat.DEFAULT.withHeader(header).withDelimiter(';'));
                 for (Pallete p : productsToExport) {
@@ -176,11 +167,12 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
                             p.getBatch(),
                             p.getQuantity(),
                             "szt");
+                    p.setState(Global.PALLETE_MIGRATED);
+                    dbc.saveObject(p);
                 }
                 out.close();
-            } catch (Exception ex) {
+            } catch (IOException ex) {
                 Logger.getLogger(BrowseProductsToExport.class.getName()).log(Level.SEVERE, null, ex);
-                ex.printStackTrace();
             }
         }
 

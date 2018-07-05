@@ -54,7 +54,7 @@
                   <Component id="jButton9" alignment="0" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Component id="scrollPanelAdministratorFrame" pref="778" max="32767" attributes="0"/>
+              <Component id="scrollPanelAdministratorFrame" pref="786" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -140,7 +140,7 @@
     </Component>
     <Component class="javax.swing.JButton" name="buttonAddCoffeeOwner">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Kawa W&#x142;a&#x15b;ciciel"/>
+        <Property name="text" type="java.lang.String" value="Zmiana ean&#xf3;w"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonAddCoffeeOwnerActionPerformed"/>

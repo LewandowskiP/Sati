@@ -39,7 +39,7 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
      * Creates new form BrowseProductsAfterLabTest
      */
     DataBaseConnector dbc;
-
+    
     private void reload() {
         dbc.openSession();
         ArrayList<Pallete> palleteToAccept = dbc.getPalleteWithState(Global.PALLETE_CHECKED);
@@ -47,21 +47,21 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
         model.setRowCount(0);
         for (Pallete p : palleteToAccept) {
             model.addRow(new Object[]{p, p.getProductionRaportPart().getProductType(), p.getBatch(), p.getQuantity(), Global.getPalleteState(p.getState()), false, false});
-
+            
         }
-
+        
     }
-
+    
     public BrowsePalleteStoreman() {
         initComponents();
-
+        
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
         }
         reload();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-
+        
         List<RowSorter.SortKey> sortKeys;
         sortKeys = new ArrayList(25);
         sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
@@ -70,7 +70,7 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
         model.addTableModelListener(new TableModelListener() {
             final static int accept_column = 5;
             final static int details_column = 6;
-
+            
             @Override
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
@@ -89,23 +89,20 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
                         Pallete p = (Pallete) model.getValueAt(row, 0);
-                        if (p.getProductionRaportPart().getLabTestState() == 3) {
-                            p.setState(Global.PALLETE_CHECKED);
+                        if (p.getState() == Global.PALLETE_CHECKED) {
+                            p.setState(Global.PALLETE_STORED);
                             dbc.updateObject(p);
-
                             JOptionPane.showMessageDialog(null, "Paleta zatwierdzona", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                         } else {
-
-                            JOptionPane.showMessageDialog(null, "Paleta nie może być zatwierdzona proszę czekać na badanie laboratorium.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
+                            JOptionPane.showMessageDialog(null, "Paleta nie może być zatwierdzona", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                         }
                         model.setValueAt(false, row, column);
                         reload();
                     }
-
                 }
             }
         });
-
+        
     }
 
     /**

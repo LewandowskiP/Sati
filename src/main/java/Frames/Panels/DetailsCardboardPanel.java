@@ -204,7 +204,7 @@ public class DetailsCardboardPanel extends javax.swing.JPanel {
             sb.append("    ").append("    ").append("Wynik badania technicznego: ").append(cardboard.getLabTest().getTechnical()).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Data badania: ").append((Global.timestampToStrDDMMYYYY(cardboard.getLabTest().getExamineDate()))).append(System.lineSeparator());
             sb.append("    ").append("    ").append("Badanie wykonał(a): ").append(cardboard.getLabTest().getLabAssistant().toString()).append(System.lineSeparator());
-
+            sb.append(cardboard.getLabTest().getDetails());
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
