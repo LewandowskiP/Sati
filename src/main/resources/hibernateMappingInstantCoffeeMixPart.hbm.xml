@@ -10,7 +10,7 @@
             <generator class="identity"/>
         </id>    
         <property name="serialNumber" column="serialNumber" type="string"/>
-        <property name="cardBoardNumber" column="cardBoardNumber" type="string"/>
+        <property name="cardBoardNumber" column="cardBoardNumber" type="string" length ="100"/>
         <property name="weight" column="weight" type="float"/>
         <property name="sealOk" column="sealOk" type="boolean"/>
         <many-to-one name="instantCoffeeMixRaport" column="instantCoffeeMixRaport_id" class="InstantCoffeeMixRaport"  not-null="true" />  
