@@ -15,9 +15,7 @@
  */
 package ProductionManagement;
 
-import Frames.Panels.DetailsGreenCoffeePanel;
 import Frames.Panels.DetailsLabTestPanel;
-import ProductionManagement.Employee;
 import java.sql.Timestamp;
 import javax.swing.JOptionPane;
 
@@ -482,6 +480,20 @@ public class LabTest {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public void buildLine(StringBuilder stringBuilder, int lineIncrements, String text, int lineSeparators) {
+
+        while (lineIncrements > 0) {
+            lineIncrements--;
+            stringBuilder.append("    ");
+        }
+        stringBuilder.append(text);
+        while (lineSeparators > 0) {
+            lineSeparators--;
+            stringBuilder.append(System.lineSeparator());
+        }
+
     }
 
     public String getDetails() {

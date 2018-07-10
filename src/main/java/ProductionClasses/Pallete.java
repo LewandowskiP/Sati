@@ -32,7 +32,6 @@ import static java.awt.print.Printable.NO_SUCH_PAGE;
 import static java.awt.print.Printable.PAGE_EXISTS;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Timestamp;
@@ -275,29 +274,24 @@ public class Pallete implements Details {
                 if (pageIndex != 0) {
                     return NO_SUCH_PAGE;
                 }
-
                 graphics.drawImage((Image) output, 0, 0, (int) Global.a4xDimPixels, (int) Global.a4yDimPixels, null);
                 return PAGE_EXISTS;
             }
         });
-
         try {
             PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
             aset.add(OrientationRequested.LANDSCAPE);
             aset.add(new MediaPrintableArea(Global.a4PrintOffset, Global.a4PrintOffset, Global.a4yDimInches - Global.a4PrintOffset, Global.a4xDimInches - Global.a4PrintOffset, MediaPrintableArea.INCH));
-
             printJob.print(aset);
-
         } catch (PrinterException ex) {
             Logger.getLogger(GenerateLabelEan128.class
                     .getName()).log(Level.SEVERE, null, ex);
         }
-
     }
 
     @Override
     public String toString() {
-        return this.id + " " + this.getBatch();
+        return String.valueOf(id);
     }
 
 }

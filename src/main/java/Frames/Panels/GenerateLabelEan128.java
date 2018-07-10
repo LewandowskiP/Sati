@@ -220,7 +220,7 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
         int quantity = (int) spinnerPcs.getValue();
         float weight = (float) spinnerWeightPerPcs.getValue();
         if (quantity > 0 && weight > 0) {
-            float nettoSum = weight * quantity;
+            float nettoSum = (weight * quantity) / 1000;
             spinnerNetto.setValue(nettoSum);
         } else {
             JOptionPane.showMessageDialog(null, "Wprowadzono błędne dane", "Uwaga", JOptionPane.PLAIN_MESSAGE);

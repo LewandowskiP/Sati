@@ -47,7 +47,7 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         model.setRowCount(0);
         for (Pallete p : palleteToAccept) {
             if (p.getProductionRaportPart().getLabTestState() > Global.PRODUCTION_RAPORT_PART_ACCEPTED) {
-                model.addRow(new Object[]{p, p.getProductionRaportPart().getProductType(), p.getBatch(), p.getQuantity(), Global.getPalleteState(p.getState()), false, false});
+                model.addRow(new Object[]{p, p.getBatch(), p.getProductionRaportPart().getProductType(), p.getQuantity(), Global.getPalleteState(p.getState()), false, false});
             }
         }
     }
@@ -60,13 +60,6 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         }
         reload();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-
-        List<RowSorter.SortKey> sortKeys;
-        sortKeys = new ArrayList(25);
-        sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
-        sorter.setSortKeys(sortKeys);
-        jTable1.setRowSorter(sorter);
         model.addTableModelListener(new TableModelListener() {
             final static int accept_column = 5;
             final static int details_column = 6;
@@ -89,7 +82,7 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
                         Pallete p = (Pallete) model.getValueAt(row, 0);
-                        if (p.getProductionRaportPart().getLabTestState() == 3) {
+                        if (p.getProductionRaportPart().getLabTestState() == Global.PRODUCTION_RAPORT_PART_ACCEPTED) {
                             p.setState(Global.PALLETE_CHECKED);
                             dbc.updateObject(p);
 
@@ -125,7 +118,7 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Paleta", "Typ produktu", "Numer partii", "Ilość sztuk", "Stan", "Zat.", "Etykieta."
+                "Paleta", "Numer partii", "Typ produktu", "Ilość sztuk", "Stan", "Zat.", "Etykieta."
             }
         ) {
             Class[] types = new Class [] {
@@ -145,12 +138,12 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         });
         jScrollPane1.setViewportView(jTable1);
         if (jTable1.getColumnModel().getColumnCount() > 0) {
-            jTable1.getColumnModel().getColumn(0).setMinWidth(0);
-            jTable1.getColumnModel().getColumn(0).setPreferredWidth(0);
-            jTable1.getColumnModel().getColumn(0).setMaxWidth(0);
-            jTable1.getColumnModel().getColumn(2).setMinWidth(150);
-            jTable1.getColumnModel().getColumn(2).setPreferredWidth(150);
-            jTable1.getColumnModel().getColumn(2).setMaxWidth(150);
+            jTable1.getColumnModel().getColumn(0).setMinWidth(120);
+            jTable1.getColumnModel().getColumn(0).setPreferredWidth(120);
+            jTable1.getColumnModel().getColumn(0).setMaxWidth(120);
+            jTable1.getColumnModel().getColumn(1).setMinWidth(150);
+            jTable1.getColumnModel().getColumn(1).setPreferredWidth(150);
+            jTable1.getColumnModel().getColumn(1).setMaxWidth(150);
             jTable1.getColumnModel().getColumn(3).setMinWidth(150);
             jTable1.getColumnModel().getColumn(3).setPreferredWidth(150);
             jTable1.getColumnModel().getColumn(3).setMaxWidth(150);

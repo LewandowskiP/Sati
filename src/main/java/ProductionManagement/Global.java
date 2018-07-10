@@ -35,7 +35,7 @@ public class Global {
         }
         return dbc;
     }
-    public static final int MINUTES_TO = 480;
+    public static final int MINUTES_TO = 20;
     public static final int NOONE = -1;
     public static final int CEO = 1;
     public static final int STOREMAN = 2;
@@ -96,12 +96,11 @@ public class Global {
     public static final int PRODUCTION_RAPORT_PART_ACCEPTED = 3;
     public static final int PRODUCTION_RAPORT_PART_TO_STORE = 4;
     public static final int PRODUCTION_RAPORT_PART_NEW = -1;
-
     public static final int PRODUCTION_RAPORT_PART_STORED = 0;
 
     public static final int PRODUCT_TYPE_ROAST = 1;
     public static final int PRODUCT_TYPE_PACK = 2;
-
+    
     public static final int PRODUCT_TYPE_BEAN = 0;
     public static final int PRODUCT_TYPE_GRIND = 1;
     public static final int PRODUCT_TYPE_INSTANT = 2;
