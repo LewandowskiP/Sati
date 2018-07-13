@@ -293,10 +293,11 @@ public class DataBaseConnector {
         if (!s.isOpen()) {
             openSession();
         }
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.emp = :emp AND PRP.productionLine = :productionLine ORDER BY id DESC LIMIT 1";
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.emp = :emp AND PRP.productionLine = :productionLine AND PRP.labTestState = :state ORDER BY id DESC LIMIT 1";
         Query q = s.createQuery(hql);
         q.setParameter("emp", employee);
         q.setParameter("productionLine", productionLine);
+        q.setParameter("state", Global.PRODUCTION_RAPORT_PART_NEW);
         List result = (List<ProductionCoffee>) q.list();
 
         if (result.size() > 0) {
@@ -306,8 +307,10 @@ public class DataBaseConnector {
                 Hibernate.initialize(p);
             }
             Hibernate.initialize(toReturn.getProductionRaportDirectPackage());
-            for (ProductionRaportDirectPackage p : toReturn.getProductionRaportDirectPackage()) {
-                Hibernate.initialize(p);
+            for (ProductionRaportDirectPackage prdp : toReturn.getProductionRaportDirectPackage()) {
+                Hibernate.initialize(prdp);
+                Hibernate.initialize(prdp.getDirectPackage());
+                Hibernate.initialize(prdp.getDirectPackage().getDirectPackageType());
             }
         }
         return toReturn;
@@ -907,13 +910,12 @@ public class DataBaseConnector {
             openSession();
         }
         ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
-        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState >0";
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState >= :state";
         Query q = s.createQuery(hql);
-        //q.setParameter("state", Global.PRODUCTION_RAPORT_PART_ACCEPTED);
+        q.setParameter("state", Global.PRODUCTION_RAPORT_PART_WAITING);
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
-
             Hibernate.initialize(prp.getProductType());
             Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
             for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
@@ -931,7 +933,7 @@ public class DataBaseConnector {
             openSession();
         }
         ArrayList<RoastRaport> alrr = new ArrayList<>();
-        String hql = "SELECT DISTINCT  roastRaport FROM RoastGreenCoffeePart RGCP WHERE RGCP.coffeeGreen = :cg";
+        String hql = "SELECT DISTINCT roastRaport FROM RoastGreenCoffeePart RGCP WHERE RGCP.coffeeGreen = :cg";
         Query q = s.createQuery(hql);
         q.setParameter("cg", cg);
         List result = (List<RoastRaport>) q.list();

@@ -199,7 +199,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
                                 summaryWeight -= pallete.getNetto();
                                 summaryPcs -= pallete.getQuantity();
-                                summaryPalletes++;
+                                summaryPalletes--;
                                 productionRaportPart.getPallete().remove(pallete);
                                 dbc.deleteObject(pallete);
                                 JOptionPane.showMessageDialog(null, "Paleta usunięta.", "Infromacja", JOptionPane.PLAIN_MESSAGE);
@@ -761,6 +761,13 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                         dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
                     }
                     dtm.addRow(new Object[]{null, null, null, null, false, false, false});
+
+                    dtm = (DefaultTableModel) tableDirectPackage.getModel();
+                    dtm.setRowCount(0);
+                    for (ProductionRaportDirectPackage prdp : prp.getProductionRaportDirectPackage()) {
+                        dtm.addRow(new Object[]{prdp.getDirectPackage().getLabId(), prdp.getDirectPackage().getDirectPackageType(), false, false});
+                    }
+                    dtm.addRow(new Object[]{null, null, false, false, false});
                     JOptionPane.showMessageDialog(null, "Załadowano istniejący numer partii.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                 }
                 prp.setEmp(employee);
@@ -769,7 +776,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 prp.setProductType(selectedProductType);
                 prp.setProductionLine(selectedProductionLine);
                 prp.setRaportDate(new Timestamp(System.currentTimeMillis()));
-                dbc.saveObject(prp);
+                dbc.saveOrUpdateObject(prp);
                 String batch = String.format("%06d", prp.getId());
                 prp.setBatchInfo(batch);
                 textFieldBatchInfo.setText(batch);
