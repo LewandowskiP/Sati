@@ -44,12 +44,12 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
     DataBaseConnector dbc;
     ArrayList<Pallete> productsToExport;
     String[] header = {"kod_towaru", "kod_kreskowy", "nazwa_partii", "ilosc", "jm"};
-
+    
     private void reload() {
         dbc.openSession();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        productsToExport = dbc.getProductsToStore();
+        productsToExport = dbc.getPalleteWithState(Global.PALLETE_STORED);
         for (Pallete pallete : productsToExport) {
             model.addRow(new Object[]{pallete,
                 pallete.getProductionRaportPart().getProductType(),
@@ -59,9 +59,9 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
                 pallete.getNetto(),
                 pallete.getProductionRaportPart().getProductionLine() + " zm. " + pallete.getProductionRaportPart().getShift()});
         }
-
+        
     }
-
+    
     public BrowseProductsToExport(Employee e) {
         initComponents();
         emp = e;
@@ -150,7 +150,7 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
+        
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File(""));
         chooser.setDialogTitle("Wybierz katalog zapisu.");
