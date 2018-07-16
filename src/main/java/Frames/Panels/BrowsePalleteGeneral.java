@@ -46,7 +46,7 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (Pallete p : palleteToAccept) {
-            if (p.getProductionRaportPart().getLabTestState() > Global.PRODUCTION_RAPORT_PART_ACCEPTED) {
+            if (p.getProductionRaportPart().getLabTestState() == Global.PRODUCTION_RAPORT_PART_ACCEPTED) {
                 model.addRow(new Object[]{p, p.getBatch(), p.getProductionRaportPart().getProductType(), p.getQuantity(), Global.getPalleteState(p.getState()), false, false});
             }
         }
@@ -85,10 +85,8 @@ public class BrowsePalleteGeneral extends javax.swing.JPanel {
                         if (p.getProductionRaportPart().getLabTestState() == Global.PRODUCTION_RAPORT_PART_ACCEPTED) {
                             p.setState(Global.PALLETE_CHECKED);
                             dbc.updateObject(p);
-
                             JOptionPane.showMessageDialog(null, "Paleta zatwierdzona", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                         } else {
-
                             JOptionPane.showMessageDialog(null, "Paleta nie może być zatwierdzona proszę czekać na badanie laboratorium.", "Uwaga!", JOptionPane.PLAIN_MESSAGE);
                         }
                         model.setValueAt(false, row, column);

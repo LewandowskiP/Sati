@@ -67,13 +67,16 @@ public class LogInForm extends javax.swing.JFrame {
                     Date now = new Date(System.currentTimeMillis());
                     Calendar c = Calendar.getInstance();
                     c.setTime(sessionStart);
-                    c.add(Calendar.MINUTE, Global.MINUTES_TO);
+                    if (emp.getJobPosition() != Global.OFFICE) {
+                        c.add(Calendar.MINUTE, Global.MINUTES_TO);
+                    } else {
+                        c.add(Calendar.MINUTE, Global.MINUTES_TO_OFFICE);
+                    }
                     c.getTime();
                     if (c.getTime().before(now)) {
                         dbc.closeSession();
                         JOptionPane.showMessageDialog(null, "Wylogowano ze wzgledu na zbyt długą nieaktywność.", "Informacja", JOptionPane.ERROR_MESSAGE);
                         frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-
                     }
                 }
             };
