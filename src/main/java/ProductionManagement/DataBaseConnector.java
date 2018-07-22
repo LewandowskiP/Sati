@@ -1816,4 +1816,23 @@ public class DataBaseConnector {
         }
         return toReturn;
     }
+
+    public ArrayList<ProductionRaportPart> getProductsToFinish() {
+        ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState > 0";
+        Query q = s.createQuery(hql);
+        List result = (List<ProductionRaportPart>) q.list();
+        alprp.addAll(result);
+        for (ProductionRaportPart prp : alprp) {
+
+            Hibernate.initialize(prp.getProductType());
+            Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
+            for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
+                Hibernate.initialize(prca);
+                Hibernate.initialize(prca.getProductionCoffee());
+                Hibernate.initialize(prca.getProductionRaportPart());
+            }
+        }
+        return alprp;
+    }
 }
