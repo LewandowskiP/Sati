@@ -60,7 +60,7 @@ public class BrowseProductsToFinishAdmin extends javax.swing.JPanel {
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
 
-        ArrayList<ProductionRaportPart> productsToExamine = dbc.getProductsToExamine();
+        ArrayList<ProductionRaportPart> productsToExamine = dbc.getProductsToFinish();
         for (ProductionRaportPart prp : productsToExamine) {
             model.addRow(new Object[]{prp, prp.getProductType(), prp.getBatchInfo(), prp.getTotalPcs(), Global.timestampToStrDDMMYYYY(prp.getRaportDate()), prp.getTotalPallete() + " // " + prp.getPallete().size(), false, false});
         }

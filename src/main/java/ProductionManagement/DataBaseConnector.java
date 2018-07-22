@@ -1824,7 +1824,6 @@ public class DataBaseConnector {
         List result = (List<ProductionRaportPart>) q.list();
         alprp.addAll(result);
         for (ProductionRaportPart prp : alprp) {
-
             Hibernate.initialize(prp.getProductType());
             Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
             for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
