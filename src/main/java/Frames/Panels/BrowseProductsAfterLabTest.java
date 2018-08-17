@@ -266,7 +266,7 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
                 if ((Boolean) dtm.getValueAt(i, accept_column) == true) {
                     ProductionRaportPart prp = (ProductionRaportPart) dtm.getValueAt(i, 0);
                     if (prp.getLabTestState() == 3 && dtm.getValueAt(i, 3).equals(dtm.getValueAt(i, 4))) {
-                        prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_TO_STORE);
+                        prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
                         dbc.updateObject(prp);
                     } else {
                         JOptionPane.showMessageDialog(null, "Wystąpił błąd sprawdź zaznaczone produkty");

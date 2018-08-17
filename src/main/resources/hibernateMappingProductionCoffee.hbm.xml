@@ -15,6 +15,7 @@
         <property name="weight" column="weight" type="float"/> 
         <property name="returned" column="returned" type="boolean"/>
         <property name="used" column="used" type="boolean"/>
+        <property name="halfProduct" column="halfProduct" type="boolean"/>
         <property name="prodDate" column="prodDate" type="timestamp"/>
         <many-to-one name="productType" column="productType" class="ProductClasses.ProductType"   not-null="false" />
     

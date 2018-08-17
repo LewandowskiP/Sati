@@ -15,6 +15,7 @@
  */
 package Frames.Panels;
 
+import ProductionClasses.Pallete;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
@@ -52,20 +53,20 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
      */
     Employee emp;
     DataBaseConnector dbc;
-
+    
     private void reload() {
         dbc.openSession();
-
+        
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-
+        
         ArrayList<ProductionRaportPart> productsToExamine = dbc.getProductsToExamine();
         for (ProductionRaportPart prp : productsToExamine) {
             model.addRow(new Object[]{prp, prp.getProductType(), prp.getBatchInfo(), prp.getTotalPcs(), Global.timestampToStrDDMMYYYY(prp.getRaportDate()), prp.getProductionLine() + " zm. " + prp.getShift(), Global.getProductStateState(prp.getLabTestState()), false, false});
         }
-
+        
     }
-
+    
     public BrowseProductsToExamine(Employee e) {
         initComponents();
         emp = e;
@@ -74,20 +75,20 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
         }
         reload();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-
+        
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-
+        
         List<RowSorter.SortKey> sortKeys;
         sortKeys = new ArrayList(25);
         sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         jTable1.setRowSorter(sorter);
         model.addTableModelListener(new TableModelListener() {
-
+            
             final static int accept_column = 7;
             final static int block_column = 8;
             final static int details_column = 9;
-
+            
             @Override
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
@@ -102,7 +103,15 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                             String options[] = new String[]{"Tak", "Nie"};
                             int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz zaakceptować produkt? " + System.lineSeparator() + prp.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                             if (JOptionPane.OK_OPTION == result) {
-                                prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_ACCEPTED);
+                                if (prp.getType() == Global.PRODUCT_TYPE_HALF) {
+                                    prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
+                                    for (Pallete pallete : prp.getPallete()) {
+                                        pallete.setState(Global.PALLETE_MIGRATED);
+                                        dbc.updateObject(pallete);
+                                    }
+                                } else {
+                                    prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_ACCEPTED);
+                                }
                                 prp.setLabTestDate(new Timestamp(System.currentTimeMillis()));
                                 model.setValueAt(Global.getProductStateState(prp.getLabTestState()), row, 6);
                                 dbc.updateObject(prp);
@@ -129,7 +138,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                         reload();
                     }
                 }
-
+                
                 if (column == details_column) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
@@ -138,10 +147,10 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                         model.setValueAt(false, row, column);
                     }
                 }
-
+                
             }
         });
-
+        
     }
 
     /**

@@ -16,6 +16,7 @@
 package Frames.Panels;
 
 import ProductionClasses.Pallete;
+import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
@@ -28,6 +29,7 @@ import javax.print.PrintServiceLookup;
 import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.standard.OrientationRequested;
+import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
@@ -52,6 +54,7 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
     Employee emp;
     DataBaseConnector dbc;
     final static int details_column = 7;
+    final static int accept_column = 8;
 
     private void reload() {
         dbc.openSession();
@@ -98,8 +101,8 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
                 if (column == details_column) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
-                        Details prp = (Details) model.getValueAt(row, 0);
-                        prp.showDetails();
+                        Details pallete = (Details) model.getValueAt(row, 0);
+                        pallete.showDetails();
                         model.setValueAt(false, row, column);
                     }
                 }
@@ -121,20 +124,21 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Produkt", "Typ produktu", "Nr Palety", "Lot", "KG", "SZT.", "Linia", "Szcz."
+                "Produkt", "Typ produktu", "Nr Palety", "Lot", "KG", "SZT.", "Linia", "Szcz.", "Zatw."
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.Integer.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true
+                false, false, false, false, false, false, false, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -159,12 +163,22 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(7).setMinWidth(40);
             jTable1.getColumnModel().getColumn(7).setPreferredWidth(40);
             jTable1.getColumnModel().getColumn(7).setMaxWidth(40);
+            jTable1.getColumnModel().getColumn(8).setMinWidth(40);
+            jTable1.getColumnModel().getColumn(8).setPreferredWidth(40);
+            jTable1.getColumnModel().getColumn(8).setMaxWidth(40);
         }
 
         jButton1.setText("Drukuj listę");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setText("Zatwierdź zaznaczone");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
             }
         });
 
@@ -178,6 +192,8 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -185,7 +201,9 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addContainerGap())
@@ -221,8 +239,31 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+        try {
+            DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+            for (int i = 0; i < dtm.getRowCount(); i++) {
+                if ((Boolean) dtm.getValueAt(i, accept_column) == true) {
+                    Pallete pallete = (Pallete) dtm.getValueAt(i, 0);
+                    if (pallete.getProductionRaportPart().getLabTestState() == Global.PRODUCTION_RAPORT_PART_STORED) {
+                        pallete.setState(Global.PALLETE_STORED);
+                        dbc.updateObject(pallete);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Wystąpił błąd! Sprawdź zaznaczone produkty");
+                        break;
+                    }
+                }
+            }
+            reload();
+        } catch (Exception e) {
+            e.printStackTrace();
+
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

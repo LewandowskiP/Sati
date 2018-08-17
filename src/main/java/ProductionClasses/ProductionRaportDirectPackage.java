@@ -16,6 +16,7 @@
 package ProductionClasses;
 
 import ProductClasses.DirectPackage;
+import java.util.Objects;
 
 /**
  *
@@ -52,5 +53,31 @@ public class ProductionRaportDirectPackage {
 
     public void setProductionRaportPart(ProductionRaportPart productionRaportPart) {
         this.productionRaportPart = productionRaportPart;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProductionRaportDirectPackage other = (ProductionRaportDirectPackage) obj;
+        if (!Objects.equals(this.directPackage, other.directPackage)) {
+            return false;
+        }
+        if (!Objects.equals(this.productionRaportPart, other.productionRaportPart)) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 41 * hash + Objects.hashCode(this.directPackage);
+        hash = 41 * hash + Objects.hashCode(this.productionRaportPart);
+        return hash;
     }
 }

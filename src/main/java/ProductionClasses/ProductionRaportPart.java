@@ -247,4 +247,26 @@ public class ProductionRaportPart implements Details {
         JOptionPane.showOptionDialog(null, new DetailsProductionRaportPartPanel(this), "Podgląd raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 79 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProductionRaportPart other = (ProductionRaportPart) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
+
 }

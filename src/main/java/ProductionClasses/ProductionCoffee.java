@@ -32,6 +32,15 @@ public class ProductionCoffee implements Comparable {
     float weight;
     boolean used = false;
     boolean returned = false;
+    boolean halfProduct = false;
+
+    public boolean isHalfProduct() {
+        return halfProduct;
+    }
+
+    public void setHalfProduct(boolean halfProduct) {
+        this.halfProduct = halfProduct;
+    }
 
     public boolean isUsed() {
         return used;
@@ -94,19 +103,17 @@ public class ProductionCoffee implements Comparable {
 
     @Override
     public String toString() {
-        if (!used) {
-            if (!returned) {
-                return productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
-            } else {
-                return "ZW " + productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
-            }
-        } else {
-            if (!returned) {
-                return "PP " + productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
-            } else {
-                return "ZW PP " + productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
-            }
+        String toReturn = productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
+        if (returned) {
+            toReturn = "ZWROT " + toReturn;
         }
+        if (used) {
+            toReturn = "PONOWNY PRZERÓB " + toReturn;
+        }
+        if (halfProduct) {
+            toReturn = "PÓŁPRODUKT" + toReturn;
+        }
+        return toReturn;
     }
 
     public int compareTo(Object o) {

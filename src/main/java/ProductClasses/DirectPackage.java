@@ -139,4 +139,28 @@ public class DirectPackage extends Test implements Details, Editable {
         int result = JOptionPane.showOptionDialog(null, new EditDirectPackagePanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
     }
 
+    @Override
+    public int hashCode() {
+        int hash = 5;
+        hash = 53 * hash + this.id;
+        return hash;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final DirectPackage other = (DirectPackage) obj;
+        if (this.id != other.id) {
+            return false;
+        }
+        return true;
+    }
+
+    
+    
 }

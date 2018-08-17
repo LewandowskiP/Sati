@@ -511,19 +511,19 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                                             .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                     .addComponent(jLabel5)
                                     .addComponent(jLabel1)
-                                    .addComponent(jLabel9)
+                                    .addComponent(jLabel9))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel11)
+                                    .addComponent(jLabel6))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(layout.createSequentialGroup()
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel11)
-                                            .addComponent(jLabel6))
+                                        .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(spinnerProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(buttonProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(comboBoxProductionCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                        .addComponent(buttonProductionCoffeeSeek, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(comboBoxProductionCoffee, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -678,7 +678,9 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     ProductionRaportDirectPackage prdp = new ProductionRaportDirectPackage();
                     prdp.setProductionRaportPart(productionRaportPart);
                     prdp.setDirectPackage(dbc.findDirectPackageWithLabId((String) tableDirectPackage.getValueAt(i, 0)));
-                    productionRaportPart.getProductionRaportDirectPackage().add(prdp);
+                    if (!productionRaportPart.getProductionRaportDirectPackage().contains(prdp)) {
+                        productionRaportPart.getProductionRaportDirectPackage().add(prdp);
+                    }
                 }
                 productionRaportPart.setType(comboBoxBean.getSelectedIndex());
                 if (comboBoxSeal.getSelectedIndex() == 1) {
@@ -700,16 +702,19 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                     if (JOptionPane.OK_OPTION == result) {
                         if (productionRaportPart.getType() == Global.PRODUCT_TYPE_HALF) {
+
                             ReturnedProduct rp = new ReturnedProduct();
                             ProductionCoffee pc = new ProductionCoffee();
                             pc.setProductType(productionRaportPart.getProductType());
                             pc.setReturned(false);
+                            pc.setHalfProduct(true);
                             pc.setState(Global.PRODUCTION_COFFEE_READY);
                             pc.setWeight(Global.round((Float) productionRaportPart.getTotalWeight(), 2));
                             pc.setProdDate(productionRaportPart.getRaportDate());
                             rp.setProductionRaportPart(productionRaportPart);
                             rp.setProductionCoffee(pc);
-                            productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
+
+                            productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
                             dbc.saveTransation(pc);
                             dbc.saveTransation(rp);
                         }
@@ -744,6 +749,9 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private void buttonAssignBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAssignBatchActionPerformed
         if (selectedProductionLine != null && selectedProductType != null) {
             try {
+                summaryWeight = 0;
+                summaryPcs = 0;
+                summaryPalletes = 0;
                 ProductionRaportPart prp = dbc.getLatestProductionRaportPart(selectedProductionLine, employee);
                 if (prp == null) {
                     prp = new ProductionRaportPart();
@@ -761,7 +769,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                         dtm.addRow(new Object[]{p, p.getId(), p.getQuantity(), p.getNetto(), false, false, false});
                     }
                     dtm.addRow(new Object[]{null, null, null, null, false, false, false});
-
                     dtm = (DefaultTableModel) tableDirectPackage.getModel();
                     dtm.setRowCount(0);
                     for (ProductionRaportDirectPackage prdp : prp.getProductionRaportDirectPackage()) {
