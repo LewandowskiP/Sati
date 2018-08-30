@@ -245,6 +245,7 @@ public class BrowseProductsToStore extends javax.swing.JPanel {
             for (int i = 0; i < dtm.getRowCount(); i++) {
                 if ((Boolean) dtm.getValueAt(i, accept_column) == true) {
                     Pallete pallete = (Pallete) dtm.getValueAt(i, 0);
+                    dbc.refresh(pallete.getProductionRaportPart());
                     if (pallete.getProductionRaportPart().getLabTestState() == Global.PRODUCTION_RAPORT_PART_STORED) {
                         pallete.setState(Global.PALLETE_STORED);
                         dbc.updateObject(pallete);

@@ -105,13 +105,13 @@ public class ProductionCoffee implements Comparable {
     public String toString() {
         String toReturn = productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
         if (returned) {
-            toReturn = "ZWROT " + toReturn;
+            toReturn = "ZW " + toReturn;
         }
         if (used) {
-            toReturn = "PONOWNY PRZERÓB " + toReturn;
+            toReturn = "PP " + toReturn;
         }
         if (halfProduct) {
-            toReturn = "PÓŁPRODUKT" + toReturn;
+            toReturn = "1/2 " + toReturn;
         }
         return toReturn;
     }
