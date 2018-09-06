@@ -406,7 +406,7 @@ public class NewRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
                     cgch.setChangeTime(new Timestamp(System.currentTimeMillis()));
                     cgch.setChangedBy(emp);
                     cgch.setInstantCoffeeMixRaport(icmr);
-                    cgch.setComment("ZASYP " + icmr.getProductType());
+                    cgch.setComment("ZASYP " + icmp.getCoffeeGreen().getLabId() + " " + icmr.getProductType());
                     cgch.setWeight(Global.round(-1 * icmp.getWeight(), 2));
                     cgch.setCoffeeGreen(icmp.getCoffeeGreen());
                     icmp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);

@@ -57,12 +57,12 @@ import javax.swing.table.TableColumn;
  * @author Przemysław
  */
 public class NewRaportRoastPanel extends javax.swing.JPanel {
-    
+
     DataBaseConnector dbc = null;
     Employee emp;
     ProductionLine selectedProductionLine;
     ProductType selectedProductType;
-    
+
     private final int labIdColumnCoffee = 0;
     private final int weightColumnCoffee = 2;
     private final int labIdColumnAroma = 0;
@@ -76,11 +76,11 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         tableRoastAromaPart.setEnabled(state);
         tableRoastGreenCoffeePart.setEnabled(state);
         textFieldOtherInfo.setEnabled(state);
-        
+
         buttonSendRaport.setEnabled(state);
         buttonOpenFile.setEnabled(state);
     }
-    
+
     private void resetInput() {
         comboBoxProductionLine.setSelectedItem(null);
         DefaultTableModel dtm = (DefaultTableModel) tableRoastAromaPart.getModel();
@@ -93,11 +93,11 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         dtm3.setRowCount(0);
         dtm3.setRowCount(10);
         textFieldOtherInfo.setText("");
-        
+
     }
-    
+
     private void initProductionList() {
-        
+
         dbc.clearSession();
         dbc.openSession();
         setControls(false);
@@ -109,7 +109,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         for (ProductionLine pl : alpl) {
             if (pl.isRoast()) {
                 comboBoxProductionLine.addItem(pl);
-                
+
             }
         }
         comboBoxProductionLine.setSelectedItem(null);
@@ -132,7 +132,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                 }
             }
         });
-        
+
         comboBoxProductType.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent arg0) {
                 selectedProductType = (ProductType) comboBoxProductType.getSelectedItem();
@@ -141,16 +141,16 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                 } else {
                     setControls(false);
                 }
-                
+
             }
         });
-        
+
     }
-    
+
     public NewRaportRoastPanel(Employee emp) {
         initComponents();
         if (dbc == null) {
-            
+
             dbc = Global.getDataBaseConnector();
         }
         dbc.openSession();
@@ -160,7 +160,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         tempComboBox.addItem("OK");
         tempComboBox.addItem("ZŁA");
         roastRaportTempColumn.setCellEditor(new DefaultCellEditor(tempComboBox));
-        
+
         initProductionList();
     }
 
@@ -449,7 +449,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         try {
             dbc.openSession();
             RoastRaport roastRaport = new RoastRaport();
-            
+
             Float totalSourceWeight = new Float(0);
             Float totalRoastWeight = new Float(0);
             Float totalSourceWeightFromGreenCoffee = new Float(0);
@@ -462,14 +462,14 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                 float toAddGreen = (Float) tableRoastPart.getModel().getValueAt(i, 0);
                 rp.setSourceWeight(toAddGreen);
                 totalSourceWeight += toAddGreen;
-                
+
                 Float toAddRoast = (Float) tableRoastPart.getModel().getValueAt(i, 1);
                 rp.setRoastedWeight(toAddRoast);
                 totalRoastWeight += toAddRoast;
-                
+
                 if (toAddGreen < toAddRoast) {
                     throw new NotMatchingCoffeeWeightException("Ilość zasypanej kawy zielonej mniejsza od ilość kawy upalonej.");
-                    
+
                 }
                 if (tableRoastPart.getModel().getValueAt(i, 2).equals("OK")) {
                     rp.setTemperature(Boolean.TRUE);
@@ -483,9 +483,9 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
             roastRaport.setTotalRoastWeight(totalRoastWeight);
             totalSourceWeight = Global.round(totalSourceWeight, 1);
             roastRaport.setTotalSourceWeight(totalSourceWeight);
-            
+
             roastRaport.setRoastPart(hsrp);
-            
+
             HashSet<RoastGreenCoffeePart> hsrgcp = new HashSet<RoastGreenCoffeePart>(0);
             for (int i = 0; i < tableRoastGreenCoffeePart.getModel().getRowCount(); i++) {
                 if (tableRoastGreenCoffeePart.getModel().getValueAt(i, 0) == null) {
@@ -504,24 +504,24 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                 hsrgcp.add(rgcp);
             }
             roastRaport.setRoastGreenCoffeePart(hsrgcp);
-            
+
             totalSourceWeightFromGreenCoffee = Global.round(totalSourceWeightFromGreenCoffee, 1);
-            
+
             if (!totalSourceWeightFromGreenCoffee.equals(totalSourceWeight)) {
                 System.out.println(totalSourceWeight);
                 System.out.println(totalSourceWeightFromGreenCoffee);
-                
+
                 throw new NotMatchingCoffeeWeightException("Ilość kawy pobranej nie zgadza się z ilością kawy w piecu.");
             }
             if (totalSourceWeight == 0) {
                 throw new NotMatchingCoffeeWeightException("Ilość kawy równa zero, proszę uzupełnić raport.");
             }
-            
+
             if (tableRoastAromaPart.getModel().getRowCount() != 0) {
-                
+
                 HashSet<RoastAromaPart> hsrap = new HashSet<RoastAromaPart>(0);
                 for (int i = 0; i < tableRoastAromaPart.getModel().getRowCount(); i++) {
-                    
+
                     if (tableRoastAromaPart.getModel().getValueAt(i, 0) == null) {
                         break;
                     }
@@ -547,10 +547,10 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
             String[] options = new String[2];
             options[0] = "Zatwierdź";
             options[1] = "Odrzuć";
-            
+
             int result = JOptionPane.showOptionDialog(this, new DetailsRoastRaportPanel(roastRaport), "Potwierdź raport", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (JOptionPane.OK_OPTION == result) {
-                
+
                 dbc.startTransation();
                 for (RoastGreenCoffeePart rgcp : roastRaport.getRoastGreenCoffeePart()) {
                     rgcp.getCoffeeGreen().setCurrentWeight(rgcp.getCoffeeGreen().getCurrentWeight() - rgcp.getWeight());
@@ -558,7 +558,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                     cgch.setChangeTime(new Timestamp(System.currentTimeMillis()));
                     cgch.setChangedBy(emp);
                     cgch.setRoastRaport(roastRaport);
-                    cgch.setComment("PALENIE " + roastRaport.getProductType());
+                    cgch.setComment("PALENIE " + rgcp.getCoffeeGreen().getLabId() + " " + roastRaport.getProductType());
                     cgch.setWeight(-1 * rgcp.getWeight());
                     cgch.setCoffeeGreen(rgcp.getCoffeeGreen());
                     dbc.saveTransation(cgch);
@@ -574,7 +574,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                     ach.setChangeTime(new Timestamp(System.currentTimeMillis()));
                     ach.setChangedBy(emp);
                     ach.setRoastRaport(roastRaport);
-                    ach.setComment("PALENIE " + roastRaport.getProductType());
+                    ach.setComment("PALENIE " + rap.getAroma().getLabId() + " " + roastRaport.getProductType());
                     ach.setWeight(-1 * rap.getQuantity());
                     ach.setAroma(rap.getAroma());
                     dbc.saveTransation(ach);

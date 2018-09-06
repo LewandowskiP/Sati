@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 public class ProductionRaportPart implements Details {
 
     private int id;
-    private String batchInfo;
+    private String batchInfo = "";
 
     private int shift;
     private int type;
@@ -93,7 +93,6 @@ public class ProductionRaportPart implements Details {
         this.labTestState = labTestState;
     }
 
-    // private ProductionRaportDaily productionRaportDaily;
     public ProductionRaportPart() {
     }
 
@@ -240,6 +239,7 @@ public class ProductionRaportPart implements Details {
 
     }
 
+    @Override
     public void showDetails() {
         DataBaseConnector dbc = Global.getDataBaseConnector();
         dbc.openSession();

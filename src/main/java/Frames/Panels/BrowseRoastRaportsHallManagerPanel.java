@@ -42,7 +42,7 @@ import javax.swing.ListSelectionModel;
  * @author Przemysław
  */
 public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
-    
+
     DataBaseConnector dbc;
     Employee e;
 
@@ -51,30 +51,30 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
      */
     private void reload() {
         dbc.openSession();
-        
+
         Timestamp from = new Timestamp(((Date) spinnerFrom.getValue()).getTime());
         Timestamp to = new Timestamp(((Date) spinnerTo.getValue()).getTime());
-        
+
         DefaultListModel dlm = new DefaultListModel();
-        
+
         for (RoastRaport rr : dbc.getRoastRaportWithFromTo(from, to)) {
             dlm.addElement(rr);
         }
-        
+
         listRaports = new JList(dlm);
         listRaports.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         jScrollPane2.setViewportView(listRaports);
-        
+
     }
-    
+
     private void rollbackCoffeeHistory(Set<CoffeeGreenChangeHistory> scgch, RoastRaport rr) {
-        
+
         Set<CoffeeGreenChangeHistory> clone = new HashSet<CoffeeGreenChangeHistory>();
         clone.addAll(scgch);
         for (CoffeeGreenChangeHistory cgch : clone) {
             if (cgch.getRoastRaport() == rr) {
                 CoffeeGreen cg = cgch.getCoffeeGreen();
-                
+
                 cg.setCurrentWeight(cg.getCurrentWeight() - cgch.getWeight());
                 if (cg.getCurrentWeight() > 0) {
                     cg.setState(Global.COFFEE_GREEN_READY_TO_ROAST);
@@ -84,13 +84,13 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                 dbc.deleteObject(cgch);
             }
         }
-        
+
     }
-    
+
     private void rollbackAromaHistory(Set<AromaChangeHistory> sach, RoastRaport rr) {
         Set<AromaChangeHistory> clone = new HashSet<AromaChangeHistory>();
         clone.addAll(sach);
-        
+
         for (AromaChangeHistory ach : clone) {
             if (ach.getRoastRaport() == rr) {
                 Aroma a = ach.getAroma();
@@ -103,13 +103,13 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                 dbc.deleteObject(ach);
             }
         }
-        
+
     }
-    
+
     public BrowseRoastRaportsHallManagerPanel(Employee emp) {
         initComponents();
         e = emp;
-        
+
         dbc = Global.getDataBaseConnector();
         dbc.openSession();
         // ArrayList<RoastRaport> alrr = dbc.getAromaWithAromaType(selectedAromaType);
@@ -245,24 +245,24 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
             String[] options = {"TAK", "NIE"};
             int ret = JOptionPane.showOptionDialog(this, "Czy na pewno chcesz zminić zaznaczony raport z bazy?", "UWAGA!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
             if (ret == JOptionPane.YES_OPTION) {
-                
+
                 Set<RoastGreenCoffeePart> srgcp = selected.getRoastGreenCoffeePart();
                 Set<RoastGreenCoffeePart> srgcpClone = new HashSet<RoastGreenCoffeePart>(srgcp);
-                
+
                 Set<RoastAromaPart> srap = selected.getRoastAromaPart();
                 Set<RoastAromaPart> srapClone = new HashSet<RoastAromaPart>(srap);
-                
+
                 for (RoastGreenCoffeePart rgcp : srgcp) {
                     rollbackCoffeeHistory((Set<CoffeeGreenChangeHistory>) rgcp.getCoffeeGreen().getCoffeeGreenChangeHistory(), selected);
                 }
                 for (RoastAromaPart rap : srap) {
                     rollbackAromaHistory((Set<AromaChangeHistory>) rap.getAroma().getAromaChangeHistory(), selected);
                 }
-                
+
                 String[] options2 = {"Zatwierdź"};
                 EditRaportRoastPanel pane = new EditRaportRoastPanel(selected);
                 JOptionPane.showOptionDialog(this, pane, "UWAGA!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options2, options2[0]);
-                
+
                 if (pane.raportSentWarden == true) {
                     for (RoastGreenCoffeePart rgcp : srgcpClone) {
                         dbc.deleteObject(rgcp);
@@ -270,7 +270,7 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                     for (RoastAromaPart rap : srapClone) {
                         dbc.deleteObject(rap);
                     }
-                    
+
                 } else {
                     dbc.openSession();
                     selected.setRoastAromaPart(srap);
@@ -281,7 +281,7 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                         ach.setChangeTime(selected.getCompleteTime());
                         ach.setChangedBy(selected.getCompletedBy());
                         ach.setAroma(rap.getAroma());
-                        ach.setComment("PALENIE " + selected.getProductType().getProductName());
+                        ach.setComment("PALENIE " + ach.getAroma().getLabId() + " " + selected.getProductType().getProductName());
                         ach.setRoastRaport(selected);
                         ach.setWeight(-1 * rap.getQuantity());
                         rap.getAroma().getAromaChangeHistory().add(ach);
@@ -293,7 +293,7 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                         dbc.saveTransation(rap);
                         dbc.commitTransation();
                     }
-                    
+
                     selected.setRoastGreenCoffeePart(srgcpClone);
                     for (RoastGreenCoffeePart rgcp : srgcpClone) {
                         dbc.startTransation();
@@ -302,7 +302,7 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                         cgch.setChangeTime(selected.getCompleteTime());
                         cgch.setChangedBy(selected.getCompletedBy());
                         cgch.setCoffeeGreen(rgcp.getCoffeeGreen());
-                        cgch.setComment("PALENIE " + selected.getProductType().getProductName());
+                        cgch.setComment("PALENIE " + cgch.getCoffeeGreen().getLabId() + " " + selected.getProductType().getProductName());
                         cgch.setRoastRaport(selected);
                         cgch.setWeight(-1 * rgcp.getWeight());
                         rgcp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
@@ -317,11 +317,11 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                 }
                 dbc.saveObject(selected);
             }
-            
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
         reload();
     }//GEN-LAST:event_buttonEditActionPerformed
 
@@ -341,7 +341,7 @@ public class BrowseRoastRaportsHallManagerPanel extends javax.swing.JPanel {
                         rollbackAromaHistory((Set<AromaChangeHistory>) rap.getAroma().getAromaChangeHistory(), selected);
                     }
                     ArrayList<ProductionCoffeeReturn> alpcr = dbc.getProductionCoffeeReturnWithProductionCoffee(selected.getProductionCoffee());
-                    
+
                     dbc.startTransation();
                     for (ProductionCoffeeReturn pcr : alpcr) {
                         dbc.deleteTransation(pcr);

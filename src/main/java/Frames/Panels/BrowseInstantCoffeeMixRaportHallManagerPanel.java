@@ -270,7 +270,7 @@ public class BrowseInstantCoffeeMixRaportHallManagerPanel extends javax.swing.JP
                         cgch.setChangeTime(selected.getMixDate());
                         cgch.setChangedBy(selected.getMixedBy());
                         cgch.setCoffeeGreen(icmp.getCoffeeGreen());
-                        cgch.setComment("ZASYP " + selected.getProductType().getProductName());
+                        cgch.setComment("ZASYP " + cgch.getCoffeeGreen().getLabId() + " " + selected.getProductType().getProductName());
                         cgch.setInstantCoffeeMixRaport(selected);
                         cgch.setWeight(-1 * icmp.getWeight());
                         icmp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
