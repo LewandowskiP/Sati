@@ -26,8 +26,6 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 
 import java.util.HashSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -227,7 +225,6 @@ public class EditRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, "Raport zmieniony");
             raportSentWarden = true;
         } catch (Exception e) {
-            e.printStackTrace();
             dbc.rollbackTransation();
             JOptionPane.showMessageDialog(this, "Wystąpił błąd poczas zmiany raportu.");
         }
@@ -237,7 +234,7 @@ public class EditRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
         try {
             dbc.openSession();
             icmr.setWeight(0);
-            HashSet< InstantCoffeeMixPart> hsicmp = new HashSet<InstantCoffeeMixPart>(0);
+            HashSet< InstantCoffeeMixPart> hsicmp = new HashSet<>(0);
             icmr.setInstantCoffeeMixPart(hsicmp);
             for (int i = 0; i < tableInstantCoffeeMixPart.getModel().getRowCount(); i++) {
                 if (tableInstantCoffeeMixPart.getModel().getValueAt(i, 0) == null) {
@@ -252,20 +249,8 @@ public class EditRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
                 icmp.setCoffeeGreen(dbc.getCoffeeGreenWithLabId(tableInstantCoffeeMixPart.getModel().getValueAt(i, 0)));
                 if (icmp.getCoffeeGreen() == null) {
                     throw new ResourceNotFoundException((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 0));
-                }
-                if (icmp.getCoffeeGreen().getCurrentWeight() - icmp.getWeight() < 0) {
+                } else if (!icmp.getCoffeeGreen().mix(icmp.getWeight(), icmr.getMixedBy(), icmr)) {
                     throw new NotEnoughtCoffeeException(icmp.getCoffeeGreen().getLabId());
-                } else {
-                    icmp.getCoffeeGreen().setCurrentWeight(icmp.getCoffeeGreen().getCurrentWeight() - icmp.getWeight());
-                    CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-                    cgch.setChangeTime(icmr.getMixDate());
-                    cgch.setChangedBy(icmr.getMixedBy());
-                    cgch.setInstantCoffeeMixRaport(icmr);
-                    cgch.setComment("ZASYP " + icmr.getProductType());
-                    cgch.setWeight(-1 * icmp.getWeight());
-                    cgch.setCoffeeGreen(icmp.getCoffeeGreen());
-                    icmp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
-                    hsicmp.add(icmp);
                 }
                 icmr.setWeight(icmr.getWeight() + icmp.getWeight());
             }

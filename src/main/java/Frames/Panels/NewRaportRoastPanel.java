@@ -19,10 +19,8 @@ import Exceptions.NotEnoughtAromaException;
 import Exceptions.NotEnoughtCoffeeException;
 import Exceptions.NotMatchingCoffeeWeightException;
 import Exceptions.ResourceNotFoundException;
-import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 import Listeners.CheckBoxAromaRoastRaport;
 import Listeners.CheckBoxGreenCoffeeRoastRaport;
-import ProductClasses.AromaChangeHistory;
 import ProductClasses.ProductType;
 import ProductClasses.RoastAromaPart;
 import ProductClasses.RoastGreenCoffeePart;
@@ -123,6 +121,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         }
         comboBoxProductType.setSelectedItem(null);
         comboBoxProductionLine.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent arg0) {
                 selectedProductionLine = (ProductionLine) comboBoxProductionLine.getSelectedItem();
                 if (selectedProductionLine != null) {
@@ -134,6 +133,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
         });
 
         comboBoxProductType.addItemListener(new ItemListener() {
+            @Override
             public void itemStateChanged(ItemEvent arg0) {
                 selectedProductType = (ProductType) comboBoxProductType.getSelectedItem();
                 if (selectedProductType != null) {
@@ -450,10 +450,10 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
             dbc.openSession();
             RoastRaport roastRaport = new RoastRaport();
 
-            Float totalSourceWeight = new Float(0);
-            Float totalRoastWeight = new Float(0);
-            Float totalSourceWeightFromGreenCoffee = new Float(0);
-            HashSet<RoastPart> hsrp = new HashSet<RoastPart>(0);
+            Float totalSourceWeight = (float) 0;
+            Float totalRoastWeight = (float) 0;
+            Float totalSourceWeightFromGreenCoffee = (float) 0;
+            HashSet<RoastPart> hsrp = new HashSet<>(0);
             for (int i = 0; i < tableRoastPart.getModel().getRowCount(); i++) {
                 if (tableRoastPart.getModel().getValueAt(i, 0) == null) {
                     break;
@@ -486,7 +486,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
 
             roastRaport.setRoastPart(hsrp);
 
-            HashSet<RoastGreenCoffeePart> hsrgcp = new HashSet<RoastGreenCoffeePart>(0);
+            HashSet<RoastGreenCoffeePart> hsrgcp = new HashSet<>(0);
             for (int i = 0; i < tableRoastGreenCoffeePart.getModel().getRowCount(); i++) {
                 if (tableRoastGreenCoffeePart.getModel().getValueAt(i, 0) == null) {
                     break;
@@ -508,9 +508,6 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
             totalSourceWeightFromGreenCoffee = Global.round(totalSourceWeightFromGreenCoffee, 1);
 
             if (!totalSourceWeightFromGreenCoffee.equals(totalSourceWeight)) {
-                System.out.println(totalSourceWeight);
-                System.out.println(totalSourceWeightFromGreenCoffee);
-
                 throw new NotMatchingCoffeeWeightException("Ilość kawy pobranej nie zgadza się z ilością kawy w piecu.");
             }
             if (totalSourceWeight == 0) {
@@ -519,7 +516,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
 
             if (tableRoastAromaPart.getModel().getRowCount() != 0) {
 
-                HashSet<RoastAromaPart> hsrap = new HashSet<RoastAromaPart>(0);
+                HashSet<RoastAromaPart> hsrap = new HashSet<>(0);
                 for (int i = 0; i < tableRoastAromaPart.getModel().getRowCount(); i++) {
 
                     if (tableRoastAromaPart.getModel().getValueAt(i, 0) == null) {
@@ -553,35 +550,13 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
 
                 dbc.startTransation();
                 for (RoastGreenCoffeePart rgcp : roastRaport.getRoastGreenCoffeePart()) {
-                    rgcp.getCoffeeGreen().setCurrentWeight(rgcp.getCoffeeGreen().getCurrentWeight() - rgcp.getWeight());
-                    CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-                    cgch.setChangeTime(new Timestamp(System.currentTimeMillis()));
-                    cgch.setChangedBy(emp);
-                    cgch.setRoastRaport(roastRaport);
-                    cgch.setComment("PALENIE " + rgcp.getCoffeeGreen().getLabId() + " " + roastRaport.getProductType());
-                    cgch.setWeight(-1 * rgcp.getWeight());
-                    cgch.setCoffeeGreen(rgcp.getCoffeeGreen());
-                    dbc.saveTransation(cgch);
-                    rgcp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
-                    if (rgcp.getCoffeeGreen().getCurrentWeight() == 0) {
-                        rgcp.getCoffeeGreen().setState(Global.COFFEE_GREEN_OUT_OF_STORE);
-                    }
+                    rgcp.getCoffeeGreen().roast(rgcp.getWeight(), emp, roastRaport);
+                    dbc.updateTransation(rgcp.getCoffeeGreen());
                     rgcp.setRoastRaport(roastRaport);
                 }
                 for (RoastAromaPart rap : roastRaport.getRoastAromaPart()) {
-                    rap.getAroma().setQuantity(rap.getAroma().getQuantity() - rap.getQuantity());
-                    AromaChangeHistory ach = new AromaChangeHistory();
-                    ach.setChangeTime(new Timestamp(System.currentTimeMillis()));
-                    ach.setChangedBy(emp);
-                    ach.setRoastRaport(roastRaport);
-                    ach.setComment("PALENIE " + rap.getAroma().getLabId() + " " + roastRaport.getProductType());
-                    ach.setWeight(-1 * rap.getQuantity());
-                    ach.setAroma(rap.getAroma());
-                    dbc.saveTransation(ach);
-                    rap.getAroma().getAromaChangeHistory().add(ach);
-                    if (rap.getAroma().getQuantity() == 0) {
-                        rap.getAroma().setState(Global.OUT_OF_STORE);
-                    }
+                    rap.getAroma().roast(rap.getQuantity(), emp, roastRaport);
+                    dbc.updateTransation(rap.getAroma());
                     rap.setRoastRaport(roastRaport);
                 }
                 for (RoastPart rp : roastRaport.getRoastPart()) {

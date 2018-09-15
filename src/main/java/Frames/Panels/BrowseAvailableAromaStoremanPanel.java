@@ -28,6 +28,8 @@ import java.awt.event.ItemListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
@@ -216,46 +218,39 @@ public class BrowseAvailableAromaStoremanPanel extends javax.swing.JPanel {
         try {
             final DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
             String s = (String) JOptionPane.showInputDialog(this, "Podaj wartość", "Edycja", JOptionPane.QUESTION_MESSAGE, null, null, null);
-
             Aroma a = selectedAroma;
-            float changeValue = (Float.valueOf(s)) - a.getQuantity();
-            if (a.getQuantity() == 0) {
-                a.setState(Global.OUT_OF_STORE);
-            }
-            if (a.getQuantity() < 0) {
+            float valueAfterChange = Float.valueOf(s);
+            if (valueAfterChange < 0) {
                 throw new WeightLessThanZero();
-            }
+            } else {
+                float changeValue = valueAfterChange - a.getQuantity();
+                String comment = (String) JOptionPane.showInputDialog(this, "Podaj komentarz do zmiany", "Edycja", JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (comment != null) {
+                    if (!comment.isEmpty()) {
+                        dbc.openSession();
+                        dbc.startTransation();
+                        a.correction(changeValue, emp, comment);
+                        dbc.updateTransation(a);
+                        dbc.commitTransation();
 
-            a.setQuantity(Float.valueOf(s));
-            AromaChangeHistory ach = new AromaChangeHistory();
-            ach.setChangeTime(new Timestamp(System.currentTimeMillis()));
-            ach.setAroma(a);
-            ach.setWeight(changeValue);
-            ach.setChangedBy(emp);
-            String comment = (String) JOptionPane.showInputDialog(this, "Podaj komentarz do zmiany", "Edycja", JOptionPane.QUESTION_MESSAGE, null, null, null);
-            ach.setComment(comment);
-            if (comment != null) {
-                if (!comment.isEmpty()) {
-                    dbc.openSession();
-                    dbc.saveObject(ach);
-                    dbc.updateObject(a);
-                    Float sum = new Float(0);
-                    ArrayList<Aroma> ala = dbc.getAromaWithAromaType(selectedAromaType);
+                        Float sum = (float) 0;
+                        ArrayList<Aroma> ala = dbc.getAromaWithAromaType(selectedAromaType);
+                        dtm.setRowCount(0);
+                        for (Aroma ar : ala) {
+                            sum += a.getQuantity();
+                            dtm.addRow(new Object[]{ar, ar.getQuantity()});
+                        }
 
-                    dtm.setRowCount(0);
-                    for (Aroma ar : ala) {
-                        sum += a.getQuantity();
-                        dtm.addRow(new Object[]{ar, ar.getQuantity()});
+                        labelAromaSum.setText("SUMA ILOŚCI AROMATU: " + sum + " KG");
+                        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
                     }
-                    labelAromaSum.setText("SUMA ILOŚCI AROMATU: " + sum + " KG");
-                    jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-
                 }
             }
-        } catch (WeightLessThanZero e) {
-            JOptionPane.showMessageDialog(this, "Zmieniono ilość kawy na wartość ujemną.");
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Zmiana nie wprowadzona, proszę wprowadzić dane prawidłowo.");
+        } catch (WeightLessThanZero ex) {
+            JOptionPane.showMessageDialog(this, "Próba zmiany ilości aromatu na wartość ujemną.");
         }
 
     }//GEN-LAST:event_jButton1ActionPerformed

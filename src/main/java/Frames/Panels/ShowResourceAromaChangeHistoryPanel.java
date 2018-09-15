@@ -56,7 +56,7 @@ public class ShowResourceAromaChangeHistoryPanel extends javax.swing.JPanel {
 
             AromaChangeHistory o = (AromaChangeHistory) ar[i];
             dtm.addRow(new Object[]{
-                Global.timestampToStrDDMMYYYY(o.getChangeTime()), o.getWeight(), o.getComment(), o.getChangedBy().toString()
+                Global.timestampToStrDDMMYYYY(o.getChangeTime()), o.getWeight(), o.getWeightAfterChange(), o.getComment(), o.getChangedBy().toString()
             }
             );
 
@@ -81,14 +81,14 @@ public class ShowResourceAromaChangeHistoryPanel extends javax.swing.JPanel {
 
             },
             new String [] {
-                "Data", "Zmiana", "Komentarz", "Zmienił"
+                "Data", "Zmiana", "Ilość po zmianie", "Komentarz", "Zmienił"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
+                java.lang.String.class, java.lang.Float.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, true, true
+                false, false, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {

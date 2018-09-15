@@ -211,48 +211,38 @@ public class BrowseAvailableGreenCoffeeStoremanPanel extends javax.swing.JPanel 
     private void buttonChangeCoffeeWeightActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonChangeCoffeeWeightActionPerformed
         try {
             final DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
-
             String s = (String) JOptionPane.showInputDialog(this, "Podaj wartość", "Edycja", JOptionPane.QUESTION_MESSAGE, null, null, null);
             CoffeeGreen cg = selectedCoffeeGreen;
-            float changeValue = (Float.valueOf(s)) - cg.getCurrentWeight();
-
-            cg.setCurrentWeight(Float.valueOf(s));
-            if (cg.getCurrentWeight() == 0) {
-                cg.setState(Global.COFFEE_GREEN_OUT_OF_STORE);
-            }
-            if (cg.getCurrentWeight() < 0) {
+            float valueAfterChange = Float.valueOf(s);
+            if (valueAfterChange < 0) {
                 throw new WeightLessThanZero();
-            }
-            CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-            cgch.setChangeTime(new Timestamp(System.currentTimeMillis()));
-            cgch.setCoffeeGreen(cg);
-            cgch.setWeight(changeValue);
-            cgch.setChangedBy(emp);
-            String comment = (String) JOptionPane.showInputDialog(this, "Podaj komentarz do zmiany", "Edycja", JOptionPane.QUESTION_MESSAGE, null, null, null);
-            cgch.setComment(comment);
-            if (comment != null) {
-                if (!comment.isEmpty()) {
-                    dbc.openSession();
-                    dbc.saveObject(cgch);
-                    dbc.updateObject(cg);
+            } else {
+                float changeValue = valueAfterChange - cg.getCurrentWeight();
+                String comment = (String) JOptionPane.showInputDialog(this, "Podaj komentarz do zmiany", "Edycja", JOptionPane.QUESTION_MESSAGE, null, null, null);
+                if (comment != null) {
+                    if (!comment.isEmpty()) {
+                        dbc.openSession();
+                        dbc.startTransation();
+                        cg.correction(changeValue, emp, comment);
+                        dbc.updateTransation(cg);
+                        dbc.commitTransation();
 
-                    Float sum = new Float(0);
-                    ArrayList<CoffeeGreen> alcg = dbc.getCoffeeGreenWithCoffeeType(selectedCoffeeType);
-
-                    dtm.setRowCount(0);
-                    for (CoffeeGreen c : alcg) {
-                        sum += c.getCurrentWeight();
-                        dtm.addRow(new Object[]{c, c.getCurrentWeight()});
+                        Float sum = (float) 0;
+                        ArrayList<CoffeeGreen> ala = dbc.getCoffeeGreenWithCoffeeType(selectedCoffeeType);
+                        dtm.setRowCount(0);
+                        for (CoffeeGreen ar : ala) {
+                            sum += cg.getCurrentWeight();
+                            dtm.addRow(new Object[]{ar, cg.getCurrentWeight()});
+                        }
+                        labelCoffeeSum.setText("SUMA ILOŚCI KAWY: " + sum + " KG");
+                        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                     }
-                    labelCoffeeSum.setText("SUMA ILOŚCI KAWY: " + sum + " KG");
-                    jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
                 }
             }
-        } catch (WeightLessThanZero e) {
-            JOptionPane.showMessageDialog(this, "Zmieniono ilość kawy na wartość ujemną.");
-
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(this, "Zmiana nie wprowadzona, proszę wprowadzić dane prawidłowo.");
+        } catch (WeightLessThanZero ex) {
+            JOptionPane.showMessageDialog(this, "Próba zaminy ilości kawy na wartość ujemną.");
         }
 
     }//GEN-LAST:event_buttonChangeCoffeeWeightActionPerformed

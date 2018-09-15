@@ -15,9 +15,7 @@
  */
 package Frames.Panels;
 
-
 import ProductionManagement.LabTest;
-
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import GreenCoffeeClasses.Provider;
@@ -26,11 +24,8 @@ import ProductClasses.AromaChangeHistory;
 import ProductClasses.AromaType;
 import ProductionManagement.Global;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 
 import javax.swing.JOptionPane;
@@ -218,61 +213,43 @@ public class AddAromaPanel extends javax.swing.JPanel {
 
     private void buttonRegisterToLaboratoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonRegisterToLaboratoryActionPerformed
         // TODO add your handling code here:
-        dbc.openSession();
-        try {
-            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            String str = dbc.getMaxLabIdAroma();
 
+        try {
+            dbc.openSession();
+            dbc.startTransation();
+            String str = dbc.getMaxLabIdAroma();
             String newLabIdStr;
             if (str != null) {
                 Integer lastLabId = Integer.parseInt(str.substring(1, 7));
-
                 newLabIdStr = String.format("A%06d", lastLabId + 1);
             } else {
                 newLabIdStr = String.format("A%06d", 1);
             }
 
-            Aroma a = new Aroma();
+            AromaType aromaType = (AromaType) comboBoxAromaType.getSelectedItem();
+            Float quantity = Global.round((Float) spinnerQuantity.getValue(), 2);
+            Employee storeman = emp;
+            String labId = newLabIdStr;
+            Provider provider = (Provider) comboBoxProvider.getSelectedItem();
+            LabTest labTest = new LabTest();
+            labTest.setVermin(checkBoxVermin.isSelected());
+            dbc.saveTransation(labTest);
+            Aroma aroma = new Aroma(quantity, storeman, provider, aromaType, labTest, labId);
+            dbc.saveTransation(aroma);
 
-            a.setQuantity((Float) spinnerQuantity.getValue());
-            a.setState(Global.TO_EXAMINE);
-            a.setArrivalDate(currentTime);
-            a.setArrivalQuantity(a.getQuantity());
-            a.setStoreman(emp);
-            a.setProvider((Provider) comboBoxProvider.getSelectedItem());
-            a.setAromaType((AromaType) comboBoxAromaType.getSelectedItem());
-            a.setLabId(newLabIdStr);
-            LabTest lt = new LabTest();
-            lt.setVermin(checkBoxVermin.isSelected());
-            dbc.saveObject(lt);
-            a.setLabTest(lt);
-
-            dbc.saveObject(a);
-
-            AromaChangeHistory ach = new AromaChangeHistory();
-            ach.setChangeTime(new Timestamp(System.currentTimeMillis()));
-            ach.setChangedBy(emp);
-            ach.setComment("Dostawa - " + a.getLabId());
-            ach.setWeight(Global.round(a.getArrivalQuantity(),2));
-            ach.setAroma(a);
-            a.setAromaChangeHistory(new HashSet<AromaChangeHistory>());
-            a.getAromaChangeHistory().add(ach);
-
-            dbc.saveObject(ach);
             JOptionPane.showMessageDialog(null, "Zarejestrowano do badania", "Informacja", JOptionPane.INFORMATION_MESSAGE);
-
+            dbc.commitTransation();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Sprawdź wprowadzone dane", "Błąd", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
-
+            dbc.rollbackTransation();
         }
     }//GEN-LAST:event_buttonRegisterToLaboratoryActionPerformed
 
     private void buttonNewAromaTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewAromaTypeActionPerformed
 
         String[] option = {"Cofnij"};
-        int result = JOptionPane.showOptionDialog(this, new AddAromaTypePanel(), "Dodaj nowy typ aromatu", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-
+        JOptionPane.showOptionDialog(this, new AddAromaTypePanel(), "Dodaj nowy typ aromatu", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         dbc.clearSession();
         dbc.openSession();
         alat = dbc.getAromaType();
@@ -285,8 +262,6 @@ public class AddAromaPanel extends javax.swing.JPanel {
             comboBoxAromaType.addItem(at);
         }
         comboBoxAromaType.setSelectedItem(null);
-
-        // resetInput();
     }//GEN-LAST:event_buttonNewAromaTypeActionPerformed
 
     private void buttonNewProviderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewProviderActionPerformed

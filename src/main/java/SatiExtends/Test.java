@@ -23,6 +23,12 @@ import ProductionManagement.LabTest;
  */
 public class Test {
 
+    public static final int TO_EXAMINE = 1;
+    public static final int NOT_ACCEPTED = 2;
+    public static final int TO_STORE = 3;
+    public static final int READY_TO_USE = 4;
+    public static final int OUT_OF_STORE = 5;
+
     LabTest labTest;
     int state;
     String labId;
@@ -49,6 +55,15 @@ public class Test {
 
     public void setState(int state) {
         this.state = state;
+    }
+
+    public Test() {
+    }
+
+    public Test(LabTest labTest, String labId) {
+        this.labTest = labTest;
+        this.labId = labId;
+        this.state = TO_EXAMINE;
     }
 
 }

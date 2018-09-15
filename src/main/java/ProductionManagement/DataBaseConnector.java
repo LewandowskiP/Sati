@@ -1135,7 +1135,6 @@ public class DataBaseConnector {
             Hibernate.initialize(rr.getProductionLine());
             Hibernate.initialize(rr.getProductionCoffee());
             Hibernate.initialize(rr.getProductionCoffee().getProductType());
-
             if (rr.getRoastAromaPart() != null) {
                 Hibernate.initialize(rr.getRoastAromaPart());
                 for (RoastAromaPart rap : rr.getRoastAromaPart()) {
@@ -1143,13 +1142,11 @@ public class DataBaseConnector {
                     Hibernate.initialize(rap.getAroma().getAromaType());
                 }
             }
-
             Hibernate.initialize(rr.getRoastGreenCoffeePart());
             for (RoastGreenCoffeePart rgcp : rr.getRoastGreenCoffeePart()) {
                 Hibernate.initialize(rgcp.getCoffeeGreen());
                 Hibernate.initialize(rgcp.getCoffeeGreen().getCoffeeType());
                 Hibernate.initialize(rgcp.getCoffeeGreen().getCoffeeType().getCoffeeAttribute());
-
             }
             Hibernate.initialize(rr.getRoastPart());
 
@@ -1791,10 +1788,9 @@ public class DataBaseConnector {
         if (!s.isOpen()) {
             openSession();
         }
-        String hql = "FROM ProductionOrder PO WHERE (PO.state = :state2 OR PO.state = :state1) AND PO.productionLine = :productionLine";
+        String hql = "FROM ProductionOrder PO WHERE (PO.state <= :state1) AND PO.productionLine = :productionLine";
         Query q = s.createQuery(hql);
-        q.setParameter("state1", Global.PRODUCTION_ORDER_ORDERED);
-        q.setParameter("state2", Global.PRODUCTION_ORDER_INPROGRESS);
+        q.setParameter("state1", ProductionOrder.PRODUCTION_ORDER_PAUSED);
         q.setParameter("productionLine", productionLine);
 
         return (ArrayList<ProductionOrder>) q.list();

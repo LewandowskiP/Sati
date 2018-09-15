@@ -347,16 +347,13 @@ public class NewRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
                     dbc.saveTransation(icmp);
                 }
             }
-
             pc.setState(Global.PRODUCTION_COFFEE_READY);
             pc.setWeight(Global.round(icmr.getWeight(), 2));
-
             icmr.setMixedBy(emp);
             icmr.setSwift(Global.currentShift());
             icmr.setMixDate(new Timestamp(System.currentTimeMillis()));
             icmr.setProductionCoffee(pc);
             icmr.setProductionLine(selectedProductionLine);
-
             pc.setProdDate(icmr.getMixDate());
             dbc.saveTransation(pc);
             dbc.updateTransation(icmr);
@@ -387,34 +384,23 @@ public class NewRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
             for (int i = 0; i < tableInstantCoffeeMixPart.getModel().getRowCount(); i++) {
                 if (tableInstantCoffeeMixPart.getModel().getValueAt(i, 0) == null) {
                     break;
-                }
-                InstantCoffeeMixPart icmp = new InstantCoffeeMixPart();
-                icmp.setInstantCoffeeMixRaport(icmr);
-                icmp.setWeight(Global.round((Float) tableInstantCoffeeMixPart.getModel().getValueAt(i, 5), 2));
-                icmp.setSealOk((Boolean) tableInstantCoffeeMixPart.getModel().getValueAt(i, 4));
-                icmp.setSerialNumber((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 3));
-                icmp.setCardBoardNumber((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 2));
-                icmp.setCoffeeGreen(dbc.getCoffeeGreenWithLabId(tableInstantCoffeeMixPart.getModel().getValueAt(i, 0)));
-                if (icmp.getCoffeeGreen() == null) {
-                    throw new ResourceNotFoundException((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 0));
-                }
-                if (icmp.getCoffeeGreen().getCurrentWeight() - icmp.getWeight() < 0) {
-                    throw new NotEnoughtCoffeeException(icmp.getCoffeeGreen().getLabId());
                 } else {
-                    icmp.getCoffeeGreen().setCurrentWeight(icmp.getCoffeeGreen().getCurrentWeight() - icmp.getWeight());
-                    CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-                    cgch.setChangeTime(new Timestamp(System.currentTimeMillis()));
-                    cgch.setChangedBy(emp);
-                    cgch.setInstantCoffeeMixRaport(icmr);
-                    cgch.setComment("ZASYP " + icmp.getCoffeeGreen().getLabId() + " " + icmr.getProductType());
-                    cgch.setWeight(Global.round(-1 * icmp.getWeight(), 2));
-                    cgch.setCoffeeGreen(icmp.getCoffeeGreen());
-                    icmp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
+                    InstantCoffeeMixPart icmp = new InstantCoffeeMixPart();
+                    icmp.setInstantCoffeeMixRaport(icmr);
+                    icmp.setWeight(Global.round((Float) tableInstantCoffeeMixPart.getModel().getValueAt(i, 5), 2));
+                    icmp.setSealOk((Boolean) tableInstantCoffeeMixPart.getModel().getValueAt(i, 4));
+                    icmp.setSerialNumber((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 3));
+                    icmp.setCardBoardNumber((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 2));
+                    icmp.setCoffeeGreen(dbc.getCoffeeGreenWithLabId(tableInstantCoffeeMixPart.getModel().getValueAt(i, 0)));
+                    if (icmp.getCoffeeGreen() == null) {
+                        throw new ResourceNotFoundException((String) tableInstantCoffeeMixPart.getModel().getValueAt(i, 0));
+                    } else if (!icmp.getCoffeeGreen().mix(icmp.getWeight(), emp, icmr)) {
+                        throw new NotEnoughtCoffeeException(icmp.getCoffeeGreen().getLabId());
+                    }
+                    icmr.setWeight(Global.round(icmr.getWeight() + icmp.getWeight(), 2));
+                    hsicmp.add(icmp);
                 }
-                icmr.setWeight(Global.round(icmr.getWeight() + icmp.getWeight(), 2));
-                hsicmp.add(icmp);
             }
-
             setControls(false);
             buttonEdit.setEnabled(true);
             buttonRefresh.setEnabled(true);

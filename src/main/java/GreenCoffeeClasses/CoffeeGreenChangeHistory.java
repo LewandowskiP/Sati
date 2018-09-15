@@ -15,9 +15,11 @@
  */
 package GreenCoffeeClasses;
 
+import ProductClasses.AromaChangeHistory;
 import ProductClasses.InstantCoffeeMixRaport;
 import ProductClasses.RoastRaport;
 import ProductionManagement.Employee;
+import ProductionManagement.Global;
 import java.sql.Timestamp;
 
 /**
@@ -28,12 +30,21 @@ public class CoffeeGreenChangeHistory implements Comparable {
 
     int id;
     Float weight;
+    Float weightAfterChange;
     CoffeeGreen coffeeGreen;
     String comment;
     Timestamp changeTime;
     Employee changedBy;
     RoastRaport roastRaport;
     InstantCoffeeMixRaport instantCoffeeMixRaport;
+
+    public Float getWeightAfterChange() {
+        return weightAfterChange;
+    }
+
+    public void setWeightAfterChange(Float weightAfterChange) {
+        this.weightAfterChange = weightAfterChange;
+    }
 
     public Employee getChangedBy() {
         return changedBy;
@@ -102,10 +113,37 @@ public class CoffeeGreenChangeHistory implements Comparable {
     public CoffeeGreenChangeHistory() {
     }
 
-    public int compareTo(Object o) {
+    public CoffeeGreenChangeHistory(Float weight, Float weightAfterChange, CoffeeGreen coffeeGreen, String comment, Employee changedBy, RoastRaport roastRaport) {
+        this.weight = weight;
+        this.weightAfterChange = weightAfterChange;
+        this.coffeeGreen = coffeeGreen;
+        this.comment = comment;
+        this.changedBy = changedBy;
+        this.roastRaport = roastRaport;
+        this.changeTime = Global.time();
+    }
 
-        int ret = (int) (this.getChangeTime().compareTo(((CoffeeGreenChangeHistory) o).getChangeTime()));
-        return ret;
+    public CoffeeGreenChangeHistory(Float weight, Float weightAfterChange, CoffeeGreen coffeeGreen, String comment, Employee changedBy, InstantCoffeeMixRaport instantCoffeeMixRaport) {
+        this.weight = weight;
+        this.weightAfterChange = weightAfterChange;
+        this.coffeeGreen = coffeeGreen;
+        this.comment = comment;
+        this.changedBy = changedBy;
+        this.instantCoffeeMixRaport = instantCoffeeMixRaport;
+        this.changeTime = Global.time();
+    }
+
+    public CoffeeGreenChangeHistory(Float weight, Float weightAfterChange, CoffeeGreen coffeeGreen, String comment, Employee changedBy) {
+        this.weight = weight;
+        this.weightAfterChange = weightAfterChange;
+        this.coffeeGreen = coffeeGreen;
+        this.comment = comment;
+        this.changedBy = changedBy;
+        this.changeTime = Global.time();
+    }
+
+    public int compareTo(Object o) {
+        return (this.getChangeTime().before(((CoffeeGreenChangeHistory) o).getChangeTime())) ? 1 : -1;
     }
 
 }

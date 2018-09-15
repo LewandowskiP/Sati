@@ -63,7 +63,7 @@ public class BrowseInstantCoffeeMixRaportHallManagerPanel extends javax.swing.JP
 
     private void rollbackInstantHistory(Set<CoffeeGreenChangeHistory> scgch, InstantCoffeeMixRaport icmr) {
 
-        Set<CoffeeGreenChangeHistory> clone = new HashSet<CoffeeGreenChangeHistory>();
+        Set<CoffeeGreenChangeHistory> clone = new HashSet<>();
         clone.addAll(scgch);
         for (CoffeeGreenChangeHistory cgch : clone) {
             if (cgch.getInstantCoffeeMixRaport() == icmr) {
@@ -219,7 +219,6 @@ public class BrowseInstantCoffeeMixRaportHallManagerPanel extends javax.swing.JP
                         rollbackInstantHistory((Set<CoffeeGreenChangeHistory>) icmp.getCoffeeGreen().getCoffeeGreenChangeHistory(), selected);
                     }
                     ArrayList<ProductionCoffeeReturn> alpcr = dbc.getProductionCoffeeReturnWithProductionCoffee(selected.getProductionCoffee());
-
                     dbc.startTransation();
                     for (ProductionCoffeeReturn pcr : alpcr) {
                         dbc.deleteTransation(pcr);
@@ -266,18 +265,7 @@ public class BrowseInstantCoffeeMixRaportHallManagerPanel extends javax.swing.JP
                     for (InstantCoffeeMixPart icmp : sicmpClone) {
                         dbc.startTransation();
                         dbc.refresh(icmp.getCoffeeGreen());
-                        CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-                        cgch.setChangeTime(selected.getMixDate());
-                        cgch.setChangedBy(selected.getMixedBy());
-                        cgch.setCoffeeGreen(icmp.getCoffeeGreen());
-                        cgch.setComment("ZASYP " + cgch.getCoffeeGreen().getLabId() + " " + selected.getProductType().getProductName());
-                        cgch.setInstantCoffeeMixRaport(selected);
-                        cgch.setWeight(-1 * icmp.getWeight());
-                        icmp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
-                        icmp.getCoffeeGreen().setCurrentWeight(icmp.getCoffeeGreen().getCurrentWeight() + cgch.getWeight());
-                        if (icmp.getCoffeeGreen().getCurrentWeight() == 0) {
-                            icmp.getCoffeeGreen().setState(Global.COFFEE_GREEN_OUT_OF_STORE);
-                        }
+                        icmp.getCoffeeGreen().mix(icmp.getWeight(), e, selected);
                         dbc.saveTransation(icmp.getCoffeeGreen());
                         dbc.saveTransation(icmp);
                         dbc.commitTransation();

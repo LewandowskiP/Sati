@@ -19,10 +19,8 @@ import Exceptions.NotEnoughtAromaException;
 import Exceptions.NotEnoughtCoffeeException;
 import Exceptions.NotMatchingCoffeeWeightException;
 import Exceptions.ResourceNotFoundException;
-import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 import Listeners.CheckBoxAromaRoastRaport;
 import Listeners.CheckBoxGreenCoffeeRoastRaport;
-import ProductClasses.AromaChangeHistory;
 import ProductClasses.RoastAromaPart;
 import ProductClasses.RoastGreenCoffeePart;
 import ProductClasses.RoastPart;
@@ -85,9 +83,9 @@ public class EditRaportRoastPanel extends javax.swing.JPanel {
         }
         dtm2.setRowCount(10);
         DefaultTableModel dtm3 = (DefaultTableModel) tableRoastAromaPart.getModel();
-        dtm.setRowCount(3);
+        dtm3.setRowCount(0);
         for (RoastAromaPart rap : rr.getRoastAromaPart()) {
-            dtm3.addRow(new Object[]{rap.getAroma().getAromaType(), rap.getAroma().getAromaType(), rap.getQuantity(), false, false});
+            dtm3.addRow(new Object[]{rap.getAroma().getLabId(), rap.getAroma().getAromaType(), rap.getQuantity(), false, false});
         }
         dtm3.setRowCount(10);
         tableRoastAromaPart.getModel().addTableModelListener(new CheckBoxAromaRoastRaport());
@@ -324,10 +322,10 @@ public class EditRaportRoastPanel extends javax.swing.JPanel {
             dbc.openSession();
 
             Float totalSourceWeight;
-            Float totalSourceWeightFromGreenCoffee = new Float(0);
+            Float totalSourceWeightFromGreenCoffee = (float) 0;
             totalSourceWeight = Global.round(oldRoastRaport.getTotalSourceWeight(), 1);
 
-            HashSet<RoastGreenCoffeePart> hsrgcp = new HashSet<RoastGreenCoffeePart>(0);
+            HashSet<RoastGreenCoffeePart> hsrgcp = new HashSet<>(0);
             for (int i = 0; i < tableRoastGreenCoffeePart.getModel().getRowCount(); i++) {
                 if (tableRoastGreenCoffeePart.getModel().getValueAt(i, 0) == null) {
                     break;
@@ -358,7 +356,7 @@ public class EditRaportRoastPanel extends javax.swing.JPanel {
             }
 
             if (tableRoastAromaPart.getModel().getRowCount() != 0) {
-                HashSet<RoastAromaPart> hsrap = new HashSet<RoastAromaPart>(0);
+                HashSet<RoastAromaPart> hsrap = new HashSet<>(0);
                 for (int i = 0; i < tableRoastAromaPart.getModel().getRowCount(); i++) {
                     if (tableRoastAromaPart.getModel().getValueAt(i, 0) == null) {
                         break;
@@ -383,35 +381,13 @@ public class EditRaportRoastPanel extends javax.swing.JPanel {
             if (JOptionPane.OK_OPTION == result) {
                 dbc.startTransation();
                 for (RoastGreenCoffeePart rgcp : oldRoastRaport.getRoastGreenCoffeePart()) {
-                    rgcp.getCoffeeGreen().setCurrentWeight(rgcp.getCoffeeGreen().getCurrentWeight() - rgcp.getWeight());
-                    CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-                    cgch.setChangeTime(oldRoastRaport.getCompleteTime());
-                    cgch.setChangedBy(oldRoastRaport.getCompletedBy());
-                    cgch.setRoastRaport(oldRoastRaport);
-                    cgch.setComment("PALENIE " + oldRoastRaport.getProductType());
-                    cgch.setWeight(-1 * rgcp.getWeight());
-                    cgch.setCoffeeGreen(rgcp.getCoffeeGreen());
-                    dbc.saveTransation(cgch);
-                    rgcp.getCoffeeGreen().getCoffeeGreenChangeHistory().add(cgch);
-                    if (rgcp.getCoffeeGreen().getCurrentWeight() == 0) {
-                        rgcp.getCoffeeGreen().setState(Global.COFFEE_GREEN_OUT_OF_STORE);
-                    }
+                    rgcp.getCoffeeGreen().roast(rgcp.getWeight(), oldRoastRaport.getCompletedBy(), oldRoastRaport);
+                    dbc.updateTransation(rgcp.getCoffeeGreen());
                     rgcp.setRoastRaport(oldRoastRaport);
                 }
                 for (RoastAromaPart rap : oldRoastRaport.getRoastAromaPart()) {
-                    rap.getAroma().setQuantity(rap.getAroma().getQuantity() - rap.getQuantity());
-                    AromaChangeHistory ach = new AromaChangeHistory();
-                    ach.setChangeTime(oldRoastRaport.getCompleteTime());
-                    ach.setChangedBy(oldRoastRaport.getCompletedBy());
-                    ach.setRoastRaport(oldRoastRaport);
-                    ach.setComment("PALENIE " + oldRoastRaport);
-                    ach.setWeight(-1 * rap.getQuantity());
-                    ach.setAroma(rap.getAroma());
-                    dbc.saveTransation(ach);
-                    rap.getAroma().getAromaChangeHistory().add(ach);
-                    if (rap.getAroma().getQuantity() == 0) {
-                        rap.getAroma().setState(Global.OUT_OF_STORE);
-                    }
+                    rap.getAroma().roast(rap.getQuantity(), oldRoastRaport.getCompletedBy(), oldRoastRaport);
+                    dbc.updateTransation(rap.getAroma());
                     rap.setRoastRaport(oldRoastRaport);
                 }
                 raportSentWarden = true;
@@ -432,7 +408,10 @@ public class EditRaportRoastPanel extends javax.swing.JPanel {
         } catch (ResourceNotFoundException ex) {
             JOptionPane.showMessageDialog(this, "Kawa lub aromat o ID " + ex.getMessage() + " nie istnieje.");
             dbc.rollbackTransation();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }//GEN-LAST:event_buttonSendRaportActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

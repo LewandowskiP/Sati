@@ -17,7 +17,6 @@ package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeCountry;
 import GreenCoffeeClasses.CoffeeGreen;
-import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 import GreenCoffeeClasses.CoffeeOwner;
 import ProductionManagement.LabTest;
 import GreenCoffeeClasses.CoffeeType;
@@ -25,19 +24,11 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import GreenCoffeeClasses.PackType;
 import GreenCoffeeClasses.Provider;
-import ProductClasses.AromaType;
-import ProductClasses.RoastAromaPart;
-import ProductClasses.RoastGreenCoffeePart;
-import ProductClasses.RoastPart;
-import ProductionClasses.ProductionCoffee;
 import ProductionManagement.Global;
-import java.sql.Timestamp;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
-
 import javax.swing.JOptionPane;
-import javax.swing.JSpinner;
 import javax.swing.SpinnerNumberModel;
 
 /**
@@ -66,8 +57,8 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
         comboBoxProvider.setSelectedItem(null);
         textFieldContractNumber.setText("");
         textFieldDossierNumber.setText("");
-        spinnerPacksNumber.setValue(new Integer(0));
-        spinnerCoffeeWeight.setValue(new Float(0));
+        spinnerPacksNumber.setValue(0);
+        spinnerCoffeeWeight.setValue((float) 0);
 
     }
 
@@ -343,84 +334,57 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
         try {
             dbc.openSession();
             dbc.startTransation();
-            java.sql.Timestamp currentTime = new java.sql.Timestamp(System.currentTimeMillis());
             String str = dbc.getMaxLabIdCoffeeGreen();
             String newLabIdStr;
             if (str != null) {
                 Integer lastLabId = Integer.parseInt(str.substring(1, 7));
-
                 newLabIdStr = String.format("K%06d", lastLabId + 1);
             } else {
                 newLabIdStr = String.format("K%06d", 1);
             }
 
-            CoffeeGreen cg = new CoffeeGreen();
+            CoffeeOwner coffeeOwner = (CoffeeOwner) comboBoxCoffeeOwner.getSelectedItem();
+            String contractNumber = textFieldContractNumber.getText();
+            CoffeeType coffeeType = (CoffeeType) comboBoxCoffeeType.getSelectedItem();
+            String dossierNumber = textFieldDossierNumber.getText();
+            Float weight = Global.round((Float) spinnerCoffeeWeight.getValue(), 2);
+            Employee storeman = emp;
+            PackType packType = (PackType) comboBoxPackType.getSelectedItem();
+            String labId = newLabIdStr;
+            Integer numberOfPacks = (Integer) spinnerPacksNumber.getValue();
+            Provider provider = (Provider) comboBoxProvider.getSelectedItem();
 
-            cg.setArrivalDate(currentTime);
-            cg.setCoffeeOwner((CoffeeOwner) comboBoxCoffeeOwner.getSelectedItem());
-            cg.setContractNumber(textFieldContractNumber.getText());
-            cg.setCoffeeType((CoffeeType) comboBoxCoffeeType.getSelectedItem());
-            cg.setDossierNumber(textFieldDossierNumber.getText());
-            cg.setCurrentWeight(Global.round((Float) spinnerCoffeeWeight.getValue(), 2));
-            cg.setArrivalWeight(cg.getCurrentWeight());
-            cg.setState(Global.COFFEE_GREEN_TO_EXAMINE);
-            cg.setStoreman(emp);
-            cg.setPackType((PackType) comboBoxPackType.getSelectedItem());
-            cg.setLabId(newLabIdStr);
-            cg.setNumberOfPacks((Integer) spinnerPacksNumber.getValue());
-            LabTest ct = new LabTest();
-            ct.setVermin(checkBoxVermin.isSelected());
-            dbc.saveTransation(ct);
-            cg.setLabTest(ct);
-            cg.setProvider((Provider) comboBoxProvider.getSelectedItem());
+            LabTest labTest = new LabTest();
+            labTest.setVermin(checkBoxVermin.isSelected());
+            dbc.saveTransation(labTest);
+            CoffeeGreen cg = new CoffeeGreen(coffeeOwner, contractNumber, coffeeType, dossierNumber, weight, storeman, packType, labId, labTest, provider, numberOfPacks);
             dbc.saveTransation(cg);
-
-            CoffeeGreenChangeHistory cgch = new CoffeeGreenChangeHistory();
-            cgch.setChangeTime(new Timestamp(System.currentTimeMillis()));
-            cgch.setChangedBy(emp);
-            cgch.setComment("Dostawa - " + cg.getLabId());
-            cgch.setWeight(cg.getArrivalWeight());
-            cgch.setCoffeeGreen(cg);
-            cg.setCoffeeGreenChangeHistory(new HashSet<CoffeeGreenChangeHistory>());
-            cg.getCoffeeGreenChangeHistory().add(cgch);
-
-            dbc.saveTransation(cgch);
-
             JOptionPane.showMessageDialog(null, "Zarejestrowano do badania.", "Informacja", JOptionPane.INFORMATION_MESSAGE);
             dbc.commitTransation();
-            // resetInput();
-        } catch (Exception e) {
+        } catch (NumberFormatException | HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Sprawdź wprowadzone dane", "Błąd", JOptionPane.ERROR_MESSAGE);
-            e.printStackTrace();
-            return;
+            dbc.rollbackTransation();
         }
     }//GEN-LAST:event_buttonRegisterToLaboratoryActionPerformed
 
     private void buttonAddNewCoffeeTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewCoffeeTypeActionPerformed
         String[] option = {"Cofnij"};
-
-        int result = JOptionPane.showOptionDialog(this, new AddGreenCoffeeTypePanel(), "Dodaj nowy typ kawy", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
-
+        JOptionPane.showOptionDialog(this, new AddGreenCoffeeTypePanel(), "Dodaj nowy typ kawy", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         dbc.openSession();
         dbc.clearSession();
         alct = dbc.getCoffeeType();
-
         Object[] o = alct.toArray();
         Arrays.sort(o);
-
         comboBoxCoffeeType.removeAllItems();
         for (Object ob : o) {
             CoffeeType ct = (CoffeeType) ob;
             comboBoxCoffeeType.addItem(ct);
         }
         comboBoxCoffeeType.setSelectedItem(null);
-
-
     }//GEN-LAST:event_buttonAddNewCoffeeTypeActionPerformed
 
     private void buttonAddNewCoffeeOwnerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAddNewCoffeeOwnerActionPerformed
         String[] option = {"Cofnij"};
-
         int result = JOptionPane.showOptionDialog(this, new AddCoffeeOwnerPanel(), "Dodaj nowego właściciela kawy", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
         if (JOptionPane.OK_OPTION == result) {
             dbc.openSession();
@@ -431,7 +395,6 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
                 comboBoxCoffeeOwner.addItem(co);
             }
             comboBoxCoffeeOwner.setSelectedItem(null);
-
         }
     }//GEN-LAST:event_buttonAddNewCoffeeOwnerActionPerformed
 
@@ -444,7 +407,6 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
             alp = dbc.getProvider();
             Object[] o = alp.toArray();
             Arrays.sort(o);
-
             comboBoxProvider.removeAllItems();
             for (Object ob : o) {
                 comboBoxProvider.addItem(ob);
@@ -465,7 +427,6 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
                 comboBoxPackType.addItem(pt);
             }
             comboBoxPackType.setSelectedItem(null);
-
         }
     }//GEN-LAST:event_buttonAddNewPackTypeActionPerformed
 
@@ -474,7 +435,7 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
-        spinnerCoffeeWeight.setValue(new Float((Integer) spinnerPacksNumber.getValue() * ((PackType) comboBoxPackType.getSelectedItem()).getSize()));
+        spinnerCoffeeWeight.setValue((float) (Integer) spinnerPacksNumber.getValue() * ((PackType) comboBoxPackType.getSelectedItem()).getSize());
     }//GEN-LAST:event_jButton2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

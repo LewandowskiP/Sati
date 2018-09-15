@@ -17,6 +17,7 @@ package ProductClasses;
 
 import GreenCoffeeClasses.*;
 import ProductionManagement.Employee;
+import ProductionManagement.Global;
 import java.sql.Timestamp;
 
 /**
@@ -27,6 +28,7 @@ public class AromaChangeHistory implements Comparable {
 
     int id;
     Float weight;
+    Float weightAfterChange;
     Aroma aroma;
     String comment;
     Timestamp changeTime;
@@ -89,11 +91,37 @@ public class AromaChangeHistory implements Comparable {
         this.comment = comment;
     }
 
+    public Float getWeightAfterChange() {
+        return weightAfterChange;
+    }
+
+    public void setWeightAfterChange(Float weightAfterChange) {
+        this.weightAfterChange = weightAfterChange;
+    }
+
     public AromaChangeHistory() {
     }
 
+    public AromaChangeHistory(Float weight, Float weightAfterChange, Aroma aroma, String comment, Employee changedBy, RoastRaport roastRaport) {
+        this.weight = weight;
+        this.weightAfterChange = weightAfterChange;
+        this.aroma = aroma;
+        this.comment = comment;
+        this.changeTime = Global.time();
+        this.changedBy = changedBy;
+        this.roastRaport = roastRaport;
+    }
+
+    public AromaChangeHistory(Float weight, Float weightAfterChange, Aroma aroma, String comment, Employee changedBy) {
+        this.weight = weight;
+        this.weightAfterChange = weightAfterChange;
+        this.aroma = aroma;
+        this.comment = comment;
+        this.changedBy = changedBy;
+        this.changeTime = Global.time();
+    }
+
     public int compareTo(Object o) {
-        int ret = (int) (this.getChangeTime().compareTo(((AromaChangeHistory) o).getChangeTime()));
-        return ret;
+        return (this.getChangeTime().before(((AromaChangeHistory) o).getChangeTime())) ? 1 : -1;
     }
 }

@@ -187,14 +187,12 @@ public class BrowseResourcesTypesPanel extends javax.swing.JPanel {
                                 dbc.getCoffeeGreenWithCoffeeType(ct);
                                 if (dbc.getCoffeeGreenWithCoffeeType(ct).isEmpty()) {
                                     HashSet<CoffeeAttribute> clone = new HashSet<CoffeeAttribute>(ct.getCoffeeAttribute());
-
                                     for (CoffeeAttribute ca : clone) {
                                         ca.getCoffeeType().remove(ct);
                                         ct.getCoffeeAttribute().remove(ca);
                                         dbc.saveTransation(ca);
                                     }
                                     dbc.saveTransation(ct);
-
                                 }
                                 dbc.deleteTransation(ct);
                                 dbc.commitTransation();
@@ -208,11 +206,8 @@ public class BrowseResourcesTypesPanel extends javax.swing.JPanel {
                             ex.printStackTrace();
                         }
                         model.setValueAt(false, row, column);
-
                     }
-
                 }
-
             }
         });
 

@@ -18,14 +18,17 @@ package ProductClasses;
 import Frames.Panels.DetailsAromaPanel;
 import Frames.Panels.EditAromaPanel;
 import Frames.Panels.EditGreenCoffeePanel;
+import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 
 import GreenCoffeeClasses.Provider;
 import ProductionManagement.Employee;
+import ProductionManagement.LabTest;
 
 import SatiExtends.Test;
 import SatiInterfaces.Details;
 import SatiInterfaces.Editable;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Set;
 import javax.swing.JOptionPane;
 
@@ -129,6 +132,50 @@ public class Aroma extends Test implements Details, Editable {
     public void edit() {
         String[] option = {"Cofnij"};
         int result = JOptionPane.showOptionDialog(null, new EditAromaPanel(this), "Zmień dane kawy.", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+    }
+
+    public Aroma(float quantity, Employee storeman, Provider provider, AromaType aromaType, LabTest labTest, String labId) {
+        super(labTest, labId);
+        this.quantity = quantity;
+        this.arrivalQuantity = quantity;
+        this.storeman = storeman;
+        this.provider = provider;
+        this.aromaType = aromaType;
+        this.aromaChangeHistory = new HashSet<>();
+        addHistory(quantity, "Dostawa - " + labId, storeman);
+    }
+
+    public void correction(float changeQuantity, Employee emp, String comment) {
+        if ((this.quantity + changeQuantity) <= 0) {
+            this.setState(Test.OUT_OF_STORE);
+        }
+        this.quantity += changeQuantity;
+        addHistory(changeQuantity, comment, emp);
+
+    }
+
+    public boolean roast(float changeQuantity, Employee mixedBy, RoastRaport rr) {
+        if (this.quantity < changeQuantity) {
+            return false;
+        } else {
+            this.quantity -= changeQuantity;
+            addHistoryRoast(changeQuantity, mixedBy, rr);
+            if (this.quantity <= 0.5) {
+                this.setState(Test.OUT_OF_STORE);
+                this.quantity = 0f;
+            }
+        }
+        return true;
+    }
+
+    private void addHistoryRoast(Float weight, Employee changedBy, RoastRaport roastRaport) {
+        String comment = this.getLabId() + " PALENIE " + roastRaport.getProductType();
+        this.aromaChangeHistory.add(new AromaChangeHistory(-1 * weight, this.quantity, this, comment, changedBy, roastRaport));
+    }
+
+    private void addHistory(Float weight, String tempComment, Employee changedBy) {
+        String comment = this.getLabId() + tempComment;
+        this.aromaChangeHistory.add(new AromaChangeHistory(weight, this.quantity, this, comment, changedBy));
     }
 
 }

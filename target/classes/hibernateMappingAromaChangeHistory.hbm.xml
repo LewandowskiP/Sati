@@ -14,6 +14,7 @@
             <column name="comment" length="100"/>
         </property> 
         <property name="weight" column="weightChange" type="float"/>
+        <property name="weightAfterChange" column="weightAfterChange" type="float"/>
         <many-to-one name="aroma" column="aroma_id" class="Aroma"/>
         <many-to-one name="changedBy" column="changedBy" class="ProductionManagement.Employee"/>
         <many-to-one name="roastRaport" column="roastRaport" class="ProductClasses.RoastRaport"/>        

@@ -26,6 +26,11 @@ import java.sql.Timestamp;
  */
 public class ProductionOrder implements Comparable {
 
+    public static final int PRODUCTION_ORDER_ORDERED = 1;
+    public static final int PRODUCTION_ORDER_INPROGRESS = 2;
+    public static final int PRODUCTION_ORDER_PAUSED = 3;
+    public static final int PRODUCTION_ORDER_COMPLETED = 4;
+
     private int id;
     private int state;
     private int positionInQueue;

@@ -26,8 +26,11 @@ import java.util.Date;
 public class Global {
 
     static DataBaseConnector dbc;
-
     static Employee employee;
+
+    public static Timestamp time() {
+        return new Timestamp(System.currentTimeMillis());
+    }
 
     public static DataBaseConnector getDataBaseConnector() {
         if (dbc == null) {
