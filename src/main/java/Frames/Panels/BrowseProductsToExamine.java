@@ -16,10 +16,12 @@
 package Frames.Panels;
 
 import ProductionClasses.Pallete;
+import ProductionClasses.ProductionRaportCoffeeAssignment;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import java.awt.print.PrinterException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -53,20 +55,20 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
      */
     Employee emp;
     DataBaseConnector dbc;
-    
+
     private void reload() {
         dbc.openSession();
-        
+
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
-        
+
         ArrayList<ProductionRaportPart> productsToExamine = dbc.getProductsToExamine();
         for (ProductionRaportPart prp : productsToExamine) {
             model.addRow(new Object[]{prp, prp.getProductType(), prp.getBatchInfo(), prp.getTotalPcs(), Global.timestampToStrDDMMYYYY(prp.getRaportDate()), prp.getProductionLine() + " zm. " + prp.getShift(), Global.getProductStateState(prp.getLabTestState()), false, false});
         }
-        
+
     }
-    
+
     public BrowseProductsToExamine(Employee e) {
         initComponents();
         emp = e;
@@ -75,20 +77,20 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
         }
         reload();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        
+
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-        
+
         List<RowSorter.SortKey> sortKeys;
         sortKeys = new ArrayList(25);
         sortKeys.add(new RowSorter.SortKey(6, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         jTable1.setRowSorter(sorter);
         model.addTableModelListener(new TableModelListener() {
-            
+
             final static int accept_column = 7;
             final static int block_column = 8;
             final static int details_column = 9;
-            
+
             @Override
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
@@ -138,7 +140,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                         reload();
                     }
                 }
-                
+
                 if (column == details_column) {
                     Boolean checked = (Boolean) model.getValueAt(row, column);
                     if (checked) {
@@ -147,10 +149,10 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                         model.setValueAt(false, row, column);
                     }
                 }
-                
+
             }
         });
-        
+
     }
 
     /**
@@ -165,6 +167,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -178,7 +181,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, true, true, false, true, true, true
+                false, false, false, false, false, false, false, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -208,6 +211,13 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
             }
         });
 
+        jButton3.setText("Wycofaj");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -218,6 +228,8 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 696, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jButton1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -225,7 +237,9 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton3))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 451, Short.MAX_VALUE)
                 .addContainerGap())
@@ -235,7 +249,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         int num = 7;
         final TableColumnModel model = jTable1.getColumnModel();
-        final List<TableColumn> removed = new ArrayList<TableColumn>();
+        final List<TableColumn> removed = new ArrayList<>();
         int columnCount = model.getColumnCount();
         for (int i = num; i < columnCount; ++i) {
             TableColumn col = model.getColumn(num);
@@ -243,6 +257,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
             model.removeColumn(col);
         }
         SwingUtilities.invokeLater(new Runnable() {
+            @Override
             public void run() {
                 PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
                 aset.add(OrientationRequested.LANDSCAPE);
@@ -250,7 +265,7 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
                 try {
                     jTable1.print(JTable.PrintMode.FIT_WIDTH, null, null, false, aset, false, service);
                 } catch (PrinterException e) {
-                    e.printStackTrace();
+                    JOptionPane.showMessageDialog(null, "Błąd drukowania");
                 }
                 for (TableColumn col : removed) {
                     model.addColumn(col);
@@ -259,8 +274,31 @@ public class BrowseProductsToExamine extends javax.swing.JPanel {
         });
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        try {
+            dbc.startTransation();
+            ProductionRaportPart selected = (ProductionRaportPart) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+            String options[] = new String[]{"Tak", "Nie"};
+            int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz wycofać raport?" + System.lineSeparator() + selected.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            if (JOptionPane.OK_OPTION == result) {
+                for (ProductionRaportCoffeeAssignment prca : selected.getProductionRaportCoffeeAssignment()) {
+                    prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
+                    prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
+                    dbc.updateTransation(prca.getProductionCoffee());
+                }
+                dbc.deleteTransation(selected);
+                dbc.commitTransation();
+                reload();
+            }
+        } catch (HeadlessException ex) {
+            dbc.rollbackTransation();
+            JOptionPane.showMessageDialog(null, "Wystąpił błąd podczas wycofywania");
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton3;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

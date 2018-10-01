@@ -185,7 +185,12 @@ public class ProductionOrder implements Comparable {
 
     @Override
     public int compareTo(Object o) {
-        return this.positionInQueue - ((ProductionOrder) o).getPositionInQueue();
+        ProductionOrder tmp = (ProductionOrder) o;
+        if (this.positionInQueue != tmp.getPositionInQueue()) {
+            return this.positionInQueue - ((ProductionOrder) o).getPositionInQueue();
+        } else {
+            return this.getOrderTime().compareTo(tmp.getOrderTime());
+        }
     }
 
     @Override

@@ -261,41 +261,49 @@ public class BrowseProductsAfterLabTest extends javax.swing.JPanel {
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
+
             DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
             for (int i = 0; i < dtm.getRowCount(); i++) {
+                dbc.startTransation();
                 if ((Boolean) dtm.getValueAt(i, accept_column) == true) {
                     ProductionRaportPart prp = (ProductionRaportPart) dtm.getValueAt(i, 0);
                     if (prp.getLabTestState() == 3 && dtm.getValueAt(i, 3).equals(dtm.getValueAt(i, 4))) {
                         prp.setLabTestState(Global.PRODUCTION_RAPORT_PART_STORED);
-                        dbc.updateObject(prp);
+                        dbc.updateTransation(prp);
                     } else {
                         JOptionPane.showMessageDialog(null, "Wystąpił błąd sprawdź zaznaczone produkty");
                         break;
                     }
                 }
             }
-            //JOptionPane.showMessageDialog(null, "Zatwierdzono produkty do zmagazynowania.");
-
             reload();
         } catch (Exception e) {
             e.printStackTrace();
+            dbc.commitTransation();
 
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        ProductionRaportPart selected = (ProductionRaportPart) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
-        String options[] = new String[]{"Tak", "Nie"};
-        int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz wycofać raport?" + System.lineSeparator() + selected.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-        if (JOptionPane.OK_OPTION == result) {
-            for (ProductionRaportCoffeeAssignment prca : selected.getProductionRaportCoffeeAssignment()) {
-                prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
-                prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
-                dbc.updateObject(prca.getProductionCoffee());
+        try {
+            dbc.startTransation();
+            ProductionRaportPart selected = (ProductionRaportPart) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
+            String options[] = new String[]{"Tak", "Nie"};
+            int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz wycofać raport?" + System.lineSeparator() + selected.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            if (JOptionPane.OK_OPTION == result) {
+                for (ProductionRaportCoffeeAssignment prca : selected.getProductionRaportCoffeeAssignment()) {
+                    prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
+                    prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
+                    dbc.updateTransation(prca.getProductionCoffee());
+                }
+                dbc.deleteTransation(selected);
+                dbc.commitTransation();
+                reload();
             }
-            dbc.deleteObject(selected);
-            reload();
+        } catch (Exception ex) {
+            dbc.rollbackTransation();
         }
+
     }//GEN-LAST:event_jButton3ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

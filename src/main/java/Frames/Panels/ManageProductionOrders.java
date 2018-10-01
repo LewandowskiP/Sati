@@ -27,7 +27,10 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
+import javax.swing.event.TableModelEvent;
+import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
 
 /**
  *
@@ -63,7 +66,7 @@ public class ManageProductionOrders extends javax.swing.JPanel {
         for (ProductionOrder po : alpo) {
             dtm.addRow(new Object[]{
                 po,
-                po.getPositionInQueue(),
+                po.getPositionInQueue() + 1,
                 po.getProductType(),
                 po.getQuantity(),
                 Global.timestampToStrDDMMYYYY(po.getDeadline()),
@@ -92,15 +95,82 @@ public class ManageProductionOrders extends javax.swing.JPanel {
             }
         }
         );
-        /*
-         listOrders.addListSelectionListener(new ListSelectionListener() {
-         @Override
-         public void valueChanged(ListSelectionEvent e) {
-         selectedProductionOrderValue = (ProductionOrder) listOrders.getSelectedValue();
-         selectedProductionOrderIndex = listOrders.getSelectedIndex();
-         }
-         }
-         );*/
+        tableProductionOrders.getModel().addTableModelListener(new TableModelListener() {
+            @Override
+            public void tableChanged(TableModelEvent e) {
+                int row = e.getFirstRow();
+                int column = e.getColumn();
+                if (column == 7) { // UP
+                    TableModel model = (TableModel) e.getSource();
+                    Boolean checked = (Boolean) model.getValueAt(row, column);
+                    if (checked) {
+                        if (row != 0) {
+                            ProductionOrder productionOrder = (ProductionOrder) model.getValueAt(row, 0);
+                            ProductionOrder upper = (ProductionOrder) model.getValueAt(row - 1, 0);
+                            try {
+                                dbc.startTransation();
+                                productionOrder.upQueue();
+                                upper.downQueue();
+                                dbc.updateTransation(productionOrder);
+                                dbc.updateTransation(upper);
+                                dbc.commitTransation();
+
+                            } catch (Exception ex) {
+                                dbc.rollbackTransation();
+                            }
+                        }
+                        model.setValueAt(false, row, column);
+                        loadProductionOrders(selectedProductionLine);
+                    }
+                }
+                if (column == 8) { // DOWN
+                    TableModel model = (TableModel) e.getSource();
+                    Boolean checked = (Boolean) model.getValueAt(row, column);
+                    if (checked) {
+                        if (row != model.getRowCount() - 1) {
+                            ProductionOrder productionOrder = (ProductionOrder) model.getValueAt(row, 0);
+                            ProductionOrder lower = (ProductionOrder) model.getValueAt(row + 1, 0);
+                            try {
+                                dbc.startTransation();
+                                productionOrder.downQueue();
+                                lower.upQueue();
+                                dbc.updateTransation(productionOrder);
+                                dbc.updateTransation(lower);
+                                dbc.commitTransation();
+
+                            } catch (Exception ex) {
+                                dbc.rollbackTransation();
+                            }
+                        }
+                        model.setValueAt(false, row, column);
+                        loadProductionOrders(selectedProductionLine);
+                    }
+                }
+                if (column == 9) { // REMOVE
+                    TableModel model = (TableModel) e.getSource();
+                    Boolean checked = (Boolean) model.getValueAt(row, column);
+                    if (checked) {
+                        try {
+                            if (row != model.getRowCount()) {
+                                dbc.startTransation();
+                                ProductionOrder productionOrder = (ProductionOrder) model.getValueAt(row, 0);
+                                dbc.deleteTransation(productionOrder);
+                                for (int i = row + 1; i < model.getRowCount(); i++) {
+                                    ProductionOrder lower = (ProductionOrder) model.getValueAt(i, 0);
+                                    lower.upQueue();
+                                    dbc.updateTransation(lower);
+                                }
+                                dbc.commitTransation();
+                            }
+                        } catch (Exception ex) {
+                            dbc.rollbackTransation();
+                        }
+                        model.setValueAt(false, row, column);
+                        loadProductionOrders(selectedProductionLine);
+                    }
+                }
+            }
+        });
     }
 
     /**
@@ -114,9 +184,6 @@ public class ManageProductionOrders extends javax.swing.JPanel {
 
         jLabel7 = new javax.swing.JLabel();
         comboBoxProductionLine = new javax.swing.JComboBox();
-        buttonUpQueue = new javax.swing.JButton();
-        buttonDownQueue = new javax.swing.JButton();
-        buttonDeleteOrder = new javax.swing.JButton();
         buttonNewOrder = new javax.swing.JButton();
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -125,27 +192,6 @@ public class ManageProductionOrders extends javax.swing.JPanel {
         jLabel7.setText("Wybierz linię produkcyjną");
 
         comboBoxProductionLine.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
-        buttonUpQueue.setText("Zwieksz piorytet");
-        buttonUpQueue.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonUpQueueActionPerformed(evt);
-            }
-        });
-
-        buttonDownQueue.setText("Zmniejsz priorytet");
-        buttonDownQueue.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDownQueueActionPerformed(evt);
-            }
-        });
-
-        buttonDeleteOrder.setText("Usuń zlecenie");
-        buttonDeleteOrder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonDeleteOrderActionPerformed(evt);
-            }
-        });
 
         buttonNewOrder.setText("Dodaj nowe zlecenie");
         buttonNewOrder.addActionListener(new java.awt.event.ActionListener() {
@@ -226,15 +272,9 @@ public class ManageProductionOrders extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(buttonUpQueue)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonDownQueue)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonDeleteOrder)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(buttonNewOrder)
-                        .addGap(0, 387, Short.MAX_VALUE))
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 874, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
@@ -254,67 +294,10 @@ public class ManageProductionOrders extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(buttonUpQueue)
-                    .addComponent(buttonDownQueue)
-                    .addComponent(buttonDeleteOrder)
-                    .addComponent(buttonNewOrder))
+                .addComponent(buttonNewOrder)
                 .addGap(12, 12, 12))
         );
     }// </editor-fold>//GEN-END:initComponents
-
-    private void buttonUpQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonUpQueueActionPerformed
-        /*  if (selectedProductionOrderIndex > 0) {
-         selectedProductionOrderValue.upQueue();
-         ProductionOrder tmp = (ProductionOrder) dlm.get(selectedProductionOrderIndex - 1);
-         tmp.downQueue();
-         try {
-         dbc.startTransation();
-         dbc.updateTransation(selectedProductionOrderValue);
-         dbc.updateTransation(tmp);
-         dbc.commitTransation();
-         loadProductionOrders(selectedProductionLine);
-         } catch (Exception e) {
-         dbc.rollbackTransation();
-         }
-         }*/
-    }//GEN-LAST:event_buttonUpQueueActionPerformed
-
-    private void buttonDownQueueActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDownQueueActionPerformed
-
-        /*if (selectedProductionOrderIndex < listOrders.getModel().getSize() - 1) {
-         selectedProductionOrderValue.downQueue();
-         ProductionOrder tmp = (ProductionOrder) dlm.get(selectedProductionOrderIndex + 1);
-         tmp.upQueue();
-         try {
-         dbc.startTransation();
-         dbc.updateTransation(selectedProductionOrderValue);
-         dbc.updateTransation(tmp);
-         dbc.commitTransation();
-         loadProductionOrders(selectedProductionLine);
-         } catch (Exception e) {
-         dbc.rollbackTransation();
-         }
-         }*/
-    }//GEN-LAST:event_buttonDownQueueActionPerformed
-
-    private void buttonDeleteOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDeleteOrderActionPerformed
-        /*   try {
-         dbc.startTransation();
-         if (selectedProductionOrderIndex != listOrders.getModel().getSize()) {
-         for (int i = selectedProductionOrderIndex + 1; i < listOrders.getModel().getSize(); i++) {
-         ProductionOrder tmp = (ProductionOrder) dlm.get(i);
-         tmp.upQueue();
-         dbc.updateTransation(tmp);
-         }
-         dbc.deleteTransation(selectedProductionOrderValue);
-         dbc.commitTransation();
-         loadProductionOrders(selectedProductionLine);
-         }
-         } catch (Exception e) {
-         dbc.rollbackTransation();
-         }*/
-    }//GEN-LAST:event_buttonDeleteOrderActionPerformed
 
     private void buttonNewOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNewOrderActionPerformed
         try {
@@ -350,10 +333,7 @@ public class ManageProductionOrders extends javax.swing.JPanel {
     }//GEN-LAST:event_jButton1ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonDeleteOrder;
-    private javax.swing.JButton buttonDownQueue;
     private javax.swing.JButton buttonNewOrder;
-    private javax.swing.JButton buttonUpQueue;
     private javax.swing.JComboBox comboBoxProductionLine;
     private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel7;

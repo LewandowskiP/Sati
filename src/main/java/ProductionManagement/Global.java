@@ -197,6 +197,15 @@ public class Global {
         return date;
     }
 
+    public static String timestampToStrYYMMDDhhmm(Timestamp ts) {
+        String date = String.format("%02d", (ts.getYear() + 1900) % 100);
+        date += "-" + String.format("%02d", ts.getMonth() + 1);
+        date += "-" + String.format("%02d", ts.getDate());
+        date += " " + String.format("%02d", ts.getHours());
+        date += ":" + String.format("%02d", ts.getMinutes());
+        return date;
+    }
+
     public static Employee getEmployee() {
         return employee;
     }

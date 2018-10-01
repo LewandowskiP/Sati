@@ -22,6 +22,8 @@
                   <Component id="jScrollPane1" pref="696" max="32767" attributes="0"/>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButton3" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -33,7 +35,10 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="jButton1" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="jButton1" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
+              </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane1" pref="451" max="32767" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
@@ -57,8 +62,8 @@
                 <Column editable="false" title="Typ produktu" type="java.lang.Object"/>
                 <Column editable="false" title="Numer partii" type="java.lang.Object"/>
                 <Column editable="false" title="Ilo&#x15b;&#x107; sztuk" type="java.lang.Object"/>
-                <Column editable="true" title="Data" type="java.lang.String"/>
-                <Column editable="true" title="Linia" type="java.lang.String"/>
+                <Column editable="false" title="Data" type="java.lang.String"/>
+                <Column editable="false" title="Linia" type="java.lang.String"/>
                 <Column editable="false" title="Stan" type="java.lang.String"/>
                 <Column editable="true" title="Zaakceptuj" type="java.lang.Boolean"/>
                 <Column editable="true" title="Zablokuj" type="java.lang.Boolean"/>
@@ -132,6 +137,14 @@
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton1ActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="jButton3">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Wycofaj"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
       </Events>
     </Component>
   </SubComponents>

@@ -19,15 +19,26 @@ import ProductionClasses.Pallete;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
+import java.awt.print.PrinterException;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
+import javax.print.attribute.standard.OrientationRequested;
 import javax.swing.JFileChooser;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
 
@@ -44,7 +55,7 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
     DataBaseConnector dbc;
     ArrayList<Pallete> productsToExport;
     String[] header = {"kod_towaru", "kod_kreskowy", "nazwa_partii", "ilosc", "jm"};
-    
+
     private void reload() {
         dbc.openSession();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
@@ -59,9 +70,9 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
                 pallete.getNetto(),
                 pallete.getProductionRaportPart().getProductionLine() + " zm. " + pallete.getProductionRaportPart().getShift()});
         }
-        
+
     }
-    
+
     public BrowseProductsToExport(Employee e) {
         initComponents();
         emp = e;
@@ -81,6 +92,7 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jButton1 = new javax.swing.JButton();
+        jButton2 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -125,6 +137,13 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
             }
         });
 
+        jButton2.setText("Drukuj listę");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -134,6 +153,8 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 730, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton1)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -142,7 +163,9 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jButton1)
+                    .addComponent(jButton2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE)
                 .addContainerGap())
@@ -150,7 +173,7 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        
+
         JFileChooser chooser = new JFileChooser();
         chooser.setCurrentDirectory(new File(""));
         chooser.setDialogTitle("Wybierz katalog zapisu.");
@@ -178,8 +201,27 @@ public class BrowseProductsToExport extends javax.swing.JPanel {
 
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                PrintRequestAttributeSet aset = new HashPrintRequestAttributeSet();
+                aset.add(OrientationRequested.LANDSCAPE);
+                PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+                try {
+                    jTable1.print(JTable.PrintMode.FIT_WIDTH, null, null, false, aset, false, service);
+                } catch (PrinterException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+    }//GEN-LAST:event_jButton2ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

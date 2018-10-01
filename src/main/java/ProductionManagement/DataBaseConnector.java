@@ -1830,4 +1830,15 @@ public class DataBaseConnector {
         }
         return alprp;
     }
+
+    public ArrayList<ProductionOrder> getProductionOrdersHistory(ProductionLine productionLine) {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductionOrder PO WHERE PO.state = :state1 AND PO.productionLine = :productionLine";
+        Query q = s.createQuery(hql);
+        q.setParameter("state1", ProductionOrder.PRODUCTION_ORDER_COMPLETED);
+        q.setParameter("productionLine", productionLine);
+        return (ArrayList<ProductionOrder>) q.list();
+    }
 }

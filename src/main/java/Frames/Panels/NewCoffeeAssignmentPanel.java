@@ -53,7 +53,7 @@ public class NewCoffeeAssignmentPanel extends javax.swing.JPanel {
 
         dbc = Global.getDataBaseConnector();
         dbc.openSession();
-       
+
         productionRaportPart.setProductionRaportCoffeeAssignment(new HashSet<ProductionRaportCoffeeAssignment>());
 
         alpcs = dbc.getProductionCoffeeSeekWithEmployee(emp);
@@ -61,8 +61,7 @@ public class NewCoffeeAssignmentPanel extends javax.swing.JPanel {
         dtm = (DefaultTableModel) jTable1.getModel();
         for (ProductionCoffeeSeek pcs : alpcs) {
             dbc.refresh(pcs);
-            dbc.flush();
-            dtm.addRow(new Object[]{pcs, new Float(pcs.getWeight()), new Float(0), new Boolean(false)});
+            dtm.addRow(new Object[]{pcs, new Float(pcs.getWeight()), new Float(0), false});
         }
     }
 
