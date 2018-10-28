@@ -23,13 +23,10 @@ import ProductionManagement.Employee;
  */
 public class ProductionCoffeeSeek {
 
-    int id;
-    ProductionCoffee productionCoffee;
-    float weight;
-    Employee seekedBy;
-    
-
-
+    private int id;
+    private ProductionCoffee productionCoffee;
+    private float weight;
+    private Employee seekedBy;
 
     public ProductionCoffeeSeek() {
     }

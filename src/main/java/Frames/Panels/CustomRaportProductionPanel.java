@@ -699,7 +699,7 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
     private void buttonConfirmProductionOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmProductionOrderActionPerformed
         if (comboBoxBean.getSelectedIndex() >= 0) {
             try {
-                dbc.clearSession();
+                //  dbc.clearSession();
                 dbc.openSession();
                 productionRaportPart.setShift(Global.currentShift());
                 productionRaportPart.setOtherInfo(textAreaOtherInfo.getText());
@@ -751,17 +751,19 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
                         dbc.saveTransation(productionRaportPart);
                         dbc.commitTransation();
                         resetInput();
+                        initProductionCoffee();
+                        initProductionLines();
+                        initProductType();
                         setPreInitControls(true);
+                        return;
                     } else {
                         dbc.rollbackTransation();
                     }
                 } else {
                     dbc.rollbackTransation();
                 }
-
-                dbc.flush();
-
             } catch (ZeroInputException e) {
+                dbc.rollbackTransation();
                 JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -770,8 +772,13 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
         }
+        productionRaportPart.returnAssignedCoffee(employee);
     }//GEN-LAST:event_buttonConfirmProductionOrderActionPerformed
 
+    
+    
+    
+    
     private void buttonAssignBatchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAssignBatchActionPerformed
         if (selectedProductionLine != null && selectedProductType != null) {
             try {

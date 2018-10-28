@@ -22,6 +22,7 @@ import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.TreeSet;
@@ -267,6 +268,24 @@ public class ProductionRaportPart implements Details {
             return false;
         }
         return true;
+    }
+
+    private void rollbackCoffee(ProductionRaportCoffeeAssignment prca, ArrayList<ProductionCoffeeSeek> alpcs) {
+        for (ProductionCoffeeSeek pcs : alpcs) {
+            if (pcs.getProductionCoffee() == prca.getProductionCoffee()) {
+                pcs.setWeight(pcs.getWeight() + prca.getWeight());
+            }
+        }
+    }
+
+    public void returnAssignedCoffee(Employee emp) {
+        DataBaseConnector dbc = Global.getDataBaseConnector();
+        productionRaportCoffeeAssignment.toArray();
+        ArrayList<ProductionCoffeeSeek> alpcs = dbc.getProductionCoffeeSeekWithEmployee(emp);
+        for (Object prca : productionRaportCoffeeAssignment.toArray()) {
+            rollbackCoffee((ProductionRaportCoffeeAssignment) prca, alpcs);
+        }
+
     }
 
 }

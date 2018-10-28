@@ -22,6 +22,7 @@ import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 
 import GreenCoffeeClasses.Provider;
 import ProductionManagement.Employee;
+import ProductionManagement.Global;
 import ProductionManagement.LabTest;
 
 import SatiExtends.Test;
@@ -48,6 +49,10 @@ public class Aroma extends Test implements Details, Editable {
     private Provider provider;
     private AromaType aromaType;
 
+    
+
+    
+    
     Set<AromaChangeHistory> aromaChangeHistory;
 
     public float getArrivalQuantity() {
@@ -142,6 +147,7 @@ public class Aroma extends Test implements Details, Editable {
         this.provider = provider;
         this.aromaType = aromaType;
         this.aromaChangeHistory = new HashSet<>();
+        this.arrivalDate = Global.time();
         addHistory(quantity, "Dostawa - " + labId, storeman);
     }
 
