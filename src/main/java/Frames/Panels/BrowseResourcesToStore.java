@@ -17,9 +17,7 @@ package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeGreen;
 import ProductClasses.Aroma;
-import ProductClasses.Cardboard;
 import ProductClasses.DirectPackage;
-
 import ProductClasses.ReadyCoffee;
 import ProductClasses.Sugar;
 import ProductionClasses.ProductionCoffee;
@@ -29,6 +27,7 @@ import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import SatiExtends.Test;
 import SatiInterfaces.Details;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -43,34 +42,34 @@ import javax.swing.table.DefaultTableModel;
  * @author Przemysław
  */
 public class BrowseResourcesToStore extends javax.swing.JPanel {
-    
+
     Employee emp;
     /**
      * Creates new form GreenCoffeeToCheckListPanel
      */
     DataBaseConnector dbc = null;
-    
+
     private void reload() {
-        
+
         dbc.openSession();
         DefaultTableModel dtm = (DefaultTableModel) tableResources.getModel();
         dtm.setRowCount(0);
-        
+
         ArrayList<CoffeeGreen> alcg = dbc.getCoffeeGreenToStore();
         for (CoffeeGreen o : alcg) {
             dtm.addRow(new Object[]{o, false});
-            
+
         }
         ArrayList<Aroma> ala = dbc.getAromaToStore();
         for (Aroma o : ala) {
             dtm.addRow(new Object[]{o, false});
         }
-        
+
         ArrayList<ProductionCoffeeExternalReturn> alpcer = dbc.getProductionCoffeeExternalReturnToStore();
         for (ProductionCoffeeExternalReturn o : alpcer) {
             dtm.addRow(new Object[]{o, false});
         }
-        
+
         ArrayList<Sugar> als = dbc.getSugarToStore();
         for (Sugar o : als) {
             dtm.addRow(new Object[]{o, false});
@@ -84,17 +83,17 @@ public class BrowseResourcesToStore extends javax.swing.JPanel {
             dtm.addRow(new Object[]{o, false});
         }
     }
-    
+
     public BrowseResourcesToStore(Employee emp) {
         initComponents();
         if (dbc == null) {
-            
+
             dbc = Global.getDataBaseConnector();
         }
         this.emp = emp;
         dbc.openSession();
         reload();
-        
+
         tableResources.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -104,10 +103,10 @@ public class BrowseResourcesToStore extends javax.swing.JPanel {
                     Details selected = (Details) tableResources.getModel().getValueAt(row, col);
                     selected.showDetails();
                 }
-                
+
             }
         });
-        
+
     }
 
     /**
@@ -218,31 +217,31 @@ public class BrowseResourcesToStore extends javax.swing.JPanel {
                 if (o.getClass() == CoffeeGreen.class) {
                     CoffeeGreen cg = (CoffeeGreen) o;
                     sb.append("    ").append(i + 1).append(". ").append(cg).append(" ").append(cg.getArrivalWeight()).append(" Kg").append(System.lineSeparator()).append(System.lineSeparator());
-                };
+                }
                 if (o.getClass() == Aroma.class) {
                     Aroma a = (Aroma) o;
                     sb.append("    ").append(i + 1).append(". ").append(a).append(" ").append(a.getArrivalQuantity()).append(" Kg").append(System.lineSeparator()).append(System.lineSeparator());
-                };
+                }
                 if (o.getClass() == ProductionCoffeeExternalReturn.class) {
                     ProductionCoffeeExternalReturn pcer = (ProductionCoffeeExternalReturn) o;
                     sb.append("    ").append(i + 1).append(". ").append(pcer).append(" ").append(pcer.getWeight()).append(" Kg").append(System.lineSeparator()).append(System.lineSeparator());
-                };
+                }
                 if (o.getClass() == Sugar.class) {
                     Sugar pcer = (Sugar) o;
                     sb.append("    ").append(i + 1).append(". ").append(pcer).append(" ").append(pcer.getQuantity()).append(" szt").append(System.lineSeparator()).append(System.lineSeparator());
-                };
-                
+                }
+
                 if (o.getClass() == DirectPackage.class) {
                     DirectPackage pcer = (DirectPackage) o;
                     sb.append("    ").append(i + 1).append(". ").append(pcer).append(" ").append(pcer.getWeight()).append(" Kg").append(System.lineSeparator()).append(System.lineSeparator());
-                };
+                }
                 if (o.getClass() == ReadyCoffee.class) {
                     ReadyCoffee pcer = (ReadyCoffee) o;
                     sb.append("    ").append(i + 1).append(". ").append(pcer).append(" ").append(pcer.getArrivalWeight()).append(" Kg").append(System.lineSeparator()).append(System.lineSeparator());
-                };
-                
+                }
+
             }
-            
+
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
@@ -253,7 +252,7 @@ public class BrowseResourcesToStore extends javax.swing.JPanel {
                     text.print(null, null, false, service, null, false);
                 }
             }
-        } catch (Exception e) {
+        } catch (PrinterException e) {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
@@ -262,7 +261,7 @@ public class BrowseResourcesToStore extends javax.swing.JPanel {
         for (int i = 0; i < dtm.getRowCount(); i++) {
             if ((Boolean) dtm.getValueAt(i, 1) == true) {
                 Test o = (Test) dtm.getValueAt(i, 0);
-                
+
                 if (o.getClass() == ProductionCoffeeExternalReturn.class) {
                     ProductionCoffeeExternalReturn pcer = (ProductionCoffeeExternalReturn) o;
                     pcer.setState(Global.PRODUCTION_COFFEE_EXTERNAL_READY_TO_USE);
@@ -272,24 +271,25 @@ public class BrowseResourcesToStore extends javax.swing.JPanel {
                     pc.setWeight(pcer.getWeight());
                     pc.setReturned(true);
                     pc.setUsed(false);
+                    pc.setProducedBy(pcer.getProductionRaportPart().getEmp());
                     pc.setProdDate(pcer.getReturnDate());
                     dbc.saveObject(pc);
                     pcer.setProductionCoffee(pc);
                     dbc.saveObject(pcer);
                     continue;
-                };
-                
+                }
+
                 if (o.getClass() == ReadyCoffee.class) {
                     ReadyCoffee rc = (ReadyCoffee) o;
                     rc.setState(Global.PRODUCTION_COFFEE_EXTERNAL_READY_TO_USE);
-                    
+
                     dbc.updateObject(rc);
                     continue;
-                };
-                
+                }
+
                 o.setState(Global.READY_TO_USE);
                 dbc.updateObject(o);
-                
+
             }
         }
         JOptionPane.showMessageDialog(null, "Zatwierdzono zmagazynowanie surowców", "Informacja", JOptionPane.INFORMATION_MESSAGE);

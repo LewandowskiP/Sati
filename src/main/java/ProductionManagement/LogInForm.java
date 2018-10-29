@@ -22,6 +22,7 @@ import Frames.HallManagerFrame;
 import Frames.CEOFrame;
 import Frames.OfficeFrame;
 import Frames.OperatorFrame;
+import Frames.StoremanJuniorFrame;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
@@ -62,12 +63,13 @@ public class LogInForm extends javax.swing.JFrame {
             Global.setEmployee(emp);
             int delay = 15000; //milliseconds
             ActionListener taskPerformer = new ActionListener() {
+                @Override
                 public void actionPerformed(ActionEvent e) {
                     Date sessionStart = new Date(dbc.getSf().getStatistics().getStartTime());
                     Date now = new Date(System.currentTimeMillis());
                     Calendar c = Calendar.getInstance();
                     c.setTime(sessionStart);
-                    if (emp.getJobPosition() != Global.OFFICE) {
+                    if (emp.getJobPosition() != Global.OFFICE || emp.getJobPosition() != Global.STOREMAN) {
                         c.add(Calendar.MINUTE, Global.MINUTES_TO);
                     } else {
                         c.add(Calendar.MINUTE, Global.MINUTES_TO_OFFICE);
@@ -222,6 +224,11 @@ public class LogInForm extends javax.swing.JFrame {
                         break;
                     case Global.OFFICE:
                         frame = new OfficeFrame(emp);
+                        frame.setVisible(true);
+                        this.dispose();
+                        break;
+                    case Global.STOREMAN_JUNIOR:
+                        frame = new StoremanJuniorFrame(emp);
                         frame.setVisible(true);
                         this.dispose();
                         break;

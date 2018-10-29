@@ -153,6 +153,7 @@ public class AddReturnedProductPanel extends javax.swing.JPanel {
         pc.setReturned(false);
         pc.setState(Global.PRODUCTION_COFFEE_READY);
         pc.setWeight(Global.round((Float) jSpinner1.getValue(), 2));
+        pc.setProducedBy(selectedProductionRaportPart.getEmp());
         pc.setProdDate(new Timestamp(System.currentTimeMillis()));
         rp.setProductionRaportPart(selectedProductionRaportPart);
         rp.setProductionCoffee(pc);

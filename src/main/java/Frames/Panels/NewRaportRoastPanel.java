@@ -569,6 +569,7 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                 pc.setWeight(totalRoastWeight);
                 pc.setState(Global.PRODUCTION_COFFEE_READY);
                 pc.setProdDate(roastRaport.getCompleteTime());
+                pc.setProducedBy(emp);
                 dbc.saveTransation(pc);
                 dbc.commitTransation();
                 resetInput();

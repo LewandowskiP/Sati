@@ -16,6 +16,7 @@
 package ProductionClasses;
 
 import ProductClasses.ProductType;
+import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.sql.Timestamp;
 
@@ -25,14 +26,23 @@ import java.sql.Timestamp;
  */
 public class ProductionCoffee implements Comparable {
 
-    int id;
-    int state;
-    Timestamp prodDate;
-    ProductType productType;
-    float weight;
-    boolean used = false;
-    boolean returned = false;
-    boolean halfProduct = false;
+    private int id;
+    private int state;
+    private Timestamp prodDate;
+    private ProductType productType;
+    private float weight;
+    private boolean used = false;
+    private boolean returned = false;
+    private boolean halfProduct = false;
+    private Employee producedBy;
+
+    public Employee getProducedBy() {
+        return producedBy;
+    }
+
+    public void setProducedBy(Employee producedBy) {
+        this.producedBy = producedBy;
+    }
 
     public boolean isHalfProduct() {
         return halfProduct;
@@ -103,7 +113,7 @@ public class ProductionCoffee implements Comparable {
 
     @Override
     public String toString() {
-        String toReturn = productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg";
+        String toReturn = productType.getProductName() + " " + Global.timestampToStrDDMMYYYY(prodDate) + " " + weight + " Kg " + producedBy.getEmployeeID();
         if (returned) {
             toReturn = "ZW " + toReturn;
         }
@@ -116,6 +126,7 @@ public class ProductionCoffee implements Comparable {
         return toReturn;
     }
 
+    @Override
     public int compareTo(Object o) {
         return this.productType.toString().compareTo(((ProductionCoffee) o).getProductType().toString());
     }

@@ -716,6 +716,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                             pc.setState(Global.PRODUCTION_COFFEE_READY);
                             pc.setWeight(Global.round((Float) productionRaportPart.getTotalWeight(), 2));
                             pc.setProdDate(productionRaportPart.getRaportDate());
+                            pc.setProducedBy(employee);
                             rp.setProductionRaportPart(productionRaportPart);
                             rp.setProductionCoffee(pc);
                             
