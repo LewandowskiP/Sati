@@ -61,16 +61,22 @@
           <Group type="103" groupAlignment="0" attributes="0">
               <Component id="jButton1" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton2" alignment="0" max="32767" attributes="0"/>
-              <Component id="buttonTrackCoffee" alignment="0" max="32767" attributes="0"/>
-              <Component id="buttonTrackProduct" alignment="0" max="32767" attributes="0"/>
-              <Component id="buttonBrowseGreenCoffee" alignment="1" max="32767" attributes="0"/>
-              <Component id="buttonBrowseAroma" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonGenerateTotalProductionRaport" alignment="0" max="32767" attributes="0"/>
-              <Component id="buttonEditNames" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton3" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton4" alignment="0" max="32767" attributes="0"/>
-              <Component id="jButton5" alignment="0" max="32767" attributes="0"/>
+              <Component id="jButton7" alignment="0" max="32767" attributes="0"/>
+              <Group type="102" attributes="0">
+                  <Group type="103" groupAlignment="0" attributes="0">
+                      <Component id="buttonBrowseGreenCoffee" max="32767" attributes="0"/>
+                      <Component id="buttonBrowseAroma" max="32767" attributes="0"/>
+                  </Group>
+                  <EmptySpace max="-2" attributes="0"/>
+              </Group>
+              <Component id="buttonTrackCoffee" alignment="0" max="32767" attributes="0"/>
+              <Component id="buttonTrackProduct" alignment="0" max="32767" attributes="0"/>
+              <Component id="buttonEditNames" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonBrowseMyRaports" alignment="0" max="32767" attributes="0"/>
+              <Component id="jButton5" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -84,6 +90,8 @@
                   <Component id="jButton4" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton2" min="-2" pref="30" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jButton7" min="-2" pref="33" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonTrackCoffee" min="-2" pref="31" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
@@ -231,6 +239,14 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton5ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="jButton7">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Przegl&#x105;daj surowce po type"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton7ActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

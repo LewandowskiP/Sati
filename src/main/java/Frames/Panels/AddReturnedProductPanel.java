@@ -151,6 +151,7 @@ public class AddReturnedProductPanel extends javax.swing.JPanel {
         ProductionCoffee pc = new ProductionCoffee();
         pc.setProductType(selectedProductionRaportPart.getProductType());
         pc.setReturned(false);
+        pc.setHalfProduct(true);
         pc.setState(Global.PRODUCTION_COFFEE_READY);
         pc.setWeight(Global.round((Float) jSpinner1.getValue(), 2));
         pc.setProducedBy(selectedProductionRaportPart.getEmp());

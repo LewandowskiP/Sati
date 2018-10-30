@@ -15,14 +15,11 @@
  */
 package Listeners;
 
-import Frames.Panels.SelectAromaPanel;
-import Frames.Panels.SelectCoffeeGreenPanel;
 import Frames.Panels.SelectDirectPackagePanel;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.TableModel;
 
 /**
  *
@@ -30,8 +27,8 @@ import javax.swing.table.TableModel;
  */
 public class CheckBoxDirectPackageRaport implements TableModelListener {
 
-    private int add_column;
-    private int del_column;
+    private final int add_column;
+    private final int del_column;
 
     public CheckBoxDirectPackageRaport(int add_col, int del_col) {
         super();
@@ -39,6 +36,7 @@ public class CheckBoxDirectPackageRaport implements TableModelListener {
         del_column = del_col;
     }
 
+    @Override
     public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
         int column = e.getColumn();
