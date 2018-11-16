@@ -97,7 +97,7 @@ public class AddNewEmployeePanel extends javax.swing.JPanel {
 
         jLabel4.setText("Hasło");
 
-        comboBoxEmployeeJobPosition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Magazynier", "Operator", "Kierownik Produkcji", "Laborant" }));
+        comboBoxEmployeeJobPosition.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Magazynier", "Operator", "Kierownik Produkcji", "Laborant", "Biuro", "Młodszy Magazynier" }));
 
         jLabel5.setText("Stanowisko");
 

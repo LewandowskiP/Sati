@@ -47,6 +47,7 @@ public class Global {
     public static final int HALL_MANAGER = 4;
     public static final int LAB_ASSISTANT = 5;
     public static final int OFFICE = 6;
+    public static final int STOREMAN_JUNIOR = 7;
     public static final int ADMINISTRATOR = 999;
 
     public static final int COFFEE_GREEN_TO_EXAMINE = 1;

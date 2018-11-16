@@ -17,6 +17,7 @@ package Frames;
 
 import Frames.Panels.AddNewEmployeePanel;
 import Frames.Panels.AddProductionLinePanel;
+import Frames.Panels.BrowseAllResourcesByTypePanel;
 import Frames.Panels.BrowseAllResourcesPanel;
 import Frames.Panels.BrowseProductionCoffee;
 import Frames.Panels.BrowseProductsToFinishAdmin;
@@ -30,6 +31,7 @@ import ProductClasses.ProductType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -87,6 +89,7 @@ public class OfficeFrame extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
         scrollPanelHallManagerFrame = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -149,7 +152,7 @@ public class OfficeFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setText("Przeglądaj surowce");
+        jButton2.setText("Przeglądaj surowce po numerze zlecenia");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton2ActionPerformed(evt);
@@ -205,6 +208,13 @@ public class OfficeFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setText("Przeglądaj surowce po type");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout SzefProdukcjiFrameToolsLayout = new javax.swing.GroupLayout(SzefProdukcjiFrameTools);
         SzefProdukcjiFrameTools.setLayout(SzefProdukcjiFrameToolsLayout);
         SzefProdukcjiFrameToolsLayout.setHorizontalGroup(
@@ -227,7 +237,8 @@ public class OfficeFrame extends javax.swing.JFrame {
                     .addComponent(buttonGenerateTotalProductionRaport, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(buttonGenerateTotalRoastRaport, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                     .addComponent(buttonGenerateTotalMixRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         SzefProdukcjiFrameToolsLayout.setVerticalGroup(
@@ -244,6 +255,8 @@ public class OfficeFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
@@ -255,7 +268,7 @@ public class OfficeFrame extends javax.swing.JFrame {
                 .addComponent(buttonGenerateTotalMixRaport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -371,7 +384,7 @@ public class OfficeFrame extends javax.swing.JFrame {
             dbc.commitTransation();
 
             JOptionPane.showMessageDialog(null, "Naprawiono adresy plików.");
-        } catch (Exception e) {
+        } catch (HeadlessException e) {
             JOptionPane.showMessageDialog(null, "Wystapił bład");
         }
 
@@ -384,6 +397,10 @@ public class OfficeFrame extends javax.swing.JFrame {
     private void jButton6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton6ActionPerformed
         scrollPanelHallManagerFrame.setViewportView(new BrowseProductsToFinishAdmin(emp));
     }//GEN-LAST:event_jButton6ActionPerformed
+
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+         scrollPanelHallManagerFrame.setViewportView(new BrowseAllResourcesByTypePanel());
+    }//GEN-LAST:event_jButton7ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SzefProdukcjiFrameTools;
@@ -403,6 +420,7 @@ public class OfficeFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
     private javax.swing.JScrollPane scrollPanelHallManagerFrame;
     // End of variables declaration//GEN-END:variables
 }

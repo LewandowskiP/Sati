@@ -355,6 +355,7 @@ public class NewRaportMixCoffeeInstantPanel extends javax.swing.JPanel {
             icmr.setProductionCoffee(pc);
             icmr.setProductionLine(selectedProductionLine);
             pc.setProdDate(icmr.getMixDate());
+            pc.setProducedBy(emp);
             dbc.saveTransation(pc);
             dbc.updateTransation(icmr);
             dbc.commitTransation();

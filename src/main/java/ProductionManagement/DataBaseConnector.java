@@ -283,6 +283,8 @@ public class DataBaseConnector {
         alpc.addAll(result);
         for (ProductionCoffee pc : alpc) {
             Hibernate.initialize(pc.getProductType());
+            Hibernate.initialize(pc.getProducedBy());
+            Hibernate.initialize(pc.getProducedBy().getEmployeeID());
         }
         return alpc;
 
@@ -1676,6 +1678,17 @@ public class DataBaseConnector {
         return aldp;
     }
 
+    public ArrayList<DirectPackage> getDirectPackageWithDirectPackageTypeNoState(DirectPackageType selectedDirectPackageType) {
+        ArrayList<DirectPackage> aldp = new ArrayList<>();
+        String hql = "FROM DirectPackage DP WHERE DP.directPackageType = :directPackageType AND DP.state = :state";
+        Query q = s.createQuery(hql);
+        q.setParameter("directPackageType", selectedDirectPackageType);
+        q.setParameter("state", Global.READY_TO_USE);
+        List result = (List<DirectPackage>) q.list();
+        aldp.addAll(result);
+        return aldp;
+    }
+
     public ArrayList<Cardboard> getCardboardWithCardboardType(CardboardType selectedCardboardType) {
         ArrayList<Cardboard> aldp = new ArrayList<>();
         String hql = "FROM Cardboard C WHERE C.cardboardType = :cardboardType AND C.state = :state";
@@ -1840,5 +1853,23 @@ public class DataBaseConnector {
         q.setParameter("state1", ProductionOrder.PRODUCTION_ORDER_COMPLETED);
         q.setParameter("productionLine", productionLine);
         return (ArrayList<ProductionOrder>) q.list();
+    }
+
+    public DirectPackage getDirectPackageWithLabId(String labId) {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        DirectPackage cg;
+        String hql = "FROM DirectPackage DP WHERE DP.labId = :labId";
+        Query q = s.createQuery(hql);
+        q.setParameter("labId", labId);
+        List result = (List<CoffeeGreen>) q.list();
+        if (result.isEmpty()) {
+            return null;
+        }
+        cg = (DirectPackage) result.get(0);
+        Hibernate.initialize(cg.getDirectPackageType());
+        Hibernate.initialize(cg.getStoreman());
+        return cg;
     }
 }

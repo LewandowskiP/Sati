@@ -133,11 +133,13 @@
     <Component class="javax.swing.JComboBox" name="comboBoxEmployeeJobPosition">
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-          <StringArray count="4">
+          <StringArray count="6">
             <StringItem index="0" value="Magazynier"/>
             <StringItem index="1" value="Operator"/>
             <StringItem index="2" value="Kierownik Produkcji"/>
             <StringItem index="3" value="Laborant"/>
+            <StringItem index="4" value="Biuro"/>
+            <StringItem index="5" value="M&#x142;odszy Magazynier"/>
           </StringArray>
         </Property>
       </Properties>
