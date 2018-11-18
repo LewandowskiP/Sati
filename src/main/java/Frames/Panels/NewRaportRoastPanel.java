@@ -574,7 +574,6 @@ public class NewRaportRoastPanel extends javax.swing.JPanel {
                 dbc.commitTransation();
                 resetInput();
                 initProductionList();
-                System.out.println("OK@");
             }
         } catch (NotEnoughtCoffeeException e) {
             JOptionPane.showMessageDialog(this, ("Nie wystarczająca ilość kawy o ID " + e.getMessage()));

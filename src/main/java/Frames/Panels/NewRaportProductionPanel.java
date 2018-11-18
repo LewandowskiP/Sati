@@ -632,7 +632,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
     private void buttonProductionCoffeeSeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProductionCoffeeSeekActionPerformed
         try {
-            dbc.startTransation();
+
             ProductionCoffee pc = (ProductionCoffee) comboBoxProductionCoffee.getSelectedItem();
             Float pcToSeek = Global.round((Float) spinnerProductionCoffeeSeek.getValue(), 2);
             if (pcToSeek == 0) {
@@ -649,7 +649,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             if (pc.getWeight() == 0) {
                 pc.setState(Global.PRODUCTION_COFFEE_OUT_OF_STORE);
             }
-
+            dbc.startTransation();
             dbc.updateTransation(pc);
             dbc.saveTransation(pcs);
             dbc.commitTransation();
@@ -657,7 +657,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, ("Zarezerwowano kawę" + pc.getProductType().getProductName() + " w ilośći " + pcToSeek + "[kg]."));
         } catch (ClassCastException | ZeroInputException e) {
             JOptionPane.showMessageDialog(this, ("Proszę podać ilośc kawy do rezerwacji."));
-
         } catch (NotEnoughtCoffeeException e) {
             JOptionPane.showMessageDialog(this, ("Nie wystarczająca ilość kawy " + e.getMessage()));
         } catch (HeadlessException ex) {
@@ -673,8 +672,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         if (comboBoxBean.getSelectedIndex() >= 0) {
             try {
 
-                dbc.openSession();
-                dbc.startTransation();
                 productionRaportPart.setShift(Global.currentShift());
                 productionRaportPart.setOtherInfo(textAreaOtherInfo.getText());
                 productionRaportPart.setStickSize((Float) spinnerStickWeight.getValue());
@@ -703,6 +700,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 String[] options = new String[2];
                 options[0] = "Dalej";
                 options[1] = "Odrzuć";
+                dbc.openSession();
+                dbc.startTransation();
                 int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(productionRaportPart, employee), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION == res) {
                     int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
@@ -720,17 +719,13 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                             pc.setProducedBy(employee);
                             rp.setProductionRaportPart(productionRaportPart);
                             rp.setProductionCoffee(pc);
-
                             productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
                             dbc.saveTransation(pc);
                             dbc.saveTransation(rp);
                         }
                         dbc.saveTransation(productionRaportPart);
                         dbc.commitTransation();
-
                         resetInput();
-
-                        //  dbc.clearSession();
                         initProductionCoffee();
                         initProductionLines();
                         initProductType();
@@ -745,8 +740,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             } catch (ZeroInputException e) {
                 JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
                 dbc.rollbackTransation();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (HeadlessException e) {
                 dbc.rollbackTransation();
             }
         } else {
