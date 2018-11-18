@@ -25,6 +25,7 @@ import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 import SatiInterfaces.Details;
+import java.awt.print.PrinterException;
 import java.util.ArrayList;
 import javax.print.DocFlavor;
 import javax.print.PrintService;
@@ -491,8 +492,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                     text.print(null, null, false, service, null, false);
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        } catch (PrinterException e) {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
