@@ -19,8 +19,6 @@ import ProductClasses.ProductType;
 import ProductionClasses.ProductionOrder;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -30,13 +28,14 @@ import java.util.Date;
  *
  * @author Przemysław
  */
-public class NewProductionOrder extends javax.swing.JPanel {
+public class EditProductionOrder extends javax.swing.JPanel {
 
     /**
      * Creates new form NewProductionOrder
      */
     ProductType selectedProductType;
     DataBaseConnector dbc = Global.getDataBaseConnector();
+    ProductionOrder productionOrder;
 
     public ProductType getProductType() {
         return (ProductType) comboBoxProductType.getSelectedItem();
@@ -69,12 +68,17 @@ public class NewProductionOrder extends javax.swing.JPanel {
         for (Object pt : A) {
             comboBoxProductType.addItem(pt);
         }
-        comboBoxProductType.setSelectedItem(null);
+        comboBoxProductType.setSelectedItem(productionOrder.getProductType());
     }
 
-    public NewProductionOrder() {
+    public EditProductionOrder(ProductionOrder productionOrder) {
+        this.productionOrder = productionOrder;
         initComponents();
         initProductType();
+        jTextField1.setText(productionOrder.getOtherInfo());
+        jSpinner1.setValue(productionOrder.getQuantity());
+        checkBoxImportant.setSelected(productionOrder.isImportant());
+        spinnerDeadline.setValue((Date) productionOrder.getDeadline());
     }
 
     /**

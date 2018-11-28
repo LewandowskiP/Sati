@@ -69,7 +69,7 @@ public class LogInForm extends javax.swing.JFrame {
                     Date now = new Date(System.currentTimeMillis());
                     Calendar c = Calendar.getInstance();
                     c.setTime(sessionStart);
-                    if (emp.getJobPosition() != Global.OFFICE || emp.getJobPosition() != Global.STOREMAN) {
+                    if (emp.getJobPosition() == Global.OPERATOR) {
                         c.add(Calendar.MINUTE, Global.MINUTES_TO);
                     } else {
                         c.add(Calendar.MINUTE, Global.MINUTES_TO_OFFICE);

@@ -47,7 +47,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
      */
     private DataBaseConnector dbc;
     private ProductionRaportPart productionRaportPart;
-
+    
     public DetailsProductionRaportPartPanel(ProductionRaportPart productionRaportPart) {
         initComponents();
         dbc = Global.getDataBaseConnector();
@@ -58,7 +58,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         } else {
             textFieldSealing.setText("NIE");
         }
-
+        
         if (!productionRaportPart.getOtherInfo().equals("")) {
             textFieldOtherInfo.setText(productionRaportPart.getOtherInfo());
         } else {
@@ -72,18 +72,18 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         textFieldStickSize.setText(Float.toString(productionRaportPart.getStickSize()));
         textFieldTotalPalletes.setText(Integer.toString(productionRaportPart.getTotalPallete()));
         textFieldbatchInfo.setText(productionRaportPart.getBatchInfo());
-
         textFieldCompleteDate.setText(productionRaportPart.getRaportDate().toString());
         textFieldCompletedBy.setText(productionRaportPart.getEmp().toString());
-
+        textFieldExpiryDate.setText(productionRaportPart.getExpiryDate().toString());
+        
         DefaultTableModel dtm = (DefaultTableModel) tableDirectPackage.getModel();
         dtm.addTableModelListener(new CheckBoxDetailsListener(1));
         for (ProductionRaportDirectPackage prdp : productionRaportPart.getProductionRaportDirectPackage()) {
             dtm.addRow(new Object[]{prdp.getDirectPackage(), false});
         }
-
+        
         dtm = (DefaultTableModel) tableProductionCoffee.getModel();
-
+        
         for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
             String prefix = "";
             if (prca.getProductionCoffee().isReturned()) {
@@ -94,7 +94,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             }
             dtm.addRow(new Object[]{prca.getProductionCoffee(), prefix + prca.getProductionCoffee().getProductType(), prca.getWeight(), false, false});
         }
-
+        
         tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -105,11 +105,11 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                     o.showDetails();
                     tableProductionCoffee.setValueAt(false, row, col);
                 }
-
+                
             }
         }
         );
-
+        
         tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -125,17 +125,17 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                     }
                     tableProductionCoffee.setValueAt(false, row, col);
                 }
-
+                
             }
         }
         );
-
+        
         dtm = (DefaultTableModel) tablePallete.getModel();
         dtm.addTableModelListener(new CheckBoxDetailsListener(3));
         for (Pallete p : productionRaportPart.getPallete()) {
             dtm.addRow(new Object[]{p, p.getNetto(), p.getQuantity(), false});
         }
-
+        
     }
 
     /**
@@ -178,6 +178,8 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         tableDirectPackage = new javax.swing.JTable();
         jScrollPane3 = new javax.swing.JScrollPane();
         tablePallete = new javax.swing.JTable();
+        jLabel2 = new javax.swing.JLabel();
+        textFieldExpiryDate = new javax.swing.JTextField();
 
         jLabel1.setText("Nazwa produktu: ");
 
@@ -308,6 +310,8 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             tablePallete.getColumnModel().getColumn(3).setMaxWidth(80);
         }
 
+        jLabel2.setText("Data ważności:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -349,7 +353,8 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                                                 .addGap(20, 20, 20)
                                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                     .addComponent(textFieldStickSize)
-                                                    .addComponent(textFieldOtherInfo))))
+                                                    .addComponent(textFieldOtherInfo)
+                                                    .addComponent(textFieldExpiryDate))))
                                         .addGap(27, 27, 27)))
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jLabel3)
@@ -357,7 +362,10 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                                     .addComponent(jLabel13)
                                     .addComponent(jLabel15)
                                     .addComponent(jLabel17)))
-                            .addComponent(jLabel18))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel18)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(textFieldOxygenAmmount)
@@ -397,7 +405,11 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel12)
-                            .addComponent(textFieldOtherInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(textFieldOtherInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(textFieldExpiryDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
@@ -437,9 +449,9 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             StringBuilder sb = new StringBuilder();
-
+            
             sb.append("").append(productionRaportPart.toString()).append(System.lineSeparator()).append(System.lineSeparator());
-
+            
             sb.append("    ").append("Typ produktu:  ").append(productionRaportPart.getProductType()).append(System.lineSeparator());
             sb.append("    ").append("Data pakowania:  ").append(Global.timestampToStrDDMMYYYY(productionRaportPart.getRaportDate())).append(System.lineSeparator());
             sb.append("    ").append("Operator:  ").append(productionRaportPart.getEmp()).append(System.lineSeparator());
@@ -447,41 +459,41 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             sb.append("    ").append("Wyprodukowano KG:  ").append(productionRaportPart.getTotalWeight()).append(System.lineSeparator());
             sb.append("    ").append("Wyprodukowano SZT:  ").append(productionRaportPart.getTotalPcs()).append(System.lineSeparator());
             sb.append("    ").append("Informacje dodatkowe  ").append(System.lineSeparator());
-
+            
             sb.append("    ").append("Numer parti:  ").append(productionRaportPart.getBatchInfo()).append(System.lineSeparator());
             sb.append("    ").append("Użyte surowce:  ").append(System.lineSeparator());
-
+            
             for (int i = 0; i < tableDirectPackage.getRowCount(); i++) {
                 sb.append("      ").append(tableDirectPackage.getValueAt(i, 0).toString()).append(System.lineSeparator());
             }
-
+            
             sb.append("    ").append("Ilość tlenu:  ").append(productionRaportPart.getOxygen()).append(System.lineSeparator());
-
+            
             sb.append("    ").append(Global.getProductTypeName(productionRaportPart.getType())).append(System.lineSeparator());
-
+            
             if (productionRaportPart.isSealing()) {
                 sb.append("    ").append("Opakowania szczelne").append(System.lineSeparator());
             } else {
                 sb.append("    ").append("Opakowania nieszczelne").append(System.lineSeparator());
             }
-
+            
             sb.append("    ").append("Wielkość stick:  ").append(productionRaportPart.getStickSize()).append(System.lineSeparator());
             sb.append("    ").append("Inne informacje:  ").append(productionRaportPart.getOtherInfo()).append(System.lineSeparator()).append(System.lineSeparator());
-
+            
             sb.append("    ").append("Wyprodukowane palety:  ").append(System.lineSeparator());
-
+            
             for (Pallete p : productionRaportPart.getPallete()) {
                 sb.append("      ").append(p.getEan128Num()).append(" ").append(p.getQuantity()).append(" szt. ").append(p.getNetto()).append(" Kg").append(System.lineSeparator());
             }
-
+            
             sb.append("    ").append("Użyte kawy:  ").append(System.lineSeparator());
-
+            
             for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
-
+                
                 sb.append("      ").append(prca.toString()).append(System.lineSeparator());
-
+                
             }
-
+            
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
@@ -506,6 +518,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -519,6 +532,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
     private javax.swing.JTextField textFieldBean;
     private javax.swing.JTextField textFieldCompleteDate;
     private javax.swing.JTextField textFieldCompletedBy;
+    private javax.swing.JTextField textFieldExpiryDate;
     private javax.swing.JTextField textFieldKGTotal;
     private javax.swing.JTextField textFieldOtherInfo;
     private javax.swing.JTextField textFieldOxygenAmmount;

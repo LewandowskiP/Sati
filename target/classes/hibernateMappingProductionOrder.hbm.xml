@@ -12,6 +12,7 @@
         <property name="state" column="state" type="int"/>
         <property name="positionInQueue" column="positionInQueue" type="int"/>
         <property name="quantity" type="int"/>
+        <property name="startQuantity" type="int"/>
         <property name="important" type="boolean"/>
         <property name="otherInfo" type="string">
             <column name="otherInfo" length="50"/>

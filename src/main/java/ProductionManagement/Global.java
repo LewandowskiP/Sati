@@ -38,7 +38,7 @@ public class Global {
         }
         return dbc;
     }
-    public static final int MINUTES_TO_OFFICE = 90;
+    public static final int MINUTES_TO_OFFICE = 480;
     public static final int MINUTES_TO = 30;
     public static final int NOONE = -1;
     public static final int CEO = 1;

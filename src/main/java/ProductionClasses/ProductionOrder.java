@@ -44,6 +44,7 @@ public class ProductionOrder implements Comparable {
     private Timestamp orderTime;
     private Timestamp completeTime;
     private Timestamp deadline;
+    private Integer startQuantity;
 
     public void makeOrder(ProductionLine productionLine,
             boolean important,
@@ -54,6 +55,7 @@ public class ProductionOrder implements Comparable {
             String otherInfo,
             int positionInQueue) {
         this.important = important;
+        this.startQuantity = quantity;
         this.deadline = deadline;
         this.productionLine = productionLine;
         this.productType = productType;
@@ -63,6 +65,22 @@ public class ProductionOrder implements Comparable {
         this.state = Global.PRODUCTION_ORDER_ORDERED;
         this.positionInQueue = positionInQueue;
         this.orderTime = new Timestamp(System.currentTimeMillis());
+    }
+
+    public void editOrder(
+            boolean important,
+            Timestamp deadline,
+            ProductType productType,
+            Integer quantity,
+            String otherInfo
+    ) {
+        this.startQuantity = quantity;
+        this.important = important;
+        this.deadline = deadline;
+        this.productType = productType;
+        this.quantity = quantity;
+        this.otherInfo = otherInfo;
+        this.state = Global.PRODUCTION_ORDER_ORDERED;
     }
 
     public void upQueue() {
@@ -75,6 +93,14 @@ public class ProductionOrder implements Comparable {
 
     public boolean isImportant() {
         return important;
+    }
+
+    public Integer getStartQuantity() {
+        return startQuantity;
+    }
+
+    public void setStartQuantity(Integer startQuantity) {
+        this.startQuantity = startQuantity;
     }
 
     public void setImportant(boolean important) {
