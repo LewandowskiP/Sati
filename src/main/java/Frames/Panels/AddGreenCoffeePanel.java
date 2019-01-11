@@ -15,6 +15,7 @@
  */
 package Frames.Panels;
 
+import GreenCoffeeClasses.CoffeeAttribute;
 import GreenCoffeeClasses.CoffeeCountry;
 import GreenCoffeeClasses.CoffeeGreen;
 import GreenCoffeeClasses.CoffeeOwner;
@@ -28,6 +29,8 @@ import ProductionManagement.Global;
 import java.awt.HeadlessException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JOptionPane;
 import javax.swing.SpinnerNumberModel;
 
@@ -62,16 +65,7 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
 
     }
 
-    public AddGreenCoffeePanel(Employee emp) {
-        initComponents();
-
-        this.emp = emp;
-        if (dbc == null) {
-            dbc = Global.getDataBaseConnector();
-        }
-        dbc.clearSession();
-        dbc.openSession();
-
+    private void loadTypes() {
         alct = dbc.getCoffeeType();
 
         Object[] o = alct.toArray();
@@ -83,6 +77,19 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
             comboBoxCoffeeType.addItem(ct);
         }
         comboBoxCoffeeType.setSelectedItem(null);
+    }
+
+    public AddGreenCoffeePanel(Employee emp) {
+        initComponents();
+
+        this.emp = emp;
+        if (dbc == null) {
+            dbc = Global.getDataBaseConnector();
+        }
+        dbc.clearSession();
+        dbc.openSession();
+
+        loadTypes();
 
         alco = dbc.getCoffeeOwner();
         comboBoxCoffeeOwner.removeAllItems();
@@ -99,7 +106,7 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
         comboBoxPackType.setSelectedItem(null);
 
         alp = dbc.getProvider();
-        o = alp.toArray();
+        Object[] o = alp.toArray();
         Arrays.sort(o);
 
         comboBoxProvider.removeAllItems();
@@ -146,6 +153,8 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
         spinnerPacksNumber = new javax.swing.JSpinner();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
+        jButton4 = new javax.swing.JButton();
 
         button1.setLabel("button1");
 
@@ -222,6 +231,20 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
             }
         });
 
+        jButton3.setText("Filtr");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
+        jButton4.setText("Reset");
+        jButton4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton4ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -240,7 +263,7 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
                             .addComponent(labelContractNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 107, Short.MAX_VALUE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(textFieldContractNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                            .addComponent(textFieldContractNumber)
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(1, 1, 1)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -251,12 +274,16 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(comboBoxCoffeeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton3)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(jButton4)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(buttonAddNewCoffeeType))
                                     .addGroup(layout.createSequentialGroup()
                                         .addComponent(comboBoxProvider, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(buttonAddNewCoffeeProvider))))
-                            .addComponent(textFieldDossierNumber, javax.swing.GroupLayout.DEFAULT_SIZE, 101, Short.MAX_VALUE)
+                            .addComponent(textFieldDossierNumber)
                             .addComponent(spinnerPacksNumber)))
                     .addComponent(checkBoxVermin)
                     .addGroup(layout.createSequentialGroup()
@@ -275,7 +302,7 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
                         .addComponent(spinnerCoffeeWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)))
-                .addContainerGap(216, Short.MAX_VALUE))
+                .addContainerGap(164, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -286,7 +313,10 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboBoxCoffeeType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(labelCoffeOwner1)
-                    .addComponent(buttonAddNewCoffeeType))
+                    .addComponent(buttonAddNewCoffeeType)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jButton3)
+                        .addComponent(jButton4)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboBoxCoffeeOwner, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -438,6 +468,33 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
         spinnerCoffeeWeight.setValue((float) (Integer) spinnerPacksNumber.getValue() * ((PackType) comboBoxPackType.getSelectedItem()).getSize());
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+
+        BuildGreenCoffeeFilterPanel bgcfp = new BuildGreenCoffeeFilterPanel();
+        String[] option = {"OK"};
+        int result = JOptionPane.showOptionDialog(this, bgcfp, "Wbierz atrybuty", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        if (result == JOptionPane.OK_OPTION) {
+            ArrayList<CoffeeAttribute> attributes = bgcfp.getAttributes();
+            ComboBoxModel t = (ComboBoxModel) comboBoxCoffeeType.getModel();
+            DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+            for (int i = 0; i < t.getSize(); i++) {
+                dcbm.addElement(t.getElementAt(i));
+                for (CoffeeAttribute ca : attributes) {
+                    if (t.getElementAt(i).toString().contains(ca.getShortcut())) {
+                    } else {
+                        dcbm.removeElement(t.getElementAt(i));
+                        break;
+                    }
+                }
+            }
+            comboBoxCoffeeType.setModel(dcbm);
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+        loadTypes();
+    }//GEN-LAST:event_jButton4ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Button button1;
     private javax.swing.JButton buttonAddNewCoffeeOwner;
@@ -452,6 +509,8 @@ public class AddGreenCoffeePanel extends javax.swing.JPanel {
     private javax.swing.JComboBox comboBoxProvider;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel labelCoffeOwner;
     private javax.swing.JLabel labelCoffeOwner1;

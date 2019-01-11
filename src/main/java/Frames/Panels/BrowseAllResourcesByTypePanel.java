@@ -15,6 +15,7 @@
  */
 package Frames.Panels;
 
+import GreenCoffeeClasses.CoffeeAttribute;
 import GreenCoffeeClasses.CoffeeGreen;
 import GreenCoffeeClasses.CoffeeType;
 import ProductClasses.Aroma;
@@ -28,8 +29,12 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -43,6 +48,28 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
     /**
      * Creates new form BrowseAllAromas
      */
+    void loadTypes() {
+        comboBoxResourceTypes.removeAllItems();
+        if (comboBoxType.getSelectedIndex() == COFFEE) {
+            ArrayList<CoffeeType> alct = dbc.getCoffeeType();
+            Collections.sort(alct);
+            for (CoffeeType ct : alct) {
+                comboBoxResourceTypes.addItem(ct);
+            }
+        } else if (comboBoxType.getSelectedIndex() == AROMA) {
+            ArrayList<AromaType> alat = dbc.getAromaType();
+            Collections.sort(alat);
+            for (AromaType at : alat) {
+                comboBoxResourceTypes.addItem(at);
+            }
+        } else {
+            ArrayList<DirectPackageType> aldpt = dbc.getDirectPackageType();
+            Collections.sort(aldpt);
+            for (DirectPackageType dpt : aldpt) {
+                comboBoxResourceTypes.addItem(dpt);
+            }
+        }
+    }
     DataBaseConnector dbc;
     Object selectedObject;
     private final int COFFEE = 0;
@@ -61,30 +88,19 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
         comboBoxType.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent arg0) {
-                comboBoxResourceTypes.removeAllItems();
-                if (comboBoxType.getSelectedIndex() == COFFEE) {
-                    ArrayList<CoffeeType> alct = dbc.getCoffeeType();
-                    Collections.sort(alct);
-                    for (CoffeeType ct : alct) {
-                        comboBoxResourceTypes.addItem(ct);
-                    }
-                } else if (comboBoxType.getSelectedIndex() == AROMA) {
-                    ArrayList<AromaType> alat = dbc.getAromaType();
-                    Collections.sort(alat);
-                    for (AromaType at : alat) {
-                        comboBoxResourceTypes.addItem(at);
-                    }
-                } else {
-                    ArrayList<DirectPackageType> aldpt = dbc.getDirectPackageType();
-                    Collections.sort(aldpt);
-                    for (DirectPackageType dpt : aldpt) {
-                        comboBoxResourceTypes.addItem(dpt);
-                    }
-                }
+                loadTypes();
             }
 
         });
+
         comboBoxType.setSelectedItem(null);
+        comboBoxResourceTypes.addItemListener(new ItemListener() {
+            @Override
+            public void itemStateChanged(ItemEvent arg0) {
+                reload();
+            }
+
+        });
 
     }
 
@@ -98,21 +114,15 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         listRaports = new javax.swing.JList();
         buttonDetails = new javax.swing.JButton();
         comboBoxType = new javax.swing.JComboBox();
         comboBoxResourceTypes = new javax.swing.JComboBox();
+        jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
 
-        jLabel1.setText("Wpisz numer typ surowca");
-
-        jButton1.setText("Wyszukaj");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
+        jLabel1.setText("Wybierz typ surowca");
 
         listRaports.setSelectionMode(javax.swing.ListSelectionModel.SINGLE_SELECTION);
         listRaports.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -127,6 +137,20 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
 
         comboBoxType.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Kawy", "Aromaty", "Opakowania" }));
 
+        jButton2.setText("Filtr");
+        jButton2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton2ActionPerformed(evt);
+            }
+        });
+
+        jButton3.setText("Reset");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -138,12 +162,15 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 285, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboBoxResourceTypes, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(comboBoxType, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 574, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(comboBoxResourceTypes, javax.swing.GroupLayout.PREFERRED_SIZE, 382, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 248, Short.MAX_VALUE)
                         .addComponent(buttonDetails)))
                 .addContainerGap())
         );
@@ -155,24 +182,19 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(comboBoxType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(comboBoxResourceTypes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
+                    .addComponent(comboBoxResourceTypes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2)
+                    .addComponent(jButton3)
                     .addComponent(buttonDetails))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 692, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 722, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        reload();
-    }//GEN-LAST:event_jButton1ActionPerformed
-
     private void reload() {
         DefaultListModel dlm = new DefaultListModel();
-
         if (comboBoxType.getSelectedIndex() == COFFEE) {
             ArrayList<CoffeeGreen> alcg = dbc.getCoffeeGreenWithCoffeeTypeNoState((CoffeeType) comboBoxResourceTypes.getSelectedItem());
             for (CoffeeGreen cg : alcg) {
@@ -207,11 +229,39 @@ public class BrowseAllResourcesByTypePanel extends javax.swing.JPanel {
         det.showDetails();
     }//GEN-LAST:event_buttonDetailsActionPerformed
 
+    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+
+        BuildGreenCoffeeFilterPanel bgcfp = new BuildGreenCoffeeFilterPanel();
+        String[] option = {"OK"};
+        int result = JOptionPane.showOptionDialog(this, bgcfp, "Wbierz atrybuty", JOptionPane.OK_OPTION, JOptionPane.PLAIN_MESSAGE, null, option, option[0]);
+        if (result == JOptionPane.OK_OPTION) {
+            ArrayList<CoffeeAttribute> attributes = bgcfp.getAttributes();
+            ComboBoxModel t = (ComboBoxModel) comboBoxResourceTypes.getModel();
+            DefaultComboBoxModel dcbm = new DefaultComboBoxModel();
+            for (int i = 0; i < t.getSize(); i++) {
+                dcbm.addElement(t.getElementAt(i));
+                for (CoffeeAttribute ca : attributes) {
+                    if (t.getElementAt(i).toString().contains(ca.getShortcut())) {
+                    } else {
+                        dcbm.removeElement(t.getElementAt(i));
+                        break;
+                    }
+                }
+            }
+            comboBoxResourceTypes.setModel(dcbm);
+        }
+    }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        loadTypes();
+    }//GEN-LAST:event_jButton3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonDetails;
     private javax.swing.JComboBox comboBoxResourceTypes;
     private javax.swing.JComboBox comboBoxType;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JList listRaports;

@@ -26,6 +26,10 @@
                       <Component id="buttonEditProductType" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="buttonBrowseProductVersions" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="47" max="-2" attributes="0"/>
+                      <Component id="buttonFilter" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="buttonResetFilter" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -41,6 +45,8 @@
                   <Component id="buttonBrowseProductVersions" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonEditProductType" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="buttonAddNewProductType" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonFilter" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="buttonResetFilter" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
               <Component id="jScrollPane2" pref="441" max="32767" attributes="0"/>
@@ -134,5 +140,21 @@
         </Component>
       </SubComponents>
     </Container>
+    <Component class="javax.swing.JButton" name="buttonFilter">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Filtr"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonFilterActionPerformed"/>
+      </Events>
+    </Component>
+    <Component class="javax.swing.JButton" name="buttonResetFilter">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Resetuj"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonResetFilterActionPerformed"/>
+      </Events>
+    </Component>
   </SubComponents>
 </Form>

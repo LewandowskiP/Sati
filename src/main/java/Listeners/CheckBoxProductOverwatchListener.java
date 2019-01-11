@@ -40,6 +40,7 @@ public class CheckBoxProductOverwatchListener implements TableModelListener {
     public void tableChanged(TableModelEvent e) {
         int row = e.getFirstRow();
         int column = e.getColumn();
+        try{
         DefaultTableModel model = (DefaultTableModel) e.getSource();
         if (model.getRowCount() > 0 && row >= 0 && column >= 0) {
             Boolean checked = (Boolean) model.getValueAt(row, column);
@@ -53,6 +54,12 @@ public class CheckBoxProductOverwatchListener implements TableModelListener {
 
             }
         }
+        }
+        catch(Exception ex)
+        {
+            JOptionPane.showMessageDialog(null, "Ups, coś poszło nie tak!");
+        }
+        
     }
 
 }

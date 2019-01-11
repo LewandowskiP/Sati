@@ -181,16 +181,13 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
 
         if (((Float) spinnerNetto.getValue()) > 0 && ((Integer) spinnerPcs.getValue()) > 0) {
             String ean13 = productionRaportPart.getProductType().getEan();
-
             ean13 += UPCEANLogicImpl.calcChecksum(ean13);
-
             String gtin = Global.qtinID + ean13;
             String prodDate = Global.prodDateID + Global.timestampToStrYYMMDD(productionRaportPart.getRaportDate());
             String lot = Global.lotID + textFieldBatch.getText();
             String expiryDate = Global.expiryDateID + Global.timestampToStrYYMMDD(new Timestamp(((Date) spinnerExpiry.getValue()).getTime()));
             String quantity = Global.quantityID + String.format("%08d", (Integer) spinnerPcs.getValue());
             DecimalFormat formatter = new DecimalFormat("0000.00");
-
             String netto = Global.nettoID + formatter.format(spinnerNetto.getValue());
             netto = netto.replace(",", "");
             pallete = new Pallete();
@@ -209,11 +206,12 @@ public class GenerateLabelEan128 extends javax.swing.JPanel {
             pallete.setEan128Num(number);
             dbc.updateObject(pallete);
             dbc.refresh(pallete);
-
             JOptionPane.showMessageDialog(null, "Wygenerowano etykietę", "Uwaga", JOptionPane.PLAIN_MESSAGE);
+            jButton1.setEnabled(false);
         } else {
             JOptionPane.showMessageDialog(null, "Proszę uzupełnić brakujące dane.", "Uwaga", JOptionPane.PLAIN_MESSAGE);
         }
+
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed

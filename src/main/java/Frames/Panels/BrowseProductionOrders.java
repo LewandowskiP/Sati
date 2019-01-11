@@ -23,8 +23,10 @@ import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -53,7 +55,9 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
     }
 
     private void loadProductionOrders(ProductionLine productionLine) {
-        ArrayList<ProductionOrder> alpo = dbc.getProductionOrdersHistory(productionLine);
+        Timestamp from = new Timestamp(((Date) spinnerFrom.getValue()).getTime()); 
+        Timestamp to = new Timestamp(((Date) spinnerFrom.getValue()).getTime());
+        ArrayList<ProductionOrder> alpo = dbc.getProductionOrdersHistoryFromTo(productionLine,from,to);
         DefaultTableModel dtm;
         dtm = (DefaultTableModel) tableProductionOrders.getModel();
         dtm.setRowCount(0);
@@ -61,7 +65,7 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
         for (ProductionOrder po : alpo) {
             dtm.addRow(new Object[]{
                 po.getProductType(),
-                po.getQuantity(),
+                po.getStartQuantity(),
                 Global.timestampToStrYYMMDDhhmm(po.getDeadline()),
                 Global.timestampToStrYYMMDDhhmm(po.getCompleteTime()),
                 po.getOtherInfo(),
@@ -101,10 +105,19 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
         jButton1 = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableProductionOrders = new javax.swing.JTable();
+        jLabel3 = new javax.swing.JLabel();
+        spinnerFrom = new javax.swing.JSpinner();
+        jLabel4 = new javax.swing.JLabel();
+        spinnerTo = new javax.swing.JSpinner();
 
         jLabel7.setText("Wybierz linię produkcyjną");
 
         comboBoxProductionLine.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        comboBoxProductionLine.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                comboBoxProductionLineActionPerformed(evt);
+            }
+        });
 
         jButton1.setText("Odśwież");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -121,7 +134,7 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Produkt", "Ilość [KG]", "Deadline", "Data zakończenia", "Dodatkowe informacje", "Ważne"
+                "Produkt", "Ilość paleń/palet", "Deadline", "Data zakończenia", "Dodatkowe informacje", "Ważne"
             }
         ) {
             Class[] types = new Class [] {
@@ -158,6 +171,14 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
             tableProductionOrders.getColumnModel().getColumn(5).setMaxWidth(50);
         }
 
+        jLabel3.setText("Od");
+
+        spinnerFrom.setModel(new javax.swing.SpinnerDateModel());
+
+        jLabel4.setText("do");
+
+        spinnerTo.setModel(new javax.swing.SpinnerDateModel());
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -170,6 +191,14 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
                         .addComponent(jLabel7)
                         .addGap(18, 18, 18)
                         .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spinnerFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel4)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(spinnerTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton1)))
                 .addContainerGap())
@@ -181,7 +210,12 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel7)
-                    .addComponent(jButton1))
+                    .addComponent(jButton1)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(spinnerFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel3)
+                        .addComponent(jLabel4)
+                        .addComponent(spinnerTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                 .addContainerGap())
@@ -194,11 +228,19 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
         loadProductionOrders(selectedProductionLine);
     }//GEN-LAST:event_jButton1ActionPerformed
 
+    private void comboBoxProductionLineActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboBoxProductionLineActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_comboBoxProductionLineActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox comboBoxProductionLine;
     private javax.swing.JButton jButton1;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JSpinner spinnerFrom;
+    private javax.swing.JSpinner spinnerTo;
     private javax.swing.JTable tableProductionOrders;
     // End of variables declaration//GEN-END:variables
 }

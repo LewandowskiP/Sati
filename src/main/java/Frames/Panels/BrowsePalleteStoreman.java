@@ -39,29 +39,30 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
      * Creates new form BrowseProductsAfterLabTest
      */
     DataBaseConnector dbc;
-    
+
     private void reload() {
+        dbc.clearSession();
         dbc.openSession();
         ArrayList<Pallete> palleteToAccept = dbc.getPalleteWithState(Global.PALLETE_CHECKED);
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         model.setRowCount(0);
         for (Pallete p : palleteToAccept) {
             model.addRow(new Object[]{p, p.getProductionRaportPart().getProductType(), p.getBatch(), p.getQuantity(), Global.getPalleteState(p.getState()), false, false});
-            
+
         }
-        
+
     }
-    
+
     public BrowsePalleteStoreman() {
         initComponents();
-        
+
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
         }
         reload();
         DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(model);
-        
+
         List<RowSorter.SortKey> sortKeys;
         sortKeys = new ArrayList(25);
         sortKeys.add(new RowSorter.SortKey(5, SortOrder.ASCENDING));
@@ -70,7 +71,7 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
         model.addTableModelListener(new TableModelListener() {
             final static int accept_column = 5;
             final static int details_column = 6;
-            
+
             @Override
             public void tableChanged(TableModelEvent e) {
                 int row = e.getFirstRow();
@@ -102,7 +103,7 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
                 }
             }
         });
-        
+
     }
 
     /**
@@ -116,6 +117,7 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        jButton1 = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -162,25 +164,43 @@ public class BrowsePalleteStoreman extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(6).setMaxWidth(40);
         }
 
+        jButton1.setText("Odśwież");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 719, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 543, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 505, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        reload();
+    }//GEN-LAST:event_jButton1ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

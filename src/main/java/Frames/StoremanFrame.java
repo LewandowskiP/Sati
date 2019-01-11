@@ -22,9 +22,11 @@ import Frames.Panels.AddReadyCoffeePanel;
 import Frames.Panels.AddReturnedCoffeePanel;
 import Frames.Panels.AddReturnedProductPanel;
 import Frames.Panels.AddSugarPanel;
+import Frames.Panels.BrowseAllResourcesByTypePanel;
 import Frames.Panels.BrowseAllResourcesPanel;
 import Frames.Panels.BrowseAvailableAromaStoremanPanel;
 import Frames.Panels.BrowseAvailableGreenCoffeeStoremanPanel;
+import Frames.Panels.BrowseProductTypePanel;
 import Frames.Panels.BrowseProductsToExport;
 import Frames.Panels.BrowseProductsToStore;
 import Frames.Panels.BrowseResourcesToExamineStoreman;
@@ -86,6 +88,8 @@ public class StoremanFrame extends javax.swing.JFrame {
         buttonAddCoffeeGreen = new javax.swing.JButton();
         buttonAromaStore = new javax.swing.JButton();
         buttonCoffeeStore = new javax.swing.JButton();
+        jButton7 = new javax.swing.JButton();
+        jButton8 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -169,7 +173,7 @@ public class StoremanFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton5.setText("Przeglądaj surowce");
+        jButton5.setText("Przeglądaj surowce po dacie/nr zlecenia");
         jButton5.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton5ActionPerformed(evt);
@@ -218,6 +222,20 @@ public class StoremanFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton7.setText("Przeglądaj surowce po typie");
+        jButton7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton7ActionPerformed(evt);
+            }
+        });
+
+        jButton8.setText("Przeglądaj karty produktów");
+        jButton8.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton8ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout MagazynierFrameToolsPanelLayout = new javax.swing.GroupLayout(MagazynierFrameToolsPanel);
         MagazynierFrameToolsPanel.setLayout(MagazynierFrameToolsPanelLayout);
         MagazynierFrameToolsPanelLayout.setHorizontalGroup(
@@ -240,6 +258,8 @@ public class StoremanFrame extends javax.swing.JFrame {
             .addComponent(buttonAddCoffeeGreen, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonAromaStore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonCoffeeStore, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jButton8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         MagazynierFrameToolsPanelLayout.setVerticalGroup(
             MagazynierFrameToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -261,10 +281,14 @@ public class StoremanFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton7)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTrackCoffee)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTrackProduct)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton8)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
@@ -377,6 +401,14 @@ public class StoremanFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(new BrowseAvailableGreenCoffeeStoremanPanel(emp));
     }//GEN-LAST:event_buttonCoffeeStoreActionPerformed
 
+    private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
+        jScrollPane1.setViewportView(new BrowseAllResourcesByTypePanel());
+    }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void jButton8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton8ActionPerformed
+        jScrollPane1.setViewportView(new BrowseProductTypePanel());
+    }//GEN-LAST:event_jButton8ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MagazynierFrameToolsPanel;
     private javax.swing.JButton buttonAddAroma;
@@ -397,6 +429,8 @@ public class StoremanFrame extends javax.swing.JFrame {
     private javax.swing.JButton jButton4;
     private javax.swing.JButton jButton5;
     private javax.swing.JButton jButton6;
+    private javax.swing.JButton jButton7;
+    private javax.swing.JButton jButton8;
     private javax.swing.JScrollPane jScrollPane1;
     // End of variables declaration//GEN-END:variables
 }

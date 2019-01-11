@@ -560,6 +560,21 @@ public class DataBaseConnector {
 
     }
 
+    public ArrayList<ProductType> getProductTypeGroupByNameTypeFilter(String filter) {
+
+        if (!s.isOpen()) {
+            openSession();
+        }
+        ArrayList<ProductType> alpt = new ArrayList<>();
+        String hql = "FROM ProductType PT WHERE PT.productName LIKE :filter GROUP BY productName ,type";
+        Query q = s.createQuery(hql);
+        q.setParameter("filter", "%" + filter + "%");
+        List result = (List<ProductType>) q.list();
+        alpt.addAll(result);
+        return alpt;
+
+    }
+
     public void updateProductName(ProductType old, String newName) {
         if (!s.isOpen()) {
             openSession();
@@ -1872,4 +1887,18 @@ public class DataBaseConnector {
         Hibernate.initialize(cg.getStoreman());
         return cg;
     }
+
+    public ArrayList<ProductionOrder> getProductionOrdersHistoryFromTo(ProductionLine productionLine, Timestamp from, Timestamp to) {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductionOrder PO WHERE PO.state = :state1 AND PO.productionLine = :productionLine AND PO.orderTime < :to AND PO.orderTime > :from";
+        Query q = s.createQuery(hql);
+        q.setParameter("state1", ProductionOrder.PRODUCTION_ORDER_COMPLETED);
+        q.setParameter("productionLine", productionLine);
+        q.setParameter("from", from);
+        q.setParameter("to", to);
+        return (ArrayList<ProductionOrder>) q.list();
+    }
+
 }

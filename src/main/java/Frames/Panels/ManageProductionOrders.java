@@ -27,6 +27,7 @@ import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.DefaultTableModel;
@@ -169,8 +170,36 @@ public class ManageProductionOrders extends javax.swing.JPanel {
                         loadProductionOrders(selectedProductionLine);
                     }
                 }
+                if (column == 10) { // EDIT
+                    TableModel model = (TableModel) e.getSource();
+                    Boolean checked = (Boolean) model.getValueAt(row, column);
+                    if (checked) {
+                        try {
+                            ProductionOrder productionOrder = (ProductionOrder) model.getValueAt(row, 0);
+                            dbc.refresh(productionOrder);
+                            if (productionOrder.getState() == ProductionOrder.PRODUCTION_ORDER_ORDERED) {
+                                EditProductionOrder epo = new EditProductionOrder(productionOrder);
+                                String[] options = {"Zatwierdź", "Porzuć"};
+                                int result = JOptionPane.showOptionDialog(null, epo, "Edycja zlecenia", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                                if (result == JOptionPane.YES_OPTION) {
+                                    productionOrder.editOrder(epo.isImportant(), epo.getDeadline(), epo.getProductType(), epo.getQuantity(), epo.getInfo());
+                                    dbc.startTransation();
+                                    dbc.saveTransation(productionOrder);
+                                    dbc.commitTransation();
+                                } else {
+                                    JOptionPane.showMessageDialog(null, "Błąd zlecenie w trakcie wykonania");
+                                }
+                            }
+                        } catch (Exception ex) {
+                            dbc.rollbackTransation();
+                        }
+                        model.setValueAt(false, row, column);
+                        loadProductionOrders(selectedProductionLine);
+                    }
+                }
             }
-        });
+        }
+        );
     }
 
     /**
@@ -209,20 +238,20 @@ public class ManageProductionOrders extends javax.swing.JPanel {
 
         tableProductionOrders.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null},
-                {null, null, null, null, null, null, null, null, null, null}
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null, null, null}
             },
             new String [] {
-                "obj", "Numer", "Produkt", "Ilość [KG]", "Deadline", "Dodatkowe informacje", "Ważne", "↑", "↓", "-"
+                "obj", "Numer", "Produkt", "Ilość paleń/palet", "Deadline", "Dodatkowe informacje", "Ważne", "↑", "↓", "-", "E"
             }
         ) {
             Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
+                java.lang.Object.class, java.lang.Integer.class, java.lang.String.class, java.lang.Float.class, java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false, true, true, true
+                false, false, false, false, false, false, false, true, true, true, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -262,6 +291,9 @@ public class ManageProductionOrders extends javax.swing.JPanel {
             tableProductionOrders.getColumnModel().getColumn(9).setMinWidth(50);
             tableProductionOrders.getColumnModel().getColumn(9).setPreferredWidth(50);
             tableProductionOrders.getColumnModel().getColumn(9).setMaxWidth(50);
+            tableProductionOrders.getColumnModel().getColumn(10).setMinWidth(50);
+            tableProductionOrders.getColumnModel().getColumn(10).setPreferredWidth(50);
+            tableProductionOrders.getColumnModel().getColumn(10).setMaxWidth(50);
         }
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
@@ -292,10 +324,10 @@ public class ManageProductionOrders extends javax.swing.JPanel {
                     .addComponent(jLabel7)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 423, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonNewOrder)
-                .addGap(12, 12, 12))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
