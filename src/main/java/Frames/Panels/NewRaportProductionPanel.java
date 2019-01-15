@@ -741,6 +741,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
                 dbc.rollbackTransation();
             } catch (HeadlessException e) {
+                JOptionPane.showMessageDialog(null, "Wystąpił błąd podczas wysyłania raportu." + System.lineSeparator() + e.getMessage(), "Uwaga", JOptionPane.WARNING_MESSAGE);
+                
                 dbc.rollbackTransation();
             }
         } else {

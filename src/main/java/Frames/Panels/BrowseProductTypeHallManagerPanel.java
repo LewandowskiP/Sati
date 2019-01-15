@@ -33,7 +33,7 @@ import javax.swing.table.TableRowSorter;
  * @author Przemysław
  */
 public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
-    
+
     ArrayList<ProductType> alpt = null;
     DataBaseConnector dbc;
 
@@ -43,24 +43,24 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
     public BrowseProductTypeHallManagerPanel() {
         initComponents();
         reload();
-        
+
         DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
         TableRowSorter<TableModel> sorter = new TableRowSorter<TableModel>(dtm);
-        
+
         List<RowSorter.SortKey> sortKeys;
         sortKeys = new ArrayList(1);
         sortKeys.add(new RowSorter.SortKey(0, SortOrder.ASCENDING));
         sorter.setSortKeys(sortKeys);
         jTable1.setRowSorter(sorter);
-        
+
         jTable1.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 int row = jTable1.rowAtPoint(evt.getPoint());
                 int col = jTable1.columnAtPoint(evt.getPoint());
-                
+
                 if (col == 5) {
-                    
+
                     if ((Boolean) jTable1.getValueAt(row, col) == true) {
                         ProductType pt = (ProductType) jTable1.getValueAt(row, 0);
                         String[] options = new String[2];
@@ -74,12 +74,12 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
                         jTable1.setValueAt(false, row, col);
                     }
                 }
-                
+
             }
         }
         );
     }
-    
+
     private String productTypeToString(ProductType pt) {
         if (pt.getType() == Global.PRODUCT_TYPE_PACK) {
             return "PAK";
@@ -87,7 +87,7 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
             return "PAL";
         }
     }
-    
+
     private void reload() {
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
@@ -124,6 +124,8 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
         buttonBrowseProductVersions = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
+        buttonFilter = new javax.swing.JButton();
+        buttonResetFilter = new javax.swing.JButton();
 
         buttonBrowseProductVersions.setText("Pokaż kartę");
         buttonBrowseProductVersions.addActionListener(new java.awt.event.ActionListener() {
@@ -164,6 +166,20 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
             jTable1.getColumnModel().getColumn(0).setMinWidth(500);
         }
 
+        buttonFilter.setText("Filtr");
+        buttonFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonFilterActionPerformed(evt);
+            }
+        });
+
+        buttonResetFilter.setText("Resetuj");
+        buttonResetFilter.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonResetFilterActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -174,6 +190,10 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
                     .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 580, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(buttonBrowseProductVersions)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonFilter)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(buttonResetFilter)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -181,20 +201,58 @@ public class BrowseProductTypeHallManagerPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(7, 7, 7)
-                .addComponent(buttonBrowseProductVersions)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(buttonBrowseProductVersions)
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(buttonFilter)
+                        .addComponent(buttonResetFilter)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void loadTableWithFilter(String filter) {
+        if (dbc == null) {
+            dbc = Global.getDataBaseConnector();
+        }
+        dbc.clearSession();
+        dbc.openSession();
+        DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
+        dtm.setRowCount(0);
+        alpt = dbc.getProductTypeGroupByNameTypeFilter(filter);
+        for (ProductType pt : alpt) {
+            String state = "Aktywny";
+            if (pt.isHidden()) {
+                state = "Nieaktywny";
+            }
+            String inst = "";
+            if (pt.isInstant()) {
+                inst = "Instant";
+            }
+            dtm.addRow(new Object[]{pt, productTypeToString(pt), inst, pt.getEan(), state, false});
+        }
+        jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+    }
+
     private void buttonBrowseProductVersionsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBrowseProductVersionsActionPerformed
         ProductType pt = (ProductType) jTable1.getValueAt(jTable1.getSelectedRow(), 0);
         pt.openFile(Global.FILE_READ_ONLY);
     }//GEN-LAST:event_buttonBrowseProductVersionsActionPerformed
 
+    private void buttonFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFilterActionPerformed
+        String filter = JOptionPane.showInputDialog("Wprowadź filtr");
+        loadTableWithFilter(filter);
+    }//GEN-LAST:event_buttonFilterActionPerformed
+
+    private void buttonResetFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonResetFilterActionPerformed
+        reload();
+    }//GEN-LAST:event_buttonResetFilterActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonBrowseProductVersions;
+    private javax.swing.JButton buttonFilter;
+    private javax.swing.JButton buttonResetFilter;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

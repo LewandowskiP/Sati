@@ -47,7 +47,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
      */
     private DataBaseConnector dbc;
     private ProductionRaportPart productionRaportPart;
-    
+
     public DetailsProductionRaportPartPanel(ProductionRaportPart productionRaportPart) {
         initComponents();
         dbc = Global.getDataBaseConnector();
@@ -58,7 +58,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         } else {
             textFieldSealing.setText("NIE");
         }
-        
+
         if (!productionRaportPart.getOtherInfo().equals("")) {
             textFieldOtherInfo.setText(productionRaportPart.getOtherInfo());
         } else {
@@ -75,15 +75,15 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
         textFieldCompleteDate.setText(productionRaportPart.getRaportDate().toString());
         textFieldCompletedBy.setText(productionRaportPart.getEmp().toString());
         textFieldExpiryDate.setText(productionRaportPart.getExpiryDate().toString());
-        
+
         DefaultTableModel dtm = (DefaultTableModel) tableDirectPackage.getModel();
         dtm.addTableModelListener(new CheckBoxDetailsListener(1));
         for (ProductionRaportDirectPackage prdp : productionRaportPart.getProductionRaportDirectPackage()) {
             dtm.addRow(new Object[]{prdp.getDirectPackage(), false});
         }
-        
+
         dtm = (DefaultTableModel) tableProductionCoffee.getModel();
-        
+
         for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
             String prefix = "";
             if (prca.getProductionCoffee().isReturned()) {
@@ -94,7 +94,7 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             }
             dtm.addRow(new Object[]{prca.getProductionCoffee(), prefix + prca.getProductionCoffee().getProductType(), prca.getWeight(), false, false});
         }
-        
+
         tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -105,11 +105,11 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                     o.showDetails();
                     tableProductionCoffee.setValueAt(false, row, col);
                 }
-                
+
             }
         }
         );
-        
+
         tableProductionCoffee.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -125,17 +125,17 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
                     }
                     tableProductionCoffee.setValueAt(false, row, col);
                 }
-                
+
             }
         }
         );
-        
+
         dtm = (DefaultTableModel) tablePallete.getModel();
         dtm.addTableModelListener(new CheckBoxDetailsListener(3));
         for (Pallete p : productionRaportPart.getPallete()) {
             dtm.addRow(new Object[]{p, p.getNetto(), p.getQuantity(), false});
         }
-        
+
     }
 
     /**
@@ -449,9 +449,9 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         try {
             StringBuilder sb = new StringBuilder();
-            
+
             sb.append("").append(productionRaportPart.toString()).append(System.lineSeparator()).append(System.lineSeparator());
-            
+
             sb.append("    ").append("Typ produktu:  ").append(productionRaportPart.getProductType()).append(System.lineSeparator());
             sb.append("    ").append("Data pakowania:  ").append(Global.timestampToStrDDMMYYYY(productionRaportPart.getRaportDate())).append(System.lineSeparator());
             sb.append("    ").append("Operator:  ").append(productionRaportPart.getEmp()).append(System.lineSeparator());
@@ -459,41 +459,42 @@ public class DetailsProductionRaportPartPanel extends javax.swing.JPanel {
             sb.append("    ").append("Wyprodukowano KG:  ").append(productionRaportPart.getTotalWeight()).append(System.lineSeparator());
             sb.append("    ").append("Wyprodukowano SZT:  ").append(productionRaportPart.getTotalPcs()).append(System.lineSeparator());
             sb.append("    ").append("Informacje dodatkowe  ").append(System.lineSeparator());
-            
+            sb.append("    ").append("Data ważności:  ").append(Global.timestampToStrDDMMYYYY(productionRaportPart.getExpiryDate())).append(System.lineSeparator());
+
             sb.append("    ").append("Numer parti:  ").append(productionRaportPart.getBatchInfo()).append(System.lineSeparator());
             sb.append("    ").append("Użyte surowce:  ").append(System.lineSeparator());
-            
+
             for (int i = 0; i < tableDirectPackage.getRowCount(); i++) {
                 sb.append("      ").append(tableDirectPackage.getValueAt(i, 0).toString()).append(System.lineSeparator());
             }
-            
+
             sb.append("    ").append("Ilość tlenu:  ").append(productionRaportPart.getOxygen()).append(System.lineSeparator());
-            
+
             sb.append("    ").append(Global.getProductTypeName(productionRaportPart.getType())).append(System.lineSeparator());
-            
+
             if (productionRaportPart.isSealing()) {
                 sb.append("    ").append("Opakowania szczelne").append(System.lineSeparator());
             } else {
                 sb.append("    ").append("Opakowania nieszczelne").append(System.lineSeparator());
             }
-            
+
             sb.append("    ").append("Wielkość stick:  ").append(productionRaportPart.getStickSize()).append(System.lineSeparator());
             sb.append("    ").append("Inne informacje:  ").append(productionRaportPart.getOtherInfo()).append(System.lineSeparator()).append(System.lineSeparator());
-            
+
             sb.append("    ").append("Wyprodukowane palety:  ").append(System.lineSeparator());
-            
+
             for (Pallete p : productionRaportPart.getPallete()) {
                 sb.append("      ").append(p.getEan128Num()).append(" ").append(p.getQuantity()).append(" szt. ").append(p.getNetto()).append(" Kg").append(System.lineSeparator());
             }
-            
+
             sb.append("    ").append("Użyte kawy:  ").append(System.lineSeparator());
-            
+
             for (ProductionRaportCoffeeAssignment prca : productionRaportPart.getProductionRaportCoffeeAssignment()) {
-                
+
                 sb.append("      ").append(prca.toString()).append(System.lineSeparator());
-                
+
             }
-            
+
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
             PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();

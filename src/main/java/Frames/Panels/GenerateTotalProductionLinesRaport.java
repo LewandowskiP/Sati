@@ -54,7 +54,7 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
     String directoryUrl;
     XSSFWorkbook workbook;
 
-    Object[] headerProduction = {"Numer partii", "Data Produkcji", "Maszyna", "Zmiana", "Kod operatora", "Rodzaj wyprodukowanej kawy", "Ilość pobranej kawy", "Ilość palet", "Razem[szt]", "Razem[Kg]", "Uwagi"};
+    Object[] headerProduction = {"Numer partii", "Data Produkcji","Data ważności", "Maszyna", "Zmiana", "Kod operatora", "Rodzaj wyprodukowanej kawy", "Ilość pobranej kawy", "Ilość palet", "Razem[szt]", "Razem[Kg]", "Uwagi"};
     Object[] headerRoast = {"Data Produkcji", "Maszyna", "Operator", "Typ Kawy", "Ilość Kawy", "Typ składnika", "Ilość składnika", "Typ produktu", "Kawa zasypana", "Kawa Upalona", "Temperatura", "Kolor", "Uwagi"};
 
     private void transformProduction(ArrayList<ProductionRaportPart> prp) {
@@ -87,6 +87,7 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
 
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getBatchInfo());
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(Global.timestampToStrDDMMYYYY(p.getRaportDate()));
+                XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(Global.timestampToStrDDMMYYYY(p.getExpiryDate()));
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getProductionLine().toString());
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getShift());
                 XSSFFunctions.nextCell(colNum++, dataRow).setCellValue(p.getEmp().getEmployeeID());
@@ -108,8 +109,8 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
             }
             XSSFFunctions.fixCellStyle(sheet, workbook, headerProduction.length, rowNum, 0, 2);
 
-            XSSFFunctions.fixCellFormat(sheet, workbook, 1, rowNum, 6, 2);
-            XSSFFunctions.fixCellFormat(sheet, workbook, 1, rowNum, 9, 2);
+            XSSFFunctions.fixCellFormat(sheet, workbook, 1, rowNum, 7, 2);
+            XSSFFunctions.fixCellFormat(sheet, workbook, 1, rowNum, 10, 2);
         }
     }
 
