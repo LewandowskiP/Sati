@@ -33,6 +33,7 @@ import ProductClasses.InstantCoffeeMixRaport;
 import ProductClasses.ProductDestination;
 import ProductClasses.ProductType;
 import ProductClasses.ReadyCoffee;
+import ProductClasses.ReturnedProduct;
 import ProductClasses.RoastAromaPart;
 import ProductClasses.RoastGreenCoffeePart;
 import ProductClasses.RoastRaport;
@@ -928,6 +929,28 @@ public class DataBaseConnector {
         }
         ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
         String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState >= :state";
+        Query q = s.createQuery(hql);
+        q.setParameter("state", Global.PRODUCTION_RAPORT_PART_WAITING);
+        List result = (List<ProductionRaportPart>) q.list();
+        alprp.addAll(result);
+        for (ProductionRaportPart prp : alprp) {
+            Hibernate.initialize(prp.getProductType());
+            Hibernate.initialize(prp.getProductionRaportCoffeeAssignment());
+            for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
+                Hibernate.initialize(prca);
+                Hibernate.initialize(prca.getProductionCoffee());
+                Hibernate.initialize(prca.getProductionRaportPart());
+            }
+        }
+        return alprp;
+    }
+
+    public ArrayList<ProductionRaportPart> getHalfProductsToAccept() {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        ArrayList<ProductionRaportPart> alprp = new ArrayList<>();
+        String hql = "FROM ProductionRaportPart PRP WHERE PRP.labTestState >= :state AND PRP.type = 3";
         Query q = s.createQuery(hql);
         q.setParameter("state", Global.PRODUCTION_RAPORT_PART_WAITING);
         List result = (List<ProductionRaportPart>) q.list();
@@ -1899,6 +1922,25 @@ public class DataBaseConnector {
         q.setParameter("from", from);
         q.setParameter("to", to);
         return (ArrayList<ProductionOrder>) q.list();
+    }
+
+    public ReturnedProduct getReturnedProduct(ProductionRaportPart selected) {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        ReturnedProduct rp;
+        String hql = "FROM ReturnedProduct RP WHERE RP.productionRaportPart = :productionRaportPart";
+        Query q = s.createQuery(hql);
+        q.setParameter("productionRaportPart", selected);
+        List<ReturnedProduct> result = (List<ReturnedProduct>) q.list();
+        if (result.isEmpty()) {
+            return null;
+        } else {
+            rp = result.get(0);
+        }
+        Hibernate.initialize(rp.getProductionCoffee());
+        return rp;
+
     }
 
 }

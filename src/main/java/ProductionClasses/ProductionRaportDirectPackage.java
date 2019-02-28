@@ -67,9 +67,6 @@ public class ProductionRaportDirectPackage {
         if (!Objects.equals(this.directPackage, other.directPackage)) {
             return false;
         }
-        if (!Objects.equals(this.productionRaportPart, other.productionRaportPart)) {
-            return false;
-        }
         return true;
     }
 

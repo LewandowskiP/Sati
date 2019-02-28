@@ -48,13 +48,19 @@ public class CheckBoxDirectPackageRaport implements TableModelListener {
                 String[] options = {"Wybierz", "Odrzuć"};
                 int result = JOptionPane.showOptionDialog(null, sdpp, "Wybierz surowiec.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                 if (JOptionPane.OK_OPTION == result) {
-                    String s = sdpp.getSelectedDirectPackage().getLabId();
-                    model.setValueAt(s, row, 0);
-                    model.setValueAt(sdpp.getSelectedDirectPackage().getDirectPackageType(), row, 1);
-                    model.addRow(new Object[]{null, null, false, false});
+                    if (sdpp.getSelectedDirectPackage() != null) {
+                        String s = sdpp.getSelectedDirectPackage().getLabId();
+                        model.setValueAt(sdpp.getSelectedDirectPackage(), row, 0);
+                        model.setValueAt(s, row, 1);
+                        model.setValueAt(sdpp.getSelectedDirectPackage().getDirectPackageType(), row, 2);
+                        model.addRow(new Object[]{null, null, null, false, false});
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Nie wybrano żadnego surowca do przypisania");
+                    }
                 }
                 model.setValueAt(false, row, column);
             }
+
         }
 
         if (column == del_column) {

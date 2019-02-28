@@ -23,6 +23,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
@@ -75,16 +76,18 @@ public class SelectDirectPackagePanel extends javax.swing.JPanel {
         comboBoxDirectPackageType.addItemListener(new ItemListener() {
             @Override
             public void itemStateChanged(ItemEvent arg0) {
-
-                dbc.openSession();
-                selectedDirectPackageType = (DirectPackageType) comboBoxDirectPackageType.getSelectedItem();
-                ArrayList<DirectPackage> aldp = dbc.getDirectPackageWithDirectPackageType(selectedDirectPackageType);
-                dtm.setRowCount(0);
-                for (DirectPackage dp : aldp) {
-                    dtm.addRow(new Object[]{dp});
+                try {
+                    dbc.openSession();
+                    selectedDirectPackageType = (DirectPackageType) comboBoxDirectPackageType.getSelectedItem();
+                    ArrayList<DirectPackage> aldp = dbc.getDirectPackageWithDirectPackageType(selectedDirectPackageType);
+                    dtm.setRowCount(0);
+                    for (DirectPackage dp : aldp) {
+                        dtm.addRow(new Object[]{dp});
+                    }
+                    selectedDirectPackage = (DirectPackage) jTable1.getValueAt(0, 0);
+                    jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+                } catch (Exception e) {
                 }
-                selectedDirectPackage = (DirectPackage) jTable1.getValueAt(0, 0);
-                jTable1.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
             }
         });
     }

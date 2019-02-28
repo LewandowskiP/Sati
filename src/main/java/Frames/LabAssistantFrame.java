@@ -176,7 +176,7 @@ public class LabAssistantFrame extends javax.swing.JFrame {
             }
         });
 
-        jButton7.setText("Przeglądaj surowce po type");
+        jButton7.setText("Przeglądaj surowce po typie");
         jButton7.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton7ActionPerformed(evt);
