@@ -51,6 +51,27 @@ public class ProductionCoffeeSeek {
         return weight;
     }
 
+
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final ProductionCoffeeSeek other = (ProductionCoffeeSeek) obj;
+        return this.id == other.id;
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 7;
+        hash = 43 * hash + this.id;
+        return hash;
+    }
+
     public void setWeight(float weight) {
         this.weight = weight;
     }

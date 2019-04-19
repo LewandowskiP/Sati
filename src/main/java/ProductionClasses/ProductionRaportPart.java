@@ -235,9 +235,7 @@ public class ProductionRaportPart implements Details {
 
     @Override
     public String toString() {
-
         return batchInfo + " " + productType + " " + productionLine + " " + totalWeight + " Kg " + Global.timestampToStrDDMMYYYY(raportDate);
-
     }
 
     @Override
@@ -257,22 +255,19 @@ public class ProductionRaportPart implements Details {
 
     @Override
     public boolean equals(Object obj) {
-        if (obj == null) {
+        if (null == obj) {
             return false;
         }
         if (getClass() != obj.getClass()) {
             return false;
         }
         final ProductionRaportPart other = (ProductionRaportPart) obj;
-        if (this.id != other.id) {
-            return false;
-        }
-        return true;
+        return this.id == other.id;
     }
 
     private void rollbackCoffee(ProductionRaportCoffeeAssignment prca, ArrayList<ProductionCoffeeSeek> alpcs) {
         for (ProductionCoffeeSeek pcs : alpcs) {
-            if (pcs.getProductionCoffee() == prca.getProductionCoffee()) {
+            if (pcs.getProductionCoffee().equals(prca.getProductionCoffee())) {
                 pcs.setWeight(pcs.getWeight() + prca.getWeight());
             }
         }
@@ -280,12 +275,10 @@ public class ProductionRaportPart implements Details {
 
     public void returnAssignedCoffee(Employee emp) {
         DataBaseConnector dbc = Global.getDataBaseConnector();
-        productionRaportCoffeeAssignment.toArray();
         ArrayList<ProductionCoffeeSeek> alpcs = dbc.getProductionCoffeeSeekWithEmployee(emp);
         for (Object prca : productionRaportCoffeeAssignment.toArray()) {
             rollbackCoffee((ProductionRaportCoffeeAssignment) prca, alpcs);
         }
-
     }
 
 }

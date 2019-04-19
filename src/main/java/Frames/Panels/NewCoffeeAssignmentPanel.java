@@ -61,7 +61,7 @@ public class NewCoffeeAssignmentPanel extends javax.swing.JPanel {
         dtm = (DefaultTableModel) jTable1.getModel();
         for (ProductionCoffeeSeek pcs : alpcs) {
             dbc.refresh(pcs);
-            dtm.addRow(new Object[]{pcs, new Float(pcs.getWeight()), new Float(0), false});
+            dtm.addRow(new Object[]{pcs, pcs.getWeight(), (float) 0, false});
         }
     }
 
@@ -76,7 +76,6 @@ public class NewCoffeeAssignmentPanel extends javax.swing.JPanel {
 
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        buttonConfirmAssignment = new javax.swing.JButton();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -104,66 +103,50 @@ public class NewCoffeeAssignmentPanel extends javax.swing.JPanel {
         jTable1.getTableHeader().setReorderingAllowed(false);
         jScrollPane1.setViewportView(jTable1);
 
-        buttonConfirmAssignment.setText("Zatwierdź");
-        buttonConfirmAssignment.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                buttonConfirmAssignmentActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(buttonConfirmAssignment)))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(buttonConfirmAssignment)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 319, Short.MAX_VALUE)
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
-    private void buttonConfirmAssignmentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonConfirmAssignmentActionPerformed
+    public void confirmAssignemt() throws NotEnoughtCoffeeException {
 
-        try {
-            ProductionCoffeeSeek temp;
-            Float toAssign;
-            for (int i = 0; i < dtm.getRowCount(); i++) {
-                temp = (ProductionCoffeeSeek) dtm.getValueAt(i, 0);
-                toAssign = Global.round((Float) dtm.getValueAt(i, 2), 2);
-                if (toAssign > 0) {
-                    if (toAssign > Global.round(temp.getWeight(), 2)) {
-                        throw new NotEnoughtCoffeeException(temp.toString());
-                    }
-                    temp.setWeight(Global.round(temp.getWeight() - toAssign, 2));
-                    ProductionRaportCoffeeAssignment prca = new ProductionRaportCoffeeAssignment();
-                    prca.setProductionCoffee(temp.getProductionCoffee());
-                    prca.setWeight(Global.round(toAssign, 2));
-                    prca.setProductionRaportPart(productionRaportPart);
-                    prca.setUsed(temp.getProductionCoffee().isUsed());
-                    productionRaportPart.getProductionRaportCoffeeAssignment().add(prca);
-                    dbc.saveTransation(temp);
+        ProductionCoffeeSeek temp;
+        Float toAssign;
+        for (int i = 0; i < dtm.getRowCount(); i++) {
+            temp = (ProductionCoffeeSeek) dtm.getValueAt(i, 0);
+            toAssign = Global.round((Float) dtm.getValueAt(i, 2), 2);
+            if (toAssign > 0) {
+                if (toAssign > Global.round(temp.getWeight(), 2)) {
+                    throw new NotEnoughtCoffeeException(temp.toString());
                 }
+                temp.setWeight(Global.round(temp.getWeight() - toAssign, 2));
+                ProductionRaportCoffeeAssignment prca = new ProductionRaportCoffeeAssignment();
+                prca.setProductionCoffee(temp.getProductionCoffee());
+                prca.setWeight(Global.round(toAssign, 2));
+                prca.setProductionRaportPart(productionRaportPart);
+                prca.setUsed(temp.getProductionCoffee().isUsed());
+                productionRaportPart.getProductionRaportCoffeeAssignment().add(prca);
+                dbc.saveTransation(temp);
             }
-            JOptionPane.showMessageDialog(this, "Przyporządkowano kawę.");
-        } catch (NotEnoughtCoffeeException e) {
-            JOptionPane.showMessageDialog(this, "Zła ilośc kawy " + e.getMessage());
         }
-    }//GEN-LAST:event_buttonConfirmAssignmentActionPerformed
+        JOptionPane.showMessageDialog(this, "Przyporządkowano kawę.");
+    }
+
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonConfirmAssignment;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     // End of variables declaration//GEN-END:variables

@@ -88,7 +88,6 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
         comboBoxProductType.setEnabled(state);
         spinnerExpiry.setEnabled(state);
         buttonAssignBatch.setEnabled(state);
-
         tablePallete.setEnabled(!state);
         tableDirectPackage.setEnabled(!state);
         spinnerStickWeight.setEnabled(!state);
@@ -647,9 +646,25 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_buttonSendRaportActionPerformed
 
+    private ProductionCoffeeSeek getProductionCoffeeSeek(ProductionCoffee pc) {
+        ProductionCoffeeSeek toReturn = null;
+        ArrayList<ProductionCoffeeSeek> alpcs = dbc.getProductionCoffeeSeekWithEmployee(employee);
+        for (ProductionCoffeeSeek pcs : alpcs) {
+            if (pcs.getProductionCoffee().equals(pc)) {
+                toReturn = pcs;
+                break;
+            }
+        }
+        if (toReturn == null) {
+            toReturn = new ProductionCoffeeSeek();
+            toReturn.setProductionCoffee(pc);
+            toReturn.setSeekedBy(employee);
+        }
+        return toReturn;
+    }
+
     private void buttonProductionCoffeeSeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProductionCoffeeSeekActionPerformed
         try {
-
             ProductionCoffee pc = (ProductionCoffee) comboBoxProductionCoffee.getSelectedItem();
             Float pcToSeek = Global.round((Float) spinnerProductionCoffeeSeek.getValue(), 2);
             if (pcToSeek == 0) {
@@ -658,10 +673,8 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
             if (pc.getWeight() - pcToSeek < 0) {
                 throw new NotEnoughtCoffeeException(pc.getProductType().getProductName());
             }
-            ProductionCoffeeSeek pcs = new ProductionCoffeeSeek();
-            pcs.setSeekedBy(employee);
-            pcs.setWeight(Global.round(pcToSeek, 2));
-            pcs.setProductionCoffee(pc);
+            ProductionCoffeeSeek pcs = getProductionCoffeeSeek(pc);
+            pcs.setWeight(pcs.getWeight() + Global.round(pcToSeek, 2));
             pc.setWeight(Global.round(pc.getWeight() - pcToSeek, 2));
             if (pc.getWeight() == 0) {
                 pc.setState(Global.PRODUCTION_COFFEE_OUT_OF_STORE);
@@ -694,13 +707,11 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     productionRaportPart.setStickSize((Float) spinnerStickWeight.getValue());
                     productionRaportPart.setOxygen((Float) spinnerOxygen.getValue());
                     productionRaportPart.setTotalWeight(Global.round((Float) summaryWeight, 2));
-                    
                     for (int i = 0; i < tableDirectPackage.getRowCount() - 1; i++) {
                         ProductionRaportDirectPackage prdp = new ProductionRaportDirectPackage();
                         prdp.setProductionRaportPart(productionRaportPart);
                         prdp.setDirectPackage((DirectPackage) tableDirectPackage.getValueAt(i, 0));
                         productionRaportPart.getProductionRaportDirectPackage().add(prdp);
-
                     }
                     productionRaportPart.setType(comboBoxBean.getSelectedIndex());
                     if (comboBoxSeal.getSelectedIndex() == 1) {
@@ -719,36 +730,43 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                     options[1] = "Odrzuć";
                     dbc.openSession();
                     dbc.startTransation();
-                    int res = JOptionPane.showOptionDialog(this, new NewCoffeeAssignmentPanel(productionRaportPart, employee), "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                    NewCoffeeAssignmentPanel ncap = new NewCoffeeAssignmentPanel(productionRaportPart, employee);
+                    int res = JOptionPane.showOptionDialog(this, ncap, "Przypisz użytą kawę.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
                     if (JOptionPane.OK_OPTION == res) {
-                        int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-                        if (JOptionPane.OK_OPTION == result) {
-                            if (productionRaportPart.getType() == Global.PRODUCT_TYPE_HALF) {
-                                ReturnedProduct rp = new ReturnedProduct();
-                                ProductionCoffee pc = new ProductionCoffee();
-                                pc.setProductType(productionRaportPart.getProductType());
-                                pc.setReturned(false);
-                                pc.setHalfProduct(true);
-                                pc.setState(Global.PRODUCTION_COFFEE_READY);
-                                pc.setWeight(Global.round((Float) productionRaportPart.getTotalWeight(), 2));
-                                pc.setProdDate(productionRaportPart.getRaportDate());
-                                pc.setProducedBy(employee);
-                                rp.setProductionRaportPart(productionRaportPart);
-                                rp.setProductionCoffee(pc);
-                                productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
-                                dbc.saveTransation(pc);
-                                dbc.saveTransation(rp);
+                        ncap.confirmAssignemt();
+                        try {
+                            int result = JOptionPane.showOptionDialog(this, new DetailsProductionRaportPartPanel(productionRaportPart), "Sprawdź poprawność raportu.", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+                            if (JOptionPane.OK_OPTION == result) {
+                                if (productionRaportPart.getType() == Global.PRODUCT_TYPE_HALF) {
+                                    ReturnedProduct rp = new ReturnedProduct();
+                                    ProductionCoffee pc = new ProductionCoffee();
+                                    pc.setProductType(productionRaportPart.getProductType());
+                                    pc.setReturned(false);
+                                    pc.setHalfProduct(true);
+                                    pc.setState(Global.PRODUCTION_COFFEE_READY);
+                                    pc.setWeight(Global.round((Float) productionRaportPart.getTotalWeight(), 2));
+                                    pc.setProdDate(productionRaportPart.getRaportDate());
+                                    pc.setProducedBy(employee);
+                                    rp.setProductionRaportPart(productionRaportPart);
+                                    rp.setProductionCoffee(pc);
+                                    productionRaportPart.setLabTestState(Global.PRODUCTION_RAPORT_PART_WAITING);
+                                    dbc.saveTransation(pc);
+                                    dbc.saveTransation(rp);
+                                }
+                                dbc.saveTransation(productionRaportPart);
+                                dbc.commitTransation();
+                                resetInput();
+                                initProductionCoffee();
+                                initProductionLines();
+                                initProductType();
+                                setPreInitControls(true);
+                            } else {
+                                dbc.rollbackTransation();
+                                productionRaportPart.returnAssignedCoffee(employee);
                             }
-                            dbc.saveTransation(productionRaportPart);
-                            dbc.commitTransation();
-                            resetInput();
-                            initProductionCoffee();
-                            initProductionLines();
-                            initProductType();
-                            setPreInitControls(true);
-                            return;
-                        } else {
+                        } catch (Exception ex) {
                             dbc.rollbackTransation();
+                            productionRaportPart.returnAssignedCoffee(employee);
                         }
                     } else {
                         dbc.rollbackTransation();
@@ -756,20 +774,19 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 } catch (ZeroInputException e) {
                     JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
                     dbc.rollbackTransation();
+                } catch (NotEnoughtCoffeeException ex) {
+                    JOptionPane.showMessageDialog(null, "Popraw ilość zarazerwowanej kawy", "Uwaga!", JOptionPane.WARNING_MESSAGE);
+                    dbc.rollbackTransation();
                 } catch (HeadlessException e) {
                     JOptionPane.showMessageDialog(null, "Wystąpił błąd podczas wysyłania raportu." + System.lineSeparator() + e.getMessage(), "Uwaga", JOptionPane.WARNING_MESSAGE);
-
                     dbc.rollbackTransation();
                 }
-
             } else {
                 JOptionPane.showMessageDialog(null, "Uzupełnij dane w raporcie!", "Uwaga", JOptionPane.WARNING_MESSAGE);
             }
         } else {
             JOptionPane.showMessageDialog(null, "Raport nie posiada przyporządkowanych palet!", "Uwaga", JOptionPane.WARNING_MESSAGE);
         }
-        productionRaportPart.returnAssignedCoffee(employee);
-
     }//GEN-LAST:event_buttonConfirmProductionOrderActionPerformed
 
     private void resetPalleteSummary() {
@@ -948,4 +965,5 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
     private javax.swing.JTextArea textAreaOtherInfo;
     private javax.swing.JTextField textFieldBatchInfo;
     // End of variables declaration//GEN-END:variables
+
 }
