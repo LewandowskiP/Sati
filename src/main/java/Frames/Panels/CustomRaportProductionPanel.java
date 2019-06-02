@@ -666,6 +666,23 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
 
     }//GEN-LAST:event_buttonSendRaportActionPerformed
 
+      private ProductionCoffeeSeek getProductionCoffeeSeek(ProductionCoffee pc) {
+        ProductionCoffeeSeek toReturn = null;
+        ArrayList<ProductionCoffeeSeek> alpcs = dbc.getProductionCoffeeSeekWithEmployee(employee);
+        for (ProductionCoffeeSeek pcs : alpcs) {
+            if (pcs.getProductionCoffee().equals(pc)) {
+                toReturn = pcs;
+                break;
+            }
+        }
+        if (toReturn == null) {
+            toReturn = new ProductionCoffeeSeek();
+            toReturn.setProductionCoffee(pc);
+            toReturn.setSeekedBy(employee);
+        }
+        return toReturn;
+    }
+    
     private void buttonProductionCoffeeSeekActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonProductionCoffeeSeekActionPerformed
         try {
             ProductionCoffee pc = (ProductionCoffee) comboBoxProductionCoffee.getSelectedItem();
@@ -676,17 +693,18 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
             if (pc.getWeight() - pcToSeek < 0) {
                 throw new NotEnoughtCoffeeException(pc.getProductType().getProductName());
             }
-            ProductionCoffeeSeek pcs = new ProductionCoffeeSeek();
-            pcs.setSeekedBy(employee);
+             ProductionCoffeeSeek pcs = getProductionCoffeeSeek(pc);
+            pcs.setWeight(pcs.getWeight() + Global.round(pcToSeek, 2));
             pcs.setWeight(Global.round(pcToSeek, 2));
             pcs.setProductionCoffee(pc);
             pc.setWeight(Global.round(pc.getWeight() - pcToSeek, 2));
             if (pc.getWeight() == 0) {
                 pc.setState(Global.PRODUCTION_COFFEE_OUT_OF_STORE);
             }
-            dbc.updateObject(pc);
-            dbc.saveObject(pcs);
-
+            dbc.startTransation();
+            dbc.updateTransation(pc);
+            dbc.saveTransation(pcs);
+            dbc.commitTransation();
             initProductionCoffee();
             JOptionPane.showMessageDialog(this, ("Zarezerwowano kawę" + pc.getProductType().getProductName() + " w ilośći " + pcToSeek + "[kg]."));
         } catch (ClassCastException | ZeroInputException e) {

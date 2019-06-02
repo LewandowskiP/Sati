@@ -58,9 +58,9 @@ public class ProductionRaportPart implements Details {
     private ProductionLine productionLine;
     private Employee emp;
 
-    private Set<ProductionRaportCoffeeAssignment> productionRaportCoffeeAssignment = new HashSet<ProductionRaportCoffeeAssignment>();
-    private Set<ProductionRaportDirectPackage> productionRaportDirectPackage = new HashSet<ProductionRaportDirectPackage>();
-    private Set<Pallete> pallete = new HashSet<Pallete>();
+    private Set<ProductionRaportCoffeeAssignment> productionRaportCoffeeAssignment = new HashSet<>();
+    private Set<ProductionRaportDirectPackage> productionRaportDirectPackage = new HashSet<>();
+    private Set<Pallete> pallete = new HashSet<>();
 
     public Timestamp getExpiryDate() {
         return expiryDate;

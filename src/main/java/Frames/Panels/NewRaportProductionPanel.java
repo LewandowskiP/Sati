@@ -875,8 +875,7 @@ public class NewRaportProductionPanel extends javax.swing.JPanel {
                 dbc.updateObject(prp);
                 this.productionRaportPart = prp;
                 setPreInitControls(false);
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ignored) {
             }
         }
 
