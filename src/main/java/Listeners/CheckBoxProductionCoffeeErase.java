@@ -18,6 +18,7 @@ package Listeners;
 import ProductionClasses.ProductionCoffee;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
@@ -30,9 +31,11 @@ import javax.swing.table.DefaultTableModel;
 public class CheckBoxProductionCoffeeErase implements TableModelListener {
 
     private final int erase_column = 4;
+    ArrayList<ProductionCoffee> alpc;
 
-    public CheckBoxProductionCoffeeErase() {
+    public CheckBoxProductionCoffeeErase(ArrayList<ProductionCoffee> alpc) {
         super();
+        this.alpc = alpc;
     }
 
     public void tableChanged(TableModelEvent e) {
@@ -51,9 +54,10 @@ public class CheckBoxProductionCoffeeErase implements TableModelListener {
                     DataBaseConnector dbc = Global.getDataBaseConnector();
                     dbc.openSession();
                     dbc.saveObject(pc);
+                    alpc.remove(pc);
                     int rowCount = model.getRowCount();
                     model.removeRow(row);
-                    model.setRowCount(rowCount);
+                    model.setRowCount(rowCount - 1);
                 }
             }
 

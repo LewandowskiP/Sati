@@ -30,6 +30,7 @@ import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
+import java.awt.HeadlessException;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.io.IOException;
@@ -695,8 +696,6 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
             }
              ProductionCoffeeSeek pcs = getProductionCoffeeSeek(pc);
             pcs.setWeight(pcs.getWeight() + Global.round(pcToSeek, 2));
-            pcs.setWeight(Global.round(pcToSeek, 2));
-            pcs.setProductionCoffee(pc);
             pc.setWeight(Global.round(pc.getWeight() - pcToSeek, 2));
             if (pc.getWeight() == 0) {
                 pc.setState(Global.PRODUCTION_COFFEE_OUT_OF_STORE);
@@ -711,6 +710,8 @@ public class CustomRaportProductionPanel extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(this, ("Proszę podać ilośc kawy do rezerwacji."));
         } catch (NotEnoughtCoffeeException e) {
             JOptionPane.showMessageDialog(this, ("Nie wystarczająca ilość kawy " + e.getMessage()));
+        } catch (HeadlessException ex) {
+            dbc.rollbackTransation();
         }
     }//GEN-LAST:event_buttonProductionCoffeeSeekActionPerformed
 

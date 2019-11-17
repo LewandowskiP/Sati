@@ -17,17 +17,12 @@ package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeGreen;
 import GreenCoffeeClasses.CoffeeType;
-import ProductClasses.Aroma;
-import ProductClasses.AromaType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 

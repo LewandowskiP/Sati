@@ -77,6 +77,8 @@
               <Component id="buttonEditNames" alignment="0" max="32767" attributes="0"/>
               <Component id="buttonBrowseMyRaports" alignment="0" max="32767" attributes="0"/>
               <Component id="jButton5" alignment="0" max="32767" attributes="0"/>
+              <Component id="buttonTrackReturnedProduct" alignment="1" max="32767" attributes="0"/>
+              <Component id="buttonTrackDirectPackage" alignment="0" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -95,6 +97,10 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonTrackCoffee" min="-2" pref="31" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
+                  <Component id="buttonTrackDirectPackage" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="buttonTrackReturnedProduct" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonTrackProduct" min="-2" pref="31" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonEditNames" min="-2" pref="31" max="-2" attributes="0"/>
@@ -102,7 +108,7 @@
                   <Component id="buttonBrowseMyRaports" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="jButton5" min="-2" pref="30" max="-2" attributes="0"/>
-                  <EmptySpace max="32767" attributes="0"/>
+                  <EmptySpace pref="62" max="32767" attributes="0"/>
                   <Component id="buttonBrowseGreenCoffee" min="-2" pref="30" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="buttonBrowseAroma" min="-2" pref="30" max="-2" attributes="0"/>
@@ -247,6 +253,22 @@
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton7ActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="buttonTrackDirectPackage">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Identyfikacja folie, kartony itd."/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonTrackDirectPackageActionPerformed"/>
+          </Events>
+        </Component>
+        <Component class="javax.swing.JButton" name="buttonTrackReturnedProduct">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Identyfikacja p&#xf3;&#x142;produktu"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonTrackReturnedProductActionPerformed"/>
           </Events>
         </Component>
       </SubComponents>

@@ -20,11 +20,6 @@
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <Component id="buttonShowLabTest" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jButton2" min="-2" pref="112" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="jLabel1" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel10" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -38,20 +33,30 @@
                           <Component id="jLabel5" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="jLabel7" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="120" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="textFieldCoffeeName" max="32767" attributes="0"/>
+                      <EmptySpace min="90" pref="90" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                  <Component id="textFieldCoffeeName" pref="256" max="32767" attributes="0"/>
+                                  <Component id="textFieldProvider" alignment="0" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Component id="textFieldLabId" max="32767" attributes="0"/>
                           <Component id="textFieldArrivalWeight" alignment="0" max="32767" attributes="0"/>
                           <Component id="textFieldCurrentWeight" alignment="0" max="32767" attributes="0"/>
-                          <Component id="textFieldStoreman" alignment="0" pref="202" max="32767" attributes="0"/>
+                          <Component id="textFieldStoreman" alignment="0" pref="256" max="32767" attributes="0"/>
                           <Component id="textFieldArrivalDate" alignment="0" max="32767" attributes="0"/>
                           <Component id="textFieldPackType" alignment="0" max="32767" attributes="0"/>
                           <Component id="textFieldContractNumber" alignment="0" max="32767" attributes="0"/>
                           <Component id="textFieldDossier" alignment="0" max="32767" attributes="0"/>
-                          <Component id="textFieldOwner" alignment="0" max="32767" attributes="0"/>
-                          <Component id="textFieldProvider" alignment="0" max="32767" attributes="0"/>
-                          <Component id="textFieldLabId" alignment="0" max="32767" attributes="0"/>
+                          <Component id="textFieldOwner" alignment="1" max="32767" attributes="0"/>
                       </Group>
+                  </Group>
+                  <Group type="102" attributes="0">
+                      <Component id="buttonShowLabTest" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="jButton2" min="-2" pref="112" max="-2" attributes="0"/>
                   </Group>
                   <Group type="102" alignment="0" attributes="0">
                       <Component id="buttonEdit2" min="-2" max="-2" attributes="0"/>
@@ -59,7 +64,7 @@
                       <Component id="jButton1" min="-2" pref="159" max="-2" attributes="0"/>
                   </Group>
               </Group>
-              <EmptySpace pref="13" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

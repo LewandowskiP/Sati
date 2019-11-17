@@ -16,18 +16,14 @@
 package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeGreen;
-import GreenCoffeeClasses.CoffeeGreenChangeHistory;
 import GreenCoffeeClasses.CoffeeType;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import ProductionManagement.Global;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;

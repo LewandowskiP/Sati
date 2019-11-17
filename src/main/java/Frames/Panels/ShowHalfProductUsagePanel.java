@@ -17,12 +17,10 @@ package Frames.Panels;
 
 import ProductClasses.InstantCoffeeMixPart;
 import ProductClasses.InstantCoffeeMixRaport;
-import ProductClasses.ReadyCoffee;
 import ProductClasses.ReturnedProduct;
 import ProductClasses.RoastAromaPart;
 import ProductClasses.RoastGreenCoffeePart;
 import ProductClasses.RoastRaport;
-import ProductionClasses.Pallete;
 import ProductionClasses.ProductionCoffee;
 import ProductionClasses.ProductionCoffeeExternalReturn;
 import ProductionClasses.ProductionRaportCoffeeAssignment;
@@ -47,7 +45,7 @@ import javax.swing.tree.TreeSelectionModel;
  *
  * @author Przemysław
  */
-public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
+public class ShowHalfProductUsagePanel extends javax.swing.JPanel {
 
     /**
      * Creates new form ShowCoffeeUsagePanel
@@ -56,7 +54,7 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
     Object selectedNode;
     ProductionRaportPart selectedProductionRaportPart;
     DefaultMutableTreeNode root;
-    
+
     void buildTree(DefaultMutableTreeNode node, StringBuilder sb, int depth) {
         for (int j = 0; j < depth; j++) {
             sb.append("----");
@@ -66,15 +64,15 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
             buildTree((DefaultMutableTreeNode) node.getChildAt(i), sb, depth + 1);
         }
     }
-    
-    public ShowProductionRaportExtendedPanel() {
+
+    public ShowHalfProductUsagePanel() {
         initComponents();
-        
+
         dbc = Global.getDataBaseConnector();
         dbc.openSession();
         jTree1.getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
         jTree1.addTreeSelectionListener(new TreeSelectionListener() {
-            
+
             @Override
             public void valueChanged(TreeSelectionEvent e) {
                 DefaultMutableTreeNode node = (DefaultMutableTreeNode) jTree1.getLastSelectedPathComponent();
@@ -84,7 +82,7 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
                 }
                 selectedNode = node.getUserObject();
             }
-            
+
         });
     }
 
@@ -192,66 +190,31 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
             selectedProductionRaportPart = bprp.getSelectedProductionRaportPart();
             if (selectedProductionRaportPart == null) {
                 labelProductionRaport.setText("Nie wybrano raportu.");
+            }if (selectedProductionRaportPart.getType()!=3) {
+                labelProductionRaport.setText("Raport nie jest raportem półproduktu");
             } else {
                 labelProductionRaport.setText(selectedProductionRaportPart.toString());
-                
                 try {
                     root = new DefaultMutableTreeNode(selectedProductionRaportPart);
-                    ArrayList<ProductionCoffee> alpc = dbc.getProducionCoffeeWithProductionRaportPart(selectedProductionRaportPart);
-                    
-                    for (ProductionCoffee pc : alpc) {
-                        
-                        DefaultMutableTreeNode raport = new DefaultMutableTreeNode("Raporty kawy: " + pc.getProductType());
-    
-                        InstantCoffeeMixRaport icmr = dbc.getInstantCoffeeMixRaportWithProductionCoffee(pc);
-                        if (icmr != null) {
-                            DefaultMutableTreeNode mix = new DefaultMutableTreeNode(icmr);
-                            for (InstantCoffeeMixPart icmp : icmr.getInstantCoffeeMixPart()) {
-                                mix.add(new DefaultMutableTreeNode(icmp));
-                            }
-                            raport.add(mix);
-                        }
-                        RoastRaport rr = dbc.getRoastRaportWithProductionCoffee(pc);
-                        if (rr != null) {
-                            DefaultMutableTreeNode roast = new DefaultMutableTreeNode(rr);
-                            for (RoastGreenCoffeePart rgcp : rr.getRoastGreenCoffeePart()) {
-                                roast.add(new DefaultMutableTreeNode(rgcp));
-                            }
-                            for (RoastAromaPart rap : rr.getRoastAromaPart()) {
-                                roast.add(new DefaultMutableTreeNode(rap));
-                            }
-                            raport.add(roast);
-                        }
-                        
-                        ProductionCoffeeExternalReturn pcer = dbc.getProductionCoffeeExternalReturnWithProductionCoffee(pc);
-                        if (pcer != null) {
-                            DefaultMutableTreeNode coffeeReturn = new DefaultMutableTreeNode(pcer);
-                            coffeeReturn.add(new DefaultMutableTreeNode(pcer.getProductionRaportPart()));
-                            raport.add(coffeeReturn);
-                        }
-                        
-                        ReturnedProduct rp = dbc.getReturnedProductWithProductionCoffee(pc);
-                        if (rp != null) {
-                            DefaultMutableTreeNode halfProduct = new DefaultMutableTreeNode("Półprodukt : " + rp.toString());
-                            halfProduct.add(new DefaultMutableTreeNode(rp));
-                            raport.add(halfProduct);
-                        }
-                        
-                        root.add(raport);
+                    ReturnedProduct returnedProduct = dbc.getReturnedProductWithProductionRaportPart(selectedProductionRaportPart);
+                    ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithProductionCoffee(returnedProduct.getProductionCoffee());
+                    DefaultMutableTreeNode raport = new DefaultMutableTreeNode("Raporty produktów dla półproduktu : " + returnedProduct.getProductionRaportPart());
+                    for (ProductionRaportPart prp : alprp) {
+                        raport.add(new DefaultMutableTreeNode(prp));
                     }
-                    
+                    root.add(raport);
                     DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
                     model.setRoot(root);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                
+
             }
         }
     }//GEN-LAST:event_buttonFindActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        
+
         try {
             StringBuilder sb = new StringBuilder();
             sb.append("Drzewo pakowania produktu. ").append(System.lineSeparator()).append(System.lineSeparator());
@@ -267,7 +230,7 @@ public class ShowProductionRaportExtendedPanel extends javax.swing.JPanel {
                 }
             }
         } catch (PrinterException e) {
-            
+
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 

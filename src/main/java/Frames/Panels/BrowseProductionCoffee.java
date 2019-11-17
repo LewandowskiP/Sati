@@ -21,6 +21,10 @@ import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
+import javax.swing.JTextArea;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -35,6 +39,8 @@ public class BrowseProductionCoffee extends javax.swing.JPanel {
      * Creates new form BrowseProductVersions
      */
     ProductionCoffee pc;
+    DefaultTableModel initialDTM;
+    ArrayList<ProductionCoffee> alpc;
 
     public BrowseProductionCoffee() {
 
@@ -43,19 +49,18 @@ public class BrowseProductionCoffee extends javax.swing.JPanel {
             dbc = Global.getDataBaseConnector();
         }
         dbc.openSession();
-        DefaultTableModel dtm = (DefaultTableModel) tableProducts.getModel();
-        dtm.setRowCount(0);
-        ArrayList<ProductionCoffee> alpc = dbc.getProductionCoffeeWithState(Global.PRODUCTION_COFFEE_READY);
 
+        alpc = dbc.getProductionCoffeeWithState(Global.PRODUCTION_COFFEE_READY);
+
+        initialDTM = (DefaultTableModel) tableProducts.getModel();
+        initialDTM.setRowCount(0);
         Object[] o = alpc.toArray();
         Arrays.sort(o);
-
         for (Object pc : o) {
             ProductionCoffee p = (ProductionCoffee) pc;
-            dtm.addRow(new Object[]{pc, p.getProductType(), Global.timestampToStrDDMMYYYY(p.getProdDate()), p.getWeight(), false});
+            initialDTM.addRow(new Object[]{pc, p.getProductType(), Global.timestampToStrDDMMYYYY(p.getProdDate()), p.getWeight(), false});
         }
-        dtm.addTableModelListener(new CheckBoxProductionCoffeeErase());
-
+        initialDTM.addTableModelListener(new CheckBoxProductionCoffeeErase(alpc));
     }
 
     /**
@@ -70,6 +75,9 @@ public class BrowseProductionCoffee extends javax.swing.JPanel {
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane2 = new javax.swing.JScrollPane();
         tableProducts = new javax.swing.JTable();
+        applyFilterButton = new javax.swing.JButton();
+        filterTextField = new javax.swing.JTextField();
+        printButton = new javax.swing.JButton();
 
         tableProducts.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -114,27 +122,98 @@ public class BrowseProductionCoffee extends javax.swing.JPanel {
             tableProducts.getColumnModel().getColumn(4).setMaxWidth(50);
         }
 
+        applyFilterButton.setText("Filtruj");
+        applyFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyFilterButtonActionPerformed(evt);
+            }
+        });
+
+        printButton.setText("Drukuj");
+        printButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 586, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 674, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 249, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(applyFilterButton)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(printButton)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                .addGap(4, 4, 4)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(applyFilterButton)
+                    .addComponent(printButton))
+                .addGap(8, 8, 8)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 432, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void applyFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFilterButtonActionPerformed
+
+        initialDTM.setRowCount(0);
+        Object[] o = alpc.toArray();
+        Arrays.sort(o);
+        for (Object pc : o) {
+            ProductionCoffee p = (ProductionCoffee) pc;
+            if (p.getProductType().toString().toLowerCase().contains(filterTextField.getText().toLowerCase())) {
+                initialDTM.addRow(new Object[]{pc, p.getProductType(), Global.timestampToStrDDMMYYYY(p.getProdDate()), p.getWeight(), false});
+            }
+        }
+    }//GEN-LAST:event_applyFilterButtonActionPerformed
+
+    private void printButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printButtonActionPerformed
+        try {
+            StringBuilder sb = new StringBuilder();
+
+            sb.append("Kawy na produkcji").append(System.lineSeparator());
+            DefaultTableModel dtm = (DefaultTableModel) tableProducts.getModel();
+            for (int numberOfLine = 0; numberOfLine < dtm.getRowCount(); numberOfLine++) {
+                sb.append(dtm.getValueAt(numberOfLine, 1).toString())
+                        .append("  ").append(dtm.getValueAt(numberOfLine, 2).toString())
+                        .append("  ").append(dtm.getValueAt(numberOfLine, 3).toString())
+                        .append(System.lineSeparator());
+            }
+
+            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+            PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
+            PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+            if (services.length != 0) {
+                if (defaultService != null) {
+                    JTextArea text = new JTextArea(sb.toString());
+                    PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+                    text.print(null, null, false, service, null, false);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_printButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton applyFilterButton;
+    private javax.swing.JTextField filterTextField;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JButton printButton;
     private javax.swing.JTable tableProducts;
     // End of variables declaration//GEN-END:variables
 }

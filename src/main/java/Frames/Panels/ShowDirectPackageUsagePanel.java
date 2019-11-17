@@ -16,8 +16,10 @@
 package Frames.Panels;
 
 import GreenCoffeeClasses.CoffeeGreen;
+import ProductClasses.DirectPackage;
 import ProductClasses.InstantCoffeeMixRaport;
 import ProductClasses.RoastRaport;
+import ProductionClasses.ProductionRaportDirectPackage;
 import ProductionClasses.ProductionRaportPart;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
@@ -37,7 +39,7 @@ import javax.swing.tree.TreeSelectionModel;
  *
  * @author Przemysław
  */
-public class ShowCoffeeUsagePanel extends javax.swing.JPanel {
+public class ShowDirectPackageUsagePanel extends javax.swing.JPanel {
 
     /**
      * Creates new form ShowCoffeeUsagePanel
@@ -56,7 +58,7 @@ public class ShowCoffeeUsagePanel extends javax.swing.JPanel {
         }
     }
 
-    public ShowCoffeeUsagePanel() {
+    public ShowDirectPackageUsagePanel() {
         initComponents();
 
         dbc = Global.getDataBaseConnector();
@@ -94,7 +96,7 @@ public class ShowCoffeeUsagePanel extends javax.swing.JPanel {
         jButton2 = new javax.swing.JButton();
         jButton3 = new javax.swing.JButton();
 
-        jLabel1.setText("Podaj numer kontroli surowca kawy: ");
+        jLabel1.setText("Podaj numer kontroli opakowania: ");
 
         jButton1.setText("Szukaj");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -160,36 +162,16 @@ public class ShowCoffeeUsagePanel extends javax.swing.JPanel {
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         String labId = textFieldCoffeeLabId.getText();
         dbc.openSession();
-        CoffeeGreen gc = dbc.getCoffeeGreenWithLabId(labId);
+        DirectPackage directPackage = dbc.getDirectPackageWithLabId(labId);
         try {
-            root = new DefaultMutableTreeNode(gc);
-            DefaultMutableTreeNode roastRaports = new DefaultMutableTreeNode("Użyte w następujących paleniach:  ");
-            ArrayList<RoastRaport> alrr = dbc.getRoastRaportWithCoffeeGreen(gc);
-            for (RoastRaport rr : alrr) {
-                DefaultMutableTreeNode roastRaport = new DefaultMutableTreeNode(rr);
-                DefaultMutableTreeNode productionRaportParts = new DefaultMutableTreeNode("Kawa z palenia wykorzystana do: ");
-                ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithProductionCoffee(rr.getProductionCoffee());
-                for (ProductionRaportPart prp : alprp) {
-                    productionRaportParts.add(new DefaultMutableTreeNode(prp));
-                }
-                roastRaport.add(productionRaportParts);
-                roastRaports.add(roastRaport);
+            root = new DefaultMutableTreeNode(directPackage);
+            DefaultMutableTreeNode productionRaports = new DefaultMutableTreeNode("Użyte w następujących produktach:  ");
+            ArrayList<ProductionRaportDirectPackage> alprdp = dbc.getProductionRaportDirectPackageWithDirectPackage(directPackage);
+            for (ProductionRaportDirectPackage productionRaportDirectPackage : alprdp) {
+                DefaultMutableTreeNode roastRaport = new DefaultMutableTreeNode(productionRaportDirectPackage.getProductionRaportPart());
+                productionRaports.add(roastRaport);
             }
-
-            DefaultMutableTreeNode mixRaports = new DefaultMutableTreeNode("Użyte w następujących zasypach:  ");
-            ArrayList<InstantCoffeeMixRaport> alicmr = dbc.getInstantCoffeeMixRaportWithCoffeeGreen(gc);
-            for (InstantCoffeeMixRaport icmr : alicmr) {
-                DefaultMutableTreeNode mixRaport = new DefaultMutableTreeNode(icmr);
-                DefaultMutableTreeNode productionRaportParts = new DefaultMutableTreeNode("Kawa z zasypu wykorzystana do: ");
-                ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithProductionCoffee(icmr.getProductionCoffee());
-                for (ProductionRaportPart prp : alprp) {
-                    productionRaportParts.add(new DefaultMutableTreeNode(prp));
-                }
-                mixRaport.add(productionRaportParts);
-                mixRaports.add(mixRaport);
-            }
-            root.add(roastRaports);
-            root.add(mixRaports);
+            root.add(productionRaports);
             DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
             model.setRoot(root);
         } catch (Exception e) {
@@ -200,7 +182,6 @@ public class ShowCoffeeUsagePanel extends javax.swing.JPanel {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         Details d = (Details) selectedNode;
         d.showDetails();
-
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
@@ -208,7 +189,7 @@ public class ShowCoffeeUsagePanel extends javax.swing.JPanel {
         try {
             StringBuilder sb = new StringBuilder();
 
-            sb.append("Drzewo użycia kawy. ").append(System.lineSeparator()).append(System.lineSeparator());
+            sb.append("Drzewo użycia opakowań. ").append(System.lineSeparator()).append(System.lineSeparator());
             buildTree(root, sb, 0);
             DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
             PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);

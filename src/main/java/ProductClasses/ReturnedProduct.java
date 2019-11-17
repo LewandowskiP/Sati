@@ -57,8 +57,14 @@ public class ReturnedProduct implements Details {
         this.productionCoffee = productionCoffee;
     }
 
+    @Override
     public void showDetails() {
         productionRaportPart.showDetails();
+    }
+
+    @Override
+    public String toString() {
+        return productionRaportPart.toString();
     }
 
 }

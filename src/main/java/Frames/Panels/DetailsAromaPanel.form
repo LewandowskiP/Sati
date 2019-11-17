@@ -41,17 +41,17 @@
                       </Group>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="textFieldArrivalDate" min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="textFieldStoreman" min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="textFieldCurrentWeight" min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="textFieldArrivalWeight" min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="textFieldProvider" min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="textFieldCoffeeName" min="-2" pref="202" max="-2" attributes="0"/>
-                          <Component id="textFieldLabId" min="-2" pref="202" max="-2" attributes="0"/>
+                          <Component id="textFieldCoffeeName" alignment="0" max="32767" attributes="0"/>
+                          <Component id="textFieldLabId" alignment="0" max="32767" attributes="0"/>
+                          <Component id="textFieldProvider" alignment="0" max="32767" attributes="0"/>
+                          <Component id="textFieldArrivalWeight" alignment="0" max="32767" attributes="0"/>
+                          <Component id="textFieldCurrentWeight" alignment="0" max="32767" attributes="0"/>
+                          <Component id="textFieldStoreman" pref="534" max="32767" attributes="0"/>
+                          <Component id="textFieldArrivalDate" alignment="0" max="32767" attributes="0"/>
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace pref="88" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>

@@ -160,14 +160,14 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
                             .addComponent(jLabel11))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(textFieldArrivalDate, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldStoreman, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldCurrentWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldArrivalWeight, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldProvider, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldCoffeeName, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(textFieldLabId, javax.swing.GroupLayout.PREFERRED_SIZE, 202, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(88, Short.MAX_VALUE))
+                            .addComponent(textFieldCoffeeName)
+                            .addComponent(textFieldLabId)
+                            .addComponent(textFieldProvider)
+                            .addComponent(textFieldArrivalWeight)
+                            .addComponent(textFieldCurrentWeight)
+                            .addComponent(textFieldStoreman, javax.swing.GroupLayout.DEFAULT_SIZE, 534, Short.MAX_VALUE)
+                            .addComponent(textFieldArrivalDate))))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -280,8 +280,6 @@ public class DetailsAromaPanel extends javax.swing.JPanel {
     }//GEN-LAST:event_buttonEdit2ActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton buttonEdit;
-    private javax.swing.JButton buttonEdit1;
     private javax.swing.JButton buttonEdit2;
     private javax.swing.JButton buttonShowLabTest;
     private javax.swing.JButton jButton1;

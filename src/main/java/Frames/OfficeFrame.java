@@ -26,6 +26,8 @@ import Frames.Panels.GenerateProductionSummary;
 import Frames.Panels.GenerateResourcesSummary;
 import Frames.Panels.GenerateTotalProductionLinesRaport;
 import Frames.Panels.ShowCoffeeUsagePanel;
+import Frames.Panels.ShowDirectPackageUsagePanel;
+import Frames.Panels.ShowHalfProductUsagePanel;
 import Frames.Panels.ShowProductionRaportExtendedPanel;
 import ProductClasses.ProductType;
 import ProductionManagement.DataBaseConnector;
@@ -90,6 +92,8 @@ public class OfficeFrame extends javax.swing.JFrame {
         jButton5 = new javax.swing.JButton();
         jButton6 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        buttonTrackReturnedProduct = new javax.swing.JButton();
+        buttonTrackDirectPackage = new javax.swing.JButton();
         scrollPanelHallManagerFrame = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -215,6 +219,20 @@ public class OfficeFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonTrackReturnedProduct.setText("Identyfikacja półproduktu");
+        buttonTrackReturnedProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTrackReturnedProductActionPerformed(evt);
+            }
+        });
+
+        buttonTrackDirectPackage.setText("Identyfikacja folie, kartony itd.");
+        buttonTrackDirectPackage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTrackDirectPackageActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout SzefProdukcjiFrameToolsLayout = new javax.swing.GroupLayout(SzefProdukcjiFrameTools);
         SzefProdukcjiFrameTools.setLayout(SzefProdukcjiFrameToolsLayout);
         SzefProdukcjiFrameToolsLayout.setHorizontalGroup(
@@ -238,7 +256,9 @@ public class OfficeFrame extends javax.swing.JFrame {
                     .addComponent(buttonGenerateTotalRoastRaport, javax.swing.GroupLayout.DEFAULT_SIZE, 307, Short.MAX_VALUE)
                     .addComponent(buttonGenerateTotalMixRaport, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jButton6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jButton7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonTrackReturnedProduct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(buttonTrackDirectPackage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         SzefProdukcjiFrameToolsLayout.setVerticalGroup(
@@ -251,12 +271,16 @@ public class OfficeFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTrackCoffee)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTrackDirectPackage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTrackReturnedProduct)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTrackProduct)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton7)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5)
@@ -266,9 +290,9 @@ public class OfficeFrame extends javax.swing.JFrame {
                 .addComponent(buttonGenerateTotalRoastRaport)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonGenerateTotalMixRaport)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
                 .addComponent(jButton6)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton4)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton1)
@@ -296,9 +320,9 @@ public class OfficeFrame extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(scrollPanelHallManagerFrame)
-                    .addComponent(SzefProdukcjiFrameTools, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(SzefProdukcjiFrameTools, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(scrollPanelHallManagerFrame))
                 .addContainerGap())
         );
 
@@ -399,8 +423,16 @@ public class OfficeFrame extends javax.swing.JFrame {
     }//GEN-LAST:event_jButton6ActionPerformed
 
     private void jButton7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton7ActionPerformed
-         scrollPanelHallManagerFrame.setViewportView(new BrowseAllResourcesByTypePanel());
+        scrollPanelHallManagerFrame.setViewportView(new BrowseAllResourcesByTypePanel());
     }//GEN-LAST:event_jButton7ActionPerformed
+
+    private void buttonTrackReturnedProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTrackReturnedProductActionPerformed
+        scrollPanelHallManagerFrame.setViewportView(new ShowHalfProductUsagePanel());
+    }//GEN-LAST:event_buttonTrackReturnedProductActionPerformed
+
+    private void buttonTrackDirectPackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTrackDirectPackageActionPerformed
+        scrollPanelHallManagerFrame.setViewportView(new ShowDirectPackageUsagePanel());
+    }//GEN-LAST:event_buttonTrackDirectPackageActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel SzefProdukcjiFrameTools;
@@ -413,7 +445,9 @@ public class OfficeFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonOperatorFrame;
     private javax.swing.JButton buttonStoremanFrame;
     private javax.swing.JButton buttonTrackCoffee;
+    private javax.swing.JButton buttonTrackDirectPackage;
     private javax.swing.JButton buttonTrackProduct;
+    private javax.swing.JButton buttonTrackReturnedProduct;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

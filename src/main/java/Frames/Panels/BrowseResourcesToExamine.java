@@ -350,7 +350,6 @@ public class BrowseResourcesToExamine extends javax.swing.JPanel {
             textPaneOrganoleptic.setText("");
             textPaneTechnical.setText("");
             spinnerSampleSize.setValue(0);
-            //dbc.closeSession();
             reload();
             JOptionPane.showMessageDialog(null, "Surowiec odrzucony.", "Informacja", JOptionPane.INFORMATION_MESSAGE);
         } else {

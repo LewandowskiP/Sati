@@ -25,6 +25,8 @@ import Frames.Panels.BrowseResourcesTypesPanel;
 import Frames.Panels.BrowseRoastRaportsHallManagerPanel;
 import Frames.Panels.GenerateTotalProductionLinesRaport;
 import Frames.Panels.ShowCoffeeUsagePanel;
+import Frames.Panels.ShowDirectPackageUsagePanel;
+import Frames.Panels.ShowHalfProductUsagePanel;
 import Frames.Panels.ShowProductionRaportExtendedPanel;
 import ProductionManagement.Employee;
 import javax.swing.JFrame;
@@ -73,6 +75,8 @@ public class LabAssistantFrame extends javax.swing.JFrame {
         buttonBrowseMyRaports = new javax.swing.JButton();
         jButton5 = new javax.swing.JButton();
         jButton7 = new javax.swing.JButton();
+        buttonTrackDirectPackage = new javax.swing.JButton();
+        buttonTrackReturnedProduct = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -183,6 +187,20 @@ public class LabAssistantFrame extends javax.swing.JFrame {
             }
         });
 
+        buttonTrackDirectPackage.setText("Identyfikacja folie, kartony itd.");
+        buttonTrackDirectPackage.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTrackDirectPackageActionPerformed(evt);
+            }
+        });
+
+        buttonTrackReturnedProduct.setText("Identyfikacja półproduktu");
+        buttonTrackReturnedProduct.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonTrackReturnedProductActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout LaborantFrameToolsPanelLayout = new javax.swing.GroupLayout(LaborantFrameToolsPanel);
         LaborantFrameToolsPanel.setLayout(LaborantFrameToolsPanelLayout);
         LaborantFrameToolsPanelLayout.setHorizontalGroup(
@@ -203,6 +221,8 @@ public class LabAssistantFrame extends javax.swing.JFrame {
             .addComponent(buttonEditNames, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(buttonBrowseMyRaports, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonTrackReturnedProduct, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(buttonTrackDirectPackage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         LaborantFrameToolsPanelLayout.setVerticalGroup(
             LaborantFrameToolsPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,6 +240,10 @@ public class LabAssistantFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTrackCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTrackDirectPackage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(buttonTrackReturnedProduct)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonTrackProduct, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonEditNames, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -227,7 +251,7 @@ public class LabAssistantFrame extends javax.swing.JFrame {
                 .addComponent(buttonBrowseMyRaports, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 62, Short.MAX_VALUE)
                 .addComponent(buttonBrowseGreenCoffee, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(buttonBrowseAroma, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -315,6 +339,14 @@ public class LabAssistantFrame extends javax.swing.JFrame {
         jScrollPane1.setViewportView(new BrowseAllResourcesByTypePanel());
     }//GEN-LAST:event_jButton7ActionPerformed
 
+    private void buttonTrackDirectPackageActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTrackDirectPackageActionPerformed
+        jScrollPane1.setViewportView(new ShowDirectPackageUsagePanel());
+    }//GEN-LAST:event_buttonTrackDirectPackageActionPerformed
+
+    private void buttonTrackReturnedProductActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonTrackReturnedProductActionPerformed
+        jScrollPane1.setViewportView(new ShowHalfProductUsagePanel());
+    }//GEN-LAST:event_buttonTrackReturnedProductActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel LaborantFrameToolsPanel;
     private javax.swing.JButton buttonBrowseAroma;
@@ -323,7 +355,9 @@ public class LabAssistantFrame extends javax.swing.JFrame {
     private javax.swing.JButton buttonEditNames;
     private javax.swing.JButton buttonGenerateTotalProductionRaport;
     private javax.swing.JButton buttonTrackCoffee;
+    private javax.swing.JButton buttonTrackDirectPackage;
     private javax.swing.JButton buttonTrackProduct;
+    private javax.swing.JButton buttonTrackReturnedProduct;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;

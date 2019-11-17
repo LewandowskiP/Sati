@@ -15,23 +15,17 @@
  */
 package Frames.Panels;
 
-import GreenCoffeeClasses.CoffeeType;
 import ProductionManagement.LabTest;
 
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Employee;
 import GreenCoffeeClasses.Provider;
-import ProductClasses.Aroma;
-import ProductClasses.AromaType;
 import ProductClasses.ProductType;
 import ProductClasses.ReadyCoffee;
 import ProductionManagement.Global;
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 
 import javax.swing.JOptionPane;
 
@@ -259,7 +253,6 @@ public class AddReadyCoffeePanel extends javax.swing.JPanel {
             String newLabIdStr;
             if (str != null) {
                 Integer lastLabId = Integer.parseInt(str.substring(1, 7));
-
                 newLabIdStr = String.format("P%06d", lastLabId + 1);
             } else {
                 newLabIdStr = String.format("P%06d", 1);
@@ -280,10 +273,8 @@ public class AddReadyCoffeePanel extends javax.swing.JPanel {
             lt.setVermin(checkBoxVermin.isSelected());
             dbc.saveObject(lt);
             rc.setLabTest(lt);
-
             dbc.saveObject(rc);
             JOptionPane.showMessageDialog(null, "Zarejestrowano do badania", "Informacja", JOptionPane.INFORMATION_MESSAGE);
-
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Sprawdź wprowadzone dane", "Błąd", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();

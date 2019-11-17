@@ -22,11 +22,16 @@ import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import javax.print.DocFlavor;
+import javax.print.PrintService;
+import javax.print.PrintServiceLookup;
 import javax.swing.DefaultListModel;
 import javax.swing.JFrame;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
+import javax.swing.JTextArea;
+import javax.swing.ListModel;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -42,6 +47,7 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
      */
     DataBaseConnector dbc;
     ProductionRaportPart selectedProductionRaportPart = null;
+    DefaultListModel initialDLM;
 
     public ProductionRaportPart getSelectedProductionRaportPart() {
         return selectedProductionRaportPart;
@@ -81,6 +87,9 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         listRaports = new javax.swing.JList();
         buttonDetails = new javax.swing.JButton();
+        filterTextField = new javax.swing.JTextField();
+        applyFilterButton = new javax.swing.JButton();
+        printListButton = new javax.swing.JButton();
 
         jLabel1.setText("Wyszukiwanie po numerze partii");
 
@@ -117,6 +126,20 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
             }
         });
 
+        applyFilterButton.setText("Filtruj");
+        applyFilterButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                applyFilterButtonActionPerformed(evt);
+            }
+        });
+
+        printListButton.setText("Drukuj");
+        printListButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                printListButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -124,14 +147,23 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 603, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 605, Short.MAX_VALUE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 200, Short.MAX_VALUE)
                             .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.Alignment.LEADING))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(buttonFindByBatchInfo)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(buttonFindByBatchInfo)
+                                .addGap(59, 59, 59)
+                                .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(applyFilterButton, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(printListButton))))
                     .addComponent(jSeparator1)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
@@ -151,11 +183,15 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(7, 7, 7)
-                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1)
+                    .addComponent(printListButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textFieldBatchInfo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonFindByBatchInfo))
+                    .addComponent(buttonFindByBatchInfo)
+                    .addComponent(filterTextField, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(applyFilterButton))
                 .addGap(7, 7, 7)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(7, 7, 7)
@@ -167,7 +203,7 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
                     .addComponent(buttonFindByDate)
                     .addComponent(buttonDetails))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 317, Short.MAX_VALUE)
                 .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
@@ -175,12 +211,12 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
     private void buttonFindByBatchInfoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonFindByBatchInfoActionPerformed
 
         ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithBatchInfo(textFieldBatchInfo.getText());
-        DefaultListModel dlm = new DefaultListModel();
+        initialDLM = new DefaultListModel();
 
         for (ProductionRaportPart prp : alprp) {
-            dlm.addElement(prp);
+            initialDLM.addElement(prp);
         }
-        listRaports = new JList(dlm);
+        listRaports = new JList(initialDLM);
         listRaports.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
         listRaports.addListSelectionListener(new ListSelectionListener() {
@@ -202,14 +238,13 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
         Timestamp to = new Timestamp(((Date) spinnerTo.getValue()).getTime());
         ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithFromTo(from, to);
 
-        DefaultListModel dlm = new DefaultListModel();
+        initialDLM = new DefaultListModel();
 
         for (ProductionRaportPart prp : alprp) {
-
-            dlm.addElement(prp);
-
+            initialDLM.addElement(prp);
         }
-        listRaports = new JList(dlm);
+
+        listRaports = new JList(initialDLM);
         listRaports.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         listRaports.addListSelectionListener(new ListSelectionListener() {
             @Override
@@ -217,27 +252,67 @@ public class BrowseProductionRaportPartPanel extends javax.swing.JPanel {
                 selectedProductionRaportPart = (ProductionRaportPart) listRaports.getSelectedValue();
             }
         });
-
         jScrollPane1.setViewportView(listRaports);
 
-        // dbc.closeSession();
     }//GEN-LAST:event_buttonFindByDateActionPerformed
 
     private void buttonDetailsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonDetailsActionPerformed
         selectedProductionRaportPart.showDetails();
-
     }//GEN-LAST:event_buttonDetailsActionPerformed
 
+    private void applyFilterButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_applyFilterButtonActionPerformed
+        DefaultListModel filteredDLM = new DefaultListModel();
+        for (int numberOfLine = 0; numberOfLine < initialDLM.getSize(); numberOfLine++) {
+            if (initialDLM.get(numberOfLine).toString().toLowerCase().contains(filterTextField.getText().toLowerCase())) {
+                filteredDLM.addElement(initialDLM.get(numberOfLine));
+            }
+        }
+        listRaports.setModel(filteredDLM);
+    }//GEN-LAST:event_applyFilterButtonActionPerformed
+
+    private void printListButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_printListButtonActionPerformed
+        try {
+            StringBuilder sb = new StringBuilder();
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+            String dateFrom = format.format((Date) spinnerFrom.getValue());
+            String dateTo = format.format((Date) spinnerTo.getValue());
+
+            sb.append("Raport produkcji od ").append(dateFrom).append(" do ").append(dateTo).append(System.lineSeparator());
+            DefaultListModel dlm = (DefaultListModel) listRaports.getModel();
+            for (int numberOfLine = 0; numberOfLine < dlm.getSize(); numberOfLine++) {
+                sb.append(dlm.getElementAt(numberOfLine).toString()).append(System.lineSeparator());
+            }
+
+            System.out.println(sb.toString());
+            DocFlavor flavor = DocFlavor.INPUT_STREAM.AUTOSENSE;
+            PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
+            PrintService defaultService = PrintServiceLookup.lookupDefaultPrintService();
+            if (services.length != 0) {
+                if (defaultService != null) {
+                    JTextArea text = new JTextArea(sb.toString());
+                    PrintService service = PrintServiceLookup.lookupDefaultPrintService();
+                    text.print(null, null, false, service, null, false);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }//GEN-LAST:event_printListButtonActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton applyFilterButton;
     private javax.swing.JButton buttonDetails;
     private javax.swing.JButton buttonFindByBatchInfo;
     private javax.swing.JButton buttonFindByDate;
+    private javax.swing.JTextField filterTextField;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JList listRaports;
+    private javax.swing.JButton printListButton;
     private javax.swing.JSpinner spinnerFrom;
     private javax.swing.JSpinner spinnerTo;
     private javax.swing.JTextField textFieldBatchInfo;

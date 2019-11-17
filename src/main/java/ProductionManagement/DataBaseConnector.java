@@ -92,12 +92,10 @@ public class DataBaseConnector {
     }
 
     public void clearSession() {
-        openSession();
-        s.close();
-        sf.close();
-        Configuration cfg = new Configuration();
-        cfg.configure(this.getClass().getClassLoader().getResource(CONFIG_URL));
-        sf = cfg.buildSessionFactory();
+        if (s.isOpen()) {
+            s.flush();
+            s.close();
+        }
         s = sf.openSession();
 
     }
@@ -821,6 +819,22 @@ public class DataBaseConnector {
         }
         String hql = "FROM ProductionRaportPart PRP WHERE PRP.batchInfo = :batchInfo";
         Query q = s.createQuery(hql).setParameter("batchInfo", batchInfo);
+        List result = (List<ProductionRaportPart>) q.list();
+        if (!result.isEmpty()) {
+            alprp.addAll(result);
+        }
+        return alprp;
+    }
+
+ 
+
+    public ArrayList<ProductionRaportDirectPackage> getProductionRaportDirectPackageWithDirectPackage(DirectPackage directPackage) {
+        ArrayList<ProductionRaportDirectPackage> alprp = new ArrayList<>();
+        if (!s.isOpen()) {
+            openSession();
+        }
+        String hql = "FROM ProductionRaportDirectPackage PRDP WHERE PRDP.directPackage = :directPackage";
+        Query q = s.createQuery(hql).setParameter("directPackage", directPackage);
         List result = (List<ProductionRaportPart>) q.list();
         if (!result.isEmpty()) {
             alprp.addAll(result);
@@ -1652,16 +1666,30 @@ public class DataBaseConnector {
         return null;
     }
 
-    public ReadyCoffee getReadyCoffeeWithProductionCoffee(ProductionCoffee pc) {
+    public ReturnedProduct getReturnedProductWithProductionCoffee(ProductionCoffee pc) {
         if (!s.isOpen()) {
             openSession();
         }
-        ReadyCoffee pcer = null;
-        String hql = "FROM ReadyCoffee PCER WHERE PCER.productionCoffee = :pc";
+        ReturnedProduct pcer = null;
+        String hql = "FROM ReturnedProduct RP WHERE RP.productionCoffee = :pc";
         Query q = s.createQuery(hql).setParameter("pc", pc);
         List result = q.list();
         if (!result.isEmpty()) {
-            pcer = (ReadyCoffee) result.get(0);
+            pcer = (ReturnedProduct) result.get(0);
+        }
+        return pcer;
+    }
+
+    public ReturnedProduct getReturnedProductWithProductionRaportPart(ProductionRaportPart productionRaportPart) {
+        if (!s.isOpen()) {
+            openSession();
+        }
+        ReturnedProduct pcer = null;
+        String hql = "FROM ReturnedProduct RP WHERE RP.productionRaportPart = :productionRaportPart";
+        Query q = s.createQuery(hql).setParameter("productionRaportPart", productionRaportPart);
+        List result = q.list();
+        if (!result.isEmpty()) {
+            pcer = (ReturnedProduct) result.get(0);
         }
         return pcer;
     }
@@ -1915,7 +1943,7 @@ public class DataBaseConnector {
         if (!s.isOpen()) {
             openSession();
         }
-        String hql = "FROM ProductionOrder PO WHERE PO.state = :state1 AND PO.productionLine = :productionLine AND PO.orderTime < :to AND PO.orderTime > :from";
+        String hql = "FROM ProductionOrder PO WHERE PO.state = :state1 AND PO.productionLine = :productionLine AND PO.orderTime < :to AND PO.orderTime >= :from";
         Query q = s.createQuery(hql);
         q.setParameter("state1", ProductionOrder.PRODUCTION_ORDER_COMPLETED);
         q.setParameter("productionLine", productionLine);

@@ -51,7 +51,7 @@ public class BrowseAvailableAromaRoasterPanel extends javax.swing.JPanel {
 
         if (dbc == null) {
             dbc = Global.getDataBaseConnector();
-        };
+        }
         dbc.openSession();
         final DefaultTableModel dtm = (DefaultTableModel) jTable1.getModel();
 

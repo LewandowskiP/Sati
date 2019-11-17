@@ -55,9 +55,9 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
     }
 
     private void loadProductionOrders(ProductionLine productionLine) {
-        Timestamp from = new Timestamp(((Date) spinnerFrom.getValue()).getTime()); 
-        Timestamp to = new Timestamp(((Date) spinnerFrom.getValue()).getTime());
-        ArrayList<ProductionOrder> alpo = dbc.getProductionOrdersHistoryFromTo(productionLine,from,to);
+        Timestamp from = new Timestamp(((Date) spinnerFrom.getValue()).getTime());
+        Timestamp to = new Timestamp(((Date) spinnerTo.getValue()).getTime());
+        ArrayList<ProductionOrder> alpo = dbc.getProductionOrdersHistoryFromTo(productionLine, from, to);
         DefaultTableModel dtm;
         dtm = (DefaultTableModel) tableProductionOrders.getModel();
         dtm.setRowCount(0);
@@ -207,15 +207,16 @@ public class BrowseProductionOrders extends javax.swing.JPanel {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7)
-                    .addComponent(jButton1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(spinnerFrom, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel3)
                         .addComponent(jLabel4)
-                        .addComponent(spinnerTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(spinnerTo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(comboBoxProductionLine, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel7)
+                        .addComponent(jButton1)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 453, Short.MAX_VALUE)
                 .addContainerGap())
