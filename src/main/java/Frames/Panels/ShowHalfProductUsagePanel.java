@@ -190,7 +190,8 @@ public class ShowHalfProductUsagePanel extends javax.swing.JPanel {
             selectedProductionRaportPart = bprp.getSelectedProductionRaportPart();
             if (selectedProductionRaportPart == null) {
                 labelProductionRaport.setText("Nie wybrano raportu.");
-            }if (selectedProductionRaportPart.getType()!=3) {
+            }
+            if (selectedProductionRaportPart.getType() != 3) {
                 labelProductionRaport.setText("Raport nie jest raportem półproduktu");
             } else {
                 labelProductionRaport.setText(selectedProductionRaportPart.toString());
@@ -234,23 +235,50 @@ public class ShowHalfProductUsagePanel extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_jButton3ActionPerformed
 
+    private void rollbackRaport(ProductionRaportPart prp) {
+        for (ProductionRaportCoffeeAssignment prca : prp.getProductionRaportCoffeeAssignment()) {
+            prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
+            prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
+            dbc.updateTransation(prca.getProductionCoffee());
+        }
+        dbc.deleteTransation(prp);
+    }
+
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        ProductionRaportPart selected = selectedProductionRaportPart;
-        String options[] = new String[]{"Tak", "Nie"};
-        int result = JOptionPane.showOptionDialog(null, ("Czy na pewno chcesz wycofać raport?" + System.lineSeparator() + selected.toString()), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
-        if (JOptionPane.OK_OPTION == result) {
-            for (ProductionRaportCoffeeAssignment prca : selected.getProductionRaportCoffeeAssignment()) {
-                prca.getProductionCoffee().setWeight(prca.getWeight() + prca.getProductionCoffee().getWeight());
-                prca.getProductionCoffee().setState(Global.PRODUCTION_COFFEE_READY);
-                dbc.updateObject(prca.getProductionCoffee());
+        try {
+            dbc.startTransation();
+            String options[] = new String[]{"Tak", "Nie"};
+            ReturnedProduct rp = dbc.getReturnedProduct(selectedProductionRaportPart);
+            ArrayList<ProductionRaportPart> alprp = dbc.getProductionRaportPartWithProductionCoffee(rp.getProductionCoffee());
+            StringBuilder sb = new StringBuilder();
+            sb.append("Wybrany raport jest raportem półproduktu!").append(System.lineSeparator());
+            sb.append("Wycofanie go spowoduje wycofanie następujących raportów:").append(System.lineSeparator());
+            for (ProductionRaportPart prp : alprp) {
+                sb.append(" ").append(prp.getBatchInfo()).append(System.lineSeparator());
             }
-            dbc.deleteObject(selected);
-            root = new DefaultMutableTreeNode("Wybierz produkt");
-            selectedProductionRaportPart = null;
-            selectedNode = null;
+            int result = JOptionPane.showOptionDialog(null, sb.toString(), "Uwaga!", JOptionPane.YES_NO_OPTION, JOptionPane.PLAIN_MESSAGE, null, options, options[0]);
+            if (result == JOptionPane.OK_OPTION) {
+                for (ProductionRaportPart prp : alprp) {
+                    rollbackRaport(prp);
+                }
+                dbc.deleteTransation(rp);
+                dbc.deleteTransation(rp.getProductionCoffee());
+                rollbackRaport(selectedProductionRaportPart);
+                dbc.commitTransation();
+                dbc.clearSession();
+                JOptionPane.showMessageDialog(null, "Raport został wycofany.");
+                root = new DefaultMutableTreeNode("Wybierz raport do przeglądu.");
+                selectedProductionRaportPart=null;
+                DefaultTreeModel model = (DefaultTreeModel) jTree1.getModel();
+                model.setRoot(root);
+            }
+
+        } catch (Exception ex) {
+            dbc.rollbackTransation();
+            JOptionPane.showMessageDialog(null, "Wystąpił błąd podczas wycofywania.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton buttonFind;

@@ -18,6 +18,7 @@ package ProductClasses;
 import java.awt.Desktop;
 import java.io.File;
 import java.sql.Timestamp;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -43,7 +44,8 @@ public class ProductType implements Comparable {
             Desktop dt = Desktop.getDesktop();
             dt.open(f);
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
+
         }
     }
 
@@ -54,7 +56,7 @@ public class ProductType implements Comparable {
             Desktop dt = Desktop.getDesktop();
             dt.open(f);
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, e.getMessage(), "Błąd", JOptionPane.ERROR_MESSAGE);
         }
     }
 
