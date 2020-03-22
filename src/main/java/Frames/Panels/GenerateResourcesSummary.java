@@ -56,7 +56,7 @@ public class GenerateResourcesSummary extends javax.swing.JPanel {
     XSSFWorkbook workbook;
 
     Object[] headerTotal = {"Nr", "Nazwa surowca", "Rozchód", "Dostawy", "Stan",};
-    Object[] headerHistory = {"Zmiana" , "Komentarz", "Zmienił", "Data"};
+    Object[] headerHistory = {"Zmiana", "Komentarz", "Zmienił", "Data"};
 
     Object[] headerBean = {"Kawa zielona"};
     Object[] headerInstant = {"Kawa instant"};
@@ -313,7 +313,9 @@ public class GenerateResourcesSummary extends javax.swing.JPanel {
                     }
                     JOptionPane.showMessageDialog(this, "Wygenerowano");
                 } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage());
                 } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage());
                 }
             }
         } catch (HeadlessException e) {

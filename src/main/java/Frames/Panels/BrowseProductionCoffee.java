@@ -15,7 +15,7 @@
  */
 package Frames.Panels;
 
-import Listeners.CheckBoxProductionCoffeeErase;
+import Listeners.CheckBoxProductionCoffee;
 import ProductionClasses.ProductionCoffee;
 import ProductionManagement.DataBaseConnector;
 import ProductionManagement.Global;
@@ -60,7 +60,7 @@ public class BrowseProductionCoffee extends javax.swing.JPanel {
             ProductionCoffee p = (ProductionCoffee) pc;
             initialDTM.addRow(new Object[]{pc, p.getProductType(), Global.timestampToStrDDMMYYYY(p.getProdDate()), p.getWeight(), false});
         }
-        initialDTM.addTableModelListener(new CheckBoxProductionCoffeeErase(alpc));
+        initialDTM.addTableModelListener(new CheckBoxProductionCoffee(alpc));
     }
 
     /**

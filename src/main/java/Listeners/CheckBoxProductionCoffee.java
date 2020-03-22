@@ -28,12 +28,12 @@ import javax.swing.table.DefaultTableModel;
  *
  * @author Przemysław
  */
-public class CheckBoxProductionCoffeeErase implements TableModelListener {
+public class CheckBoxProductionCoffee implements TableModelListener {
 
     private final int erase_column = 4;
     ArrayList<ProductionCoffee> alpc;
 
-    public CheckBoxProductionCoffeeErase(ArrayList<ProductionCoffee> alpc) {
+    public CheckBoxProductionCoffee(ArrayList<ProductionCoffee> alpc) {
         super();
         this.alpc = alpc;
     }
@@ -51,6 +51,7 @@ public class CheckBoxProductionCoffeeErase implements TableModelListener {
                 if (JOptionPane.OK_OPTION == result) {
                     ProductionCoffee pc = (ProductionCoffee) model.getValueAt(row, 0);
                     pc.setState(Global.PRODUCTION_COFFEE_OUT_OF_STORE);
+                    pc.setWeight(0);
                     DataBaseConnector dbc = Global.getDataBaseConnector();
                     dbc.openSession();
                     dbc.saveObject(pc);

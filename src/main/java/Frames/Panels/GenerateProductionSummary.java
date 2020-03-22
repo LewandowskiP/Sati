@@ -265,7 +265,9 @@ public class GenerateProductionSummary extends javax.swing.JPanel {
                     }
                     JOptionPane.showMessageDialog(this, "Wygenerowano");
                 } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage());
                 } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, e.getMessage());
                 }
             }
         } catch (HeadlessException e) {

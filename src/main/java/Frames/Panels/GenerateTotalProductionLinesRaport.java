@@ -54,7 +54,7 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
     String directoryUrl;
     XSSFWorkbook workbook;
 
-    Object[] headerProduction = {"Numer partii", "Data Produkcji","Data ważności", "Maszyna", "Zmiana", "Kod operatora", "Rodzaj wyprodukowanej kawy", "Ilość pobranej kawy", "Ilość palet", "Razem[szt]", "Razem[Kg]", "Uwagi"};
+    Object[] headerProduction = {"Numer partii", "Data Produkcji", "Data ważności", "Maszyna", "Zmiana", "Kod operatora", "Rodzaj wyprodukowanej kawy", "Ilość pobranej kawy", "Ilość palet", "Razem[szt]", "Razem[Kg]", "Uwagi"};
     Object[] headerRoast = {"Data Produkcji", "Maszyna", "Operator", "Typ Kawy", "Ilość Kawy", "Typ składnika", "Ilość składnika", "Typ produktu", "Kawa zasypana", "Kawa Upalona", "Temperatura", "Kolor", "Uwagi"};
 
     private void transformProduction(ArrayList<ProductionRaportPart> prp) {
@@ -331,10 +331,12 @@ public class GenerateTotalProductionLinesRaport extends javax.swing.JPanel {
                     }
                     JOptionPane.showMessageDialog(this, "Wygenerowano");
                 } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
                 } catch (IOException e) {
+                    JOptionPane.showMessageDialog(null, e.getMessage());
                 }
             }
-        } catch (HeadlessException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e.getMessage());
         }
     }//GEN-LAST:event_buttonGenerateActionPerformed
